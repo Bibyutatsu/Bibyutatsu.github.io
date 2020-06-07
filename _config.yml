@@ -2,5 +2,5 @@
 title: Developer Portfolio
 subtitle: "About a Data Scientist named Bibhash"
 url: "https://Bibyutatsu.github.io" # the base hostname & protocol for your site
-baseurl: "/Portfolio" # Set this value to "" if you want your site to be root
-# baseurl: ""
+# baseurl: "/the/subpath/of/your/site" # Set this value to "" if you want your site to be root
+baseurl: ""
