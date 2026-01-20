@@ -530,9 +530,9 @@ footer {
 
 #lead {
     position: relative;
-    height: 100vh;
-    min-height: 600px;
-    max-height: 1080px;
+    height: auto;
+    min-height: 100vh;
+    // max-height removed to support 1440p+ screens
     background: url(../images/lead-bg.jpg);
     background-size: cover;
     padding: 15px;
@@ -1916,8 +1916,7 @@ html[data-theme='light'] #contact {
 
     #lead {
         height: auto;
-        min-height: auto;
-        max-height: auto;
+        min-height: 100vh; // Ensure fullscreen on mobile/tablet
         padding: 100px 15px;
     }
 
