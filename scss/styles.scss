@@ -162,6 +162,38 @@ body {
     }
 }
 
+// Glassmorphic Button
+.btn-glassy {
+    @include glass-card;
+    padding: 8px 20px;
+    color: $text;
+    font-size: 0.9em;
+    cursor: pointer;
+    border-radius: 50px; // Pill shape
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    @include transition();
+    outline: none;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        color: #fff;
+    }
+
+    // Light Mode Support
+    html[data-theme='light'] & {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        color: $base-color;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.8);
+            color: $base-color-hover;
+        }
+    }
+}
+
 // Light Mode Global Gradient
 html[data-theme='light'] body {
     background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);

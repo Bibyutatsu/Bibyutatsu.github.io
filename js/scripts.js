@@ -186,7 +186,7 @@
                 label: 'Proficiency',
                 data: [4.5, 4.0, 4.5, 3.5, 3.5, 3.0, 4.0],
                 fill: true,
-                backgroundColor: 'rgba(var(--base-color-rgb), 0.2)', // Use CSS var for transparency
+                backgroundColor: `rgba(${getVar('--base-color-rgb')}, 0.2)`, // Interpolate the value
                 borderColor: getVar('--accent-color'),
                 pointBackgroundColor: getVar('--accent-color'),
                 pointBorderColor: '#fff',
@@ -214,12 +214,12 @@
                         pointLabels: {
                             color: getVar('--heading'),
                             font: {
-                                size: 11, // Slightly smaller for longer labels
+                                size: 11,
                                 family: "'Fira Code', monospace"
                             }
                         },
                         ticks: {
-                            display: false, // Hide the numbers
+                            display: false,
                             stepSize: 1,
                             backdropColor: 'transparent'
                         }
@@ -358,11 +358,7 @@
 
         const toggleAllBtn = document.createElement('button');
         toggleAllBtn.textContent = 'Collapse All';
-        toggleAllBtn.className = 'btn-rounded-white';
-        toggleAllBtn.style.padding = '8px 15px';
-        toggleAllBtn.style.fontSize = '0.8em';
-        toggleAllBtn.style.color = 'var(--base-color)';
-        toggleAllBtn.style.borderColor = 'var(--base-color)';
+        toggleAllBtn.className = 'btn-glassy'; // Updated class for glassmorphism
 
         // Handle Toggle All
         let allExpanded = true;
