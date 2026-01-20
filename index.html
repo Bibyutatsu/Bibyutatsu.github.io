@@ -88,26 +88,25 @@
             <div class="about-content">
                 <p class="about-intro">
                     Hi! I'm a Senior Data Scientist passionate about building AI systems that solve real-world problems.
-                    With 6+ years of experience, I've led teams to deliver production ML systems for Fortune 500
-                    companies,
-                    filed patents in Generative AI and Quantum Computing, and published research in aerospace AI.
+                    I've led teams to deliver production ML systems for Fortune 500 companies, filed patents in
+                    Generative AI and Quantum Computing, and published research in aerospace AI.
                 </p>
                 <div class="about-highlights">
                     <div class="highlight-card">
-                        <span class="highlight-number">6+</span>
+                        <span class="highlight-number" id="years-count">6+</span>
                         <span class="highlight-label">Years Experience</span>
                     </div>
                     <div class="highlight-card">
-                        <span class="highlight-number">5</span>
-                        <span class="highlight-label">US Patents</span>
+                        <span class="highlight-number" id="publications-count">6</span>
+                        <span class="highlight-label">Publications</span>
                     </div>
                     <div class="highlight-card">
-                        <span class="highlight-number">40×</span>
-                        <span class="highlight-label">Faster ETL Pipeline</span>
+                        <span class="highlight-number" id="certifications-count">12</span>
+                        <span class="highlight-label">Certifications</span>
                     </div>
                     <div class="highlight-card">
-                        <span class="highlight-number">IIT</span>
-                        <span class="highlight-label">Kharagpur Alumnus</span>
+                        <span class="highlight-number" id="badges-count">19</span>
+                        <span class="highlight-label">Credly Badges</span>
                     </div>
                 </div>
                 <p class="about-details">
@@ -288,15 +287,18 @@
     <div id="education">
         <h2 class="heading">Education</h2>
         <div class="education-block">
-            <h3>Indian Institute of Technology, Kharagpur</h3>
-            <span class="education-date">May 2014 - May 2019</span>
-            <h4>Dual Degree (Master of Technology and Bachelor of Technology)</h4>
-            <p>
-            <ul>
+            <div class="education-header">
+                <img src="images/Logo/IIT-Kharagpur-logo-01.png" alt="IIT Kharagpur Logo" class="education-logo">
+                <div class="education-info">
+                    <h3>Indian Institute of Technology, Kharagpur</h3>
+                    <span class="education-date">May 2014 - May 2019</span>
+                    <h4>Dual Degree (Master of Technology and Bachelor of Technology)</h4>
+                </div>
+            </div>
+            <ul class="education-details">
                 <li><b>Major in Aerospace Engineering</b> with CGPA <b>8.45/10</b></li>
                 <li><b>Minor in Computer Science Engineering</b> with CGPA <b>8.20/10</b></li>
             </ul>
-            </p>
         </div>
         <!-- End .education-block -->
     </div>
@@ -552,7 +554,25 @@
     <!-- End footer -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/data.js"></script>
     <script src="js/scripts.min.js"></script>
+    <script>
+        // Dynamic year calculation
+        document.addEventListener('DOMContentLoaded', function () {
+            const startDate = new Date(2019, 5); // June 2019
+            const now = new Date();
+            const years = Math.floor((now - startDate) / (365.25 * 24 * 60 * 60 * 1000));
+
+            document.getElementById('years-count').textContent = years + '+';
+
+            // Update counts from data if available
+            if (typeof portfolioData !== 'undefined') {
+                document.getElementById('publications-count').textContent = portfolioData.PatentsPublications.length;
+                document.getElementById('certifications-count').textContent = portfolioData.Certifications.length;
+                document.getElementById('badges-count').textContent = portfolioData.Credly.length;
+            }
+        });
+    </script>
 </body>
 
 </html>
