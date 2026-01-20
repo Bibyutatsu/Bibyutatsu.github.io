@@ -569,42 +569,109 @@
 
     <div id="skills">
         <h2 class="heading">Skills</h2>
-        <ul>
-            <li>Python</li>
-            <li>SQL</li>
-            <li>Statistics</li>
-            <li>Hypothesis Testing</li>
-            <li>A/B Testing</li>
-            <li>Regression Analysis</li>
-            <li>Feature Engineering</li>
-            <li>Machine Learning</li>
-            <li>Deep Learning</li>
-            <li>NLP</li>
-            <li>Computer Vision</li>
-            <li>PyTorch</li>
-            <li>TensorFlow</li>
-            <li>Transformers</li>
-            <li>OpenCV</li>
-            <li>pandas</li>
-            <li>NumPy</li>
-            <li>scikit-learn</li>
-            <li>GANs</li>
-            <li>VAE</li>
-            <li>Quantum Computing</li>
-            <li>Docker</li>
-            <li>Kubernetes</li>
-            <li>AWS</li>
-            <li>Azure</li>
-            <li>GCP</li>
-            <li>MLflow</li>
-            <li>Power BI</li>
-            <li>Tableau</li>
-            <li>FastAPI</li>
-            <li>Model Evaluation</li>
-            <li>Hyperparameter Tuning</li>
-            <li>Data Quality</li>
-            <li>Model Deployment</li>
-        </ul>
+
+        <div class="skills-wrapper">
+            <!-- Radar Chart Container -->
+            <div class="skills-chart-container">
+                <canvas id="skills-chart"></canvas>
+            </div>
+
+            <!-- Categorized Skills List -->
+            <div class="skills-list-container">
+                <div class="skill-category">
+                    <h3>Core Programming & Systems</h3>
+                    <ul>
+                        <li>Python (Production-grade)</li>
+                        <li>SQL (PostgreSQL)</li>
+                        <li>REST APIs (FastAPI, Flask)</li>
+                        <li>System Design (HLD/LLD)</li>
+                        <li>Distributed Systems</li>
+                        <li>Caching (Redis)</li>
+                        <li>Message Queues</li>
+                        <li>Multithreading & Async</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Machine Learning & Deep Learning</h3>
+                    <ul>
+                        <li>Supervised/Unsupervised Learning</li>
+                        <li>Feature Engineering</li>
+                        <li>Model Evaluation</li>
+                        <li>Hyperparameter Optimization</li>
+                        <li>Time Series (LSTM)</li>
+                        <li>Explainable AI (SHAP)</li>
+                        <li>PyTorch</li>
+                        <li>TensorFlow / Keras</li>
+                        <li>scikit-learn</li>
+                        <li>Transformers</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Generative AI & LLMs</h3>
+                    <ul>
+                        <li>LLMs (GPT-3.5/4 APIs)</li>
+                        <li>Prompt Engineering</li>
+                        <li>Multi-Agent Architectures</li>
+                        <li>Text-to-SQL Systems</li>
+                        <li>RAG</li>
+                        <li>Semantic Search</li>
+                        <li>LangChain / Semantic Kernel</li>
+                        <li>Multimodal Models</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Computer Vision & OCR</h3>
+                    <ul>
+                        <li>OpenCV</li>
+                        <li>Tesseract OCR</li>
+                        <li>Faster R-CNN</li>
+                        <li>YOLO</li>
+                        <li>Document Layout Analysis</li>
+                        <li>Table Detection</li>
+                        <li>Multimodal Search</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Graphs & Knowledge Systems</h3>
+                    <ul>
+                        <li>Graph Databases (Neo4j)</li>
+                        <li>Graph Algorithms</li>
+                        <li>Knowledge Graphs</li>
+                        <li>GCN</li>
+                        <li>Entity Normalization</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Quantum Computing</h3>
+                    <ul>
+                        <li>Quantum Annealing</li>
+                        <li>D-Wave Leap</li>
+                        <li>CQM Solvers</li>
+                        <li>Quantum Optimization</li>
+                        <li>Hybrid Pipelines</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>MLOps, Cloud & Deployment</h3>
+                    <ul>
+                        <li>Docker</li>
+                        <li>Kubernetes</li>
+                        <li>TorchServe</li>
+                        <li>MLflow</li>
+                        <li>CI/CD for ML</li>
+                        <li>AWS (ECS, EC2, S3)</li>
+                        <li>Azure (AI Search)</li>
+                        <li>Model Versioning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- End #skills -->
 
@@ -662,6 +729,7 @@
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
     <script src="js/data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/scripts.js"></script>
     <script>
         // Dynamic year calculation

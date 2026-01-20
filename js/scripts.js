@@ -159,6 +159,99 @@
         });
     }
 
+    /* 
+       ------------------------------------------------
+       4. Skills Radar Chart (Chart.js)
+       ------------------------------------------------
+    */
+    let skillsChart = null;
+
+    const initSkillsChart = () => {
+        const ctx = document.getElementById('skills-chart');
+        if (!ctx) return;
+
+        const getVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+        const data = {
+            labels: [
+                'Programming & Systems',
+                'Machine Learning & DL',
+                'Generative AI & LLMs',
+                'Computer Vision & OCR',
+                'Graphs & Knowledge Systems',
+                'Optimization & Quantum',
+                'MLOps / Deployment'
+            ],
+            datasets: [{
+                label: 'Proficiency',
+                data: [4.5, 4.0, 4.5, 3.5, 3.5, 3.0, 4.0],
+                fill: true,
+                backgroundColor: 'rgba(var(--base-color-rgb), 0.2)', // Use CSS var for transparency
+                borderColor: getVar('--accent-color'),
+                pointBackgroundColor: getVar('--accent-color'),
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: getVar('--accent-color')
+            }]
+        };
+
+        const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 5,
+                        angleLines: {
+                            color: getVar('--border')
+                        },
+                        grid: {
+                            color: getVar('--border')
+                        },
+                        pointLabels: {
+                            color: getVar('--heading'),
+                            font: {
+                                size: 11, // Slightly smaller for longer labels
+                                family: "'Fira Code', monospace"
+                            }
+                        },
+                        ticks: {
+                            display: false, // Hide the numbers
+                            stepSize: 1,
+                            backdropColor: 'transparent'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        };
+
+        // If chart exists, destroy it before creating new one (useful for theme switch)
+        if (skillsChart) {
+            skillsChart.destroy();
+        }
+
+        skillsChart = new Chart(ctx, config);
+    };
+
+    // Initialize Chart
+    initSkillsChart();
+
+    // Update Chart on Theme Toggle
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            // Tiny delay to allow CSS variables to update
+            setTimeout(initSkillsChart, 50);
+        });
+    }
+
 
     /* 
        ------------------------------------------------

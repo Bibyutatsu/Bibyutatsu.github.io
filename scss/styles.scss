@@ -1095,28 +1095,72 @@ footer {
         margin-bottom: 50px;
     }
 
-    ul {
-        display: block;
+    .skills-wrapper {
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0;
-        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
     }
 
-    li {
-        display: inline-block;
-        margin: 7px;
-        padding: 5px 10px;
-        color: $heading;
+    .skills-chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .skills-list-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        width: 100%;
+        text-align: left;
+    }
+
+    .skill-category {
         background: $background-alt;
-        list-style: none;
-        cursor: default;
-        font-size: 1.2em;
+        padding: 20px;
+        border-radius: 8px;
+        border-bottom: 3px solid $accent-color;
         @include transition();
 
         &:hover {
-            transform: scale(1.1);
-            background: $base-color;
-            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        h3 {
+            font-size: 1.1em;
+            color: $base-color;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid $border;
+            padding-bottom: 10px;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        li {
+            display: block; // Stack items vertically in the list
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: $text;
+            position: relative;
+            padding-left: 15px;
+
+            &:before {
+                content: '•';
+                color: $accent-color;
+                position: absolute;
+                left: 0;
+            }
         }
     }
 }
