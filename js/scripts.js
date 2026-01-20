@@ -174,13 +174,13 @@
 
         const data = {
             labels: [
-                'Programming & Systems',
-                'Machine Learning & DL',
-                'Generative AI & LLMs',
-                'Computer Vision & OCR',
-                'Graphs & Knowledge Systems',
-                'Optimization & Quantum',
-                'MLOps / Deployment'
+                'Core Programming',
+                'ML & Deep Learning',
+                'GenAI & LLM',
+                'Computer Vision',
+                'Graphs & Knowledge',
+                'Quantum Computing',
+                'MLOps & Cloud'
             ],
             datasets: [{
                 label: 'Proficiency',
@@ -251,6 +251,14 @@
             setTimeout(initSkillsChart, 50);
         });
     }
+
+    // Toggle for Collapsible Skill Categories
+    const skillCategories = document.querySelectorAll('.skill-category');
+    skillCategories.forEach(category => {
+        category.addEventListener('click', () => {
+            category.classList.toggle('active');
+        });
+    });
 
 
     /* 

@@ -1113,19 +1113,28 @@ footer {
     }
 
     .skills-list-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        /* Centers the items, including the last row */
+        gap: 20px;
         width: 100%;
         text-align: left;
     }
 
     .skill-category {
+        flex: 1 1 300px;
+        /* Grow, shrink, base width */
+        max-width: 400px;
+        /* Prevent them from getting too wide on large screens */
         background: $background-alt;
         padding: 20px;
         border-radius: 8px;
         border-bottom: 3px solid $accent-color;
         @include transition();
+        cursor: pointer;
+        /* Indicate clickable */
+        height: fit-content;
 
         &:hover {
             transform: translateY(-5px);
@@ -1135,8 +1144,28 @@ footer {
         h3 {
             font-size: 1.1em;
             color: $base-color;
-            margin-bottom: 15px;
+            margin-bottom: 0;
+            /* Removing bottom margin when collapsed */
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Icon for collapse/expand */
+        h3::after {
+            content: '\f107'; // FontAwesome angle-down
+            font-family: 'FontAwesome';
+            font-weight: normal;
+            transition: transform 0.3s ease;
+        }
+
+        &.active h3::after {
+            transform: rotate(180deg);
+        }
+
+        &.active h3 {
+            margin-bottom: 15px;
             border-bottom: 1px solid $border;
             padding-bottom: 10px;
         }
@@ -1145,6 +1174,13 @@ footer {
             padding: 0;
             margin: 0;
             list-style: none;
+            display: none;
+            /* Hidden by default */
+        }
+
+        &.active ul {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
 
         li {
