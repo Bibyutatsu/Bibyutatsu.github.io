@@ -5,9 +5,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bibhash Mitra</title>
-	<link rel="shortcut icon" href="images/icon.webp" type="image/x-icon">
-	<link rel="icon" href="images/icon.webp" type="image/x-icon">
+    <meta name="description"
+        content="Bibhash Chandra Mitra - Senior Data Scientist with 6+ years of experience in AI/ML, specializing in Generative AI, NLP, Computer Vision, and Quantum Computing. View my portfolio, projects, and patents.">
+    <meta name="keywords"
+        content="Data Scientist, AI, Machine Learning, Deep Learning, NLP, Computer Vision, Quantum Computing, Portfolio">
+    <meta name="author" content="Bibhash Chandra Mitra">
+    <title>Bibhash Mitra | Data Scientist & AI/ML Expert</title>
+    <link rel="shortcut icon" href="images/icon.webp" type="image/x-icon">
+    <link rel="icon" href="images/icon.webp" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
     <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -19,7 +24,7 @@
         <i class="fa fa-bars" aria-hidden="true"></i>
     </div>
     <!-- End #mobile-menu-toggle -->
-    <header>
+    <header class="sticky">
         <div id="mobile-menu-close">
             <span>Close</span> <i class="fa fa-times" aria-hidden="true"></i>
         </div>
@@ -34,7 +39,10 @@
                 <a href="#education">Education</a>
             </li>
             <li>
-                <a href="#projects">Projects</a>
+                <a href="#papers-patents">Papers & Patents</a>
+            </li>
+            <li>
+                <a href="#certifications">Certifications</a>
             </li>
             <li>
                 <a href="#skills">Skills</a>
@@ -47,22 +55,24 @@
     <!-- End header -->
 
     <div id="lead">
-        <div>
-            <img id ="lead-image" src="images/img_profile.jpg" border-radius=50% width="15%">
-        </div>
-        <div id="lead-content">
-            <h1>Bibhash Chandra Mitra</h1>
-            <h2>Data Scientist</h2>
-            <div class="row text-center">
-                <div class="col-md-3"></div>
-                <div class="col-md-3"><a href="files/Bibhash_Mitra_DS_2025.pdf" class="btn-rounded-white">Download Resume</a></div>
-                <div class="col-md-3"><a href="https://bibyutatsu.github.io/Blogs/" target="_blank" class="btn-rounded-white">Visit Developer Blog</a></div>
-                <div class="col-md-3"></div>
+        <div class="hero-container">
+            <div id="lead-image-container">
+                <img id="lead-image" src="images/img_profile.jpg" alt="Bibhash Mitra">
+            </div>
+            <div id="lead-content">
+                <h1>Bibhash Mitra</h1>
+                <h2>Data Scientist & AI/ML Expert</h2>
+                <p class="tagline">Building intelligent systems with 6+ years of experience in Generative AI, NLP,
+                    Computer Vision & Quantum Computing.</p>
+                <div class="btn-container">
+                    <a href="files/Bibhash_Mitra_DS_2025.pdf" class="btn-rounded-white">Download Resume</a>
+                    <a href="https://bibyutatsu.github.io/Blogs/" target="_blank" class="btn-rounded-white">Developer
+                        Blog</a>
+                </div>
             </div>
         </div>
-        <!-- End #lead-content -->
+        <!-- End .hero-container -->
         <div id="lead-overlay"></div>
-
         <div id="lead-down">
             <span>
                 <i class="fa fa-chevron-down" aria-hidden="true"></i>
@@ -74,15 +84,37 @@
 
     <div id="about">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h2 class="heading">About Me</h2>
+            <h2 class="heading">About Me</h2>
+            <div class="about-content">
+                <p class="about-intro">
+                    Hi! I'm a Senior Data Scientist passionate about building AI systems that solve real-world problems.
+                    With 6+ years of experience, I've led teams to deliver production ML systems for Fortune 500
+                    companies,
+                    filed patents in Generative AI and Quantum Computing, and published research in aerospace AI.
+                </p>
+                <div class="about-highlights">
+                    <div class="highlight-card">
+                        <span class="highlight-number">6+</span>
+                        <span class="highlight-label">Years Experience</span>
+                    </div>
+                    <div class="highlight-card">
+                        <span class="highlight-number">5</span>
+                        <span class="highlight-label">US Patents</span>
+                    </div>
+                    <div class="highlight-card">
+                        <span class="highlight-number">40×</span>
+                        <span class="highlight-label">Faster ETL Pipeline</span>
+                    </div>
+                    <div class="highlight-card">
+                        <span class="highlight-number">IIT</span>
+                        <span class="highlight-label">Kharagpur Alumnus</span>
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <p>
-                        Senior Data Scientist with 6+ years of experience leading end-to-end data science initiatives across customer analytics, decision optimization and AI-driven products. Proven expertise in statistical modeling, machine learning, experimentation (A/B testing) and large-scale data analysis to drive measurable business outcomes. Strong background in production ML systems, cloud-native deployment and cross-functional collaboration with product, engineering, and business stakeholders. Experienced in translating complex analytical insights into clear, actionable recommendations through dashboards and executive reporting. Holds multiple patents on topics related to Generative AI and Quantum Computing along with an M.Tech and B.Tech from the prestigious IIT Kharagpur. 
-                    </p>
-                </div>
+                <p class="about-details">
+                    My expertise spans Generative AI, NLP, Computer Vision, and Quantum Computing. I excel at
+                    translating complex analytical insights into actionable business outcomes through production-ready
+                    ML systems and cloud-native deployments.
+                </p>
             </div>
         </div>
     </div>
@@ -92,98 +124,161 @@
         <h2 class="heading">Work Experience</h2>
         <div id="experience-timeline">
             <div data-date="June 2024 – Present">
-                <h3>PwC</h3>
-                <h4>Manager (AI/ML)</h4>
-                <p>
-                    <ul>
-                      <li><b>Cloud-Native Multi-Agent ETL Platform</b></li>
-                      <p>Designed and led a scalable ETL system on Azure. The platform reads user-supplied Excel files and "control" specification sheets, then autonomously generates Python-based data transformation pipelines. By distributing work across parallel agents and optimizing schema-driven execution, it reduced data ingestion time from ~10 hours to about 15 minutes (≈40× speedup). The cleaned data is stored in a database, enabling downstream real-time analytics and access via chat-based interfaces.</p>
-                      <li><b>Financial Filings Query System</b></li>
-                      <p>Implemented a multi-agent document analysis system for financial reports (10-K/10-Q). Deployed a pipeline that parses, indexes, and semantically understands thousands of audit filings. Analysts can pose queries in natural language and quickly rank companies on 17 key financial metrics. This reduced decision-making time from days to just a few hours, greatly accelerating competitive analysis and investment research.</p>
-                      <li><b>Text-to-SQL Integration Engine</b></li>
-                      <p>Built a unified interface for querying data across heterogeneous sources. The solution uses a multi-agent workflow to convert natural language text (questions or prompts) into SQL queries that combine structured databases and unstructured text corpora. By automating this Text-to-SQL translation, the system enables non-technical users to extract insights from diverse data without manual query writing. This improved data accessibility and boosted analyst productivity by over 30%.</p>
-                      <li><b>Contextual Recommendation Engine</b></li>
-                      <p>Developed a personalization system for ecommerce that fuses behavioral knowledge graphs with LLM-based reasoning. The pipeline models user journeys and product relations to suggest context-aware items and campaigns. By reasoning over this graph-structured data with large language models, the system delivers highly relevant recommendations that adapt to each customer's history and context.</p>
-                    </ul>
-                </p>
+                <div class="company-header">
+                    <img src="images/Logo/pricewaterhousecoopers-pwc-logo-png_seeklogo-619359.png" alt="PwC Logo"
+                        class="company-logo">
+                    <div class="company-info">
+                        <h3>PwC</h3>
+                        <h4>Manager (AI/ML)</h4>
+                    </div>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <h5>Cloud-Native Multi-Agent ETL Platform</h5>
+                        <p>Designed and led a scalable ETL system on Azure that autonomously generates Python-based data
+                            transformation pipelines, reducing data ingestion time from ~10 hours to ~15 minutes (≈40×
+                            speedup).</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Financial Filings Query System</h5>
+                        <p>Implemented a multi-agent document analysis system for 10-K/10-Q reports, enabling natural
+                            language queries to rank companies on 17 key financial metrics.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Text-to-SQL Integration Engine</h5>
+                        <p>Built a unified interface converting natural language to SQL queries across heterogeneous
+                            sources, boosting analyst productivity by over 30%.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Contextual Recommendation Engine</h5>
+                        <p>Developed personalization system fusing behavioral knowledge graphs with LLM-based reasoning
+                            for context-aware ecommerce recommendations.</p>
+                    </div>
+                </div>
             </div>
             <div data-date="June 2022 – June 2024">
-                <h3>PwC</h3>
-                <h4>Senior Associate (AI/ML)</h4>
-                <p>
-                    <ul>
-                      <li><b>Automated Email Response System</b></li>
-                      <p>Architected a production pipeline to auto-respond to user policy queries by email. Implemented backend orchestration that classifies incoming questions, retrieves relevant policy snippets, and composes replies with accurate citations. This system reduced manual handling time by ~15% while improving response consistency and user satisfaction.</p>
-                      <li><b>Document Q&A System on Big Corpora</b></li>
-                      <p>Designed a scalable question-answering platform over large PDF datasets. Leveraged Azure Cognitive Search with OpenAI/LLM chains to index and retrieve answers from millions of pages. The pipeline allows users to query complex documents (e.g. contracts, reports) in natural language and receive concise, sourced answers, greatly speeding up information retrieval for analysts.</p>
-                      <li><b>English Proficiency (CEFR) Scorer from Audio</b></li>
-                      <p>Created an automated system to score English speech on the CEFR scale. Audio inputs are first transcribed using OpenAI Whisper; then acoustic and linguistic features (lexical, syntactic, prosodic) are extracted and fed to a fine-tuned GPT-3.5 classifier. In testing, the model achieved ~94% accuracy in classifying proficiency levels, enabling rapid, reliable language assessment.</p>
-                      <li><b>Multimodal Inference Demonstration App</b></li>
-                      <p>Developed a demo platform to showcase vision-and-language AI. Integrated OpenAI's CLIP and Generative Image Transformer (GIT) models into a Streamlit app that accepts both text and image inputs. This demo lets stakeholders experiment with and visualize how the models jointly handle multimodal queries, facilitating understanding of model capabilities.</p>
-                      <li><b>Content-Based Image Search with Captioning</b></li>
-                      <p>Built an image retrieval system that interprets visual queries. Using CLIP embeddings, the engine finds the top-3 images from a large gallery matching a text or image query, then generates descriptive captions for the input image. This tool supports intuitive image browsing and annotation, useful for media and marketing teams to quickly find and describe relevant imagery.</p>
-                    </ul>
-                </p>
+                <div class="company-header">
+                    <img src="images/Logo/pricewaterhousecoopers-pwc-logo-png_seeklogo-619359.png" alt="PwC Logo"
+                        class="company-logo">
+                    <div class="company-info">
+                        <h3>PwC</h3>
+                        <h4>Senior Associate (AI/ML)</h4>
+                    </div>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <h5>Automated Email Response System</h5>
+                        <p>Architected production pipeline for auto-responding to policy queries, reducing manual
+                            handling time by ~15%.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Document Q&A System</h5>
+                        <p>Designed scalable question-answering platform using Azure Cognitive Search with OpenAI/LLM
+                            chains over millions of pages.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>English Proficiency (CEFR) Scorer</h5>
+                        <p>Created automated speech scoring system using Whisper and GPT-3.5, achieving ~94% accuracy in
+                            proficiency classification.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Multimodal Inference App & Image Search</h5>
+                        <p>Integrated CLIP and GIT models for vision-language demos and content-based image retrieval
+                            with captioning.</p>
+                    </div>
+                </div>
             </div>
-            <div data-date="November 2021 – June 2022">
-                <h3>PwC</h3>
-                <h4>Experienced Associate (AI/ML)</h4>
-                <p>
-                    <ul>
-                      <li><b>Active-Learning NLP Annotation System</b></li>
-                      <p>Led development of an NLP pipeline with active learning. Integrated Label Studio to annotate a small initial dataset, iteratively retrained models (combining deep learning and rule-based components) on the most informative samples. This reduced manual labeling by focusing effort where the model was uncertain, thereby accelerating model training and improving performance with minimal data.</p>
-                      <li><b>Delivery Route Optimization (Quantum Annealing)</b></li>
-                      <p>Applied quantum optimization to logistics. Formulated the routing and fleet-allocation problem for a delivery service and solved it using quantum annealing (D-Wave Leap). This approach yielded ~35% reduction in simulated routing cost and a ~20% increase in on-time delivery rate in trials. The solution dynamically computed optimal number of agents and routes over a service area, improving efficiency in scheduling.</p>
-                      <li><b>Personalized Product Recommender</b></li>
-                      <p>Built a hybrid recommendation engine for large-scale retail data. Combined collaborative filtering with content-based features to suggest products tailored to each user's behavior and preferences. The system processes massive interaction logs to improve user engagement and support cross-selling, enhancing the personalization of customer experiences.</p>
-                    </ul>
-                </p>
+            <div data-date="Nov 2021 – June 2022">
+                <div class="company-header">
+                    <img src="images/Logo/pricewaterhousecoopers-pwc-logo-png_seeklogo-619359.png" alt="PwC Logo"
+                        class="company-logo">
+                    <div class="company-info">
+                        <h3>PwC</h3>
+                        <h4>Experienced Associate (AI/ML)</h4>
+                    </div>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <h5>Active-Learning NLP System</h5>
+                        <p>Led NLP pipeline with Label Studio integration, reducing manual labeling through intelligent
+                            sample selection.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Quantum Route Optimization</h5>
+                        <p>Applied D-Wave quantum annealing for delivery routing, achieving ~35% cost reduction and ~20%
+                            improvement in on-time delivery.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Product Recommender</h5>
+                        <p>Built hybrid recommendation engine combining collaborative filtering with content-based
+                            features for retail personalization.</p>
+                    </div>
+                </div>
             </div>
-            <div data-date="June 2019 – November 2021">
-                <h3>Innoplexus Consulting Services Pvt. Ltd.</h3>
-                <h4>Associate Data Scientist</h4>
-                <p>
-                    <ul>
-                      <li><b>Novel Molecule Generation for Drug Discovery</b></li>
-                      <p>Developed generative AI to create new chemical compounds targeting a given protein. Employed a multi-stage architecture combining Variational Autoencoders (VAE, Junction-Tree VAE) and Generative Adversarial Networks, with Reinforcement Learning rewards shaped by Self-Organizing Maps to bias sampling in desirable chemical space. Custom tokenizers for SMILES strings and comprehensive benchmarking (ZINC dataset, MOSES) were implemented. This innovative pipeline was awarded a $1 M Hessen grant and covered by media (e.g. Wall Street Journal, Forbes) for generating novel molecules with high bioactivity.</p>
-                      <li><b>Disease-Gene Prediction with Explainable AI</b></li>
-                      <p>Designed an explainable ML model to identify disease-causing genes. Trained predictive models on genomic data and applied SHAP (SHapley Additive exPlanations) to rank genes by influence. The system achieved ~85% mean average precision in top‑5 gene predictions, providing interpretable insights into genetic causes of disease.</p>
-                      <li><b>Automated Drug-Design Pipeline</b></li>
-                      <p>Implemented an end-to-end workflow for drug discovery, integrating molecule filtering, protein–ligand docking, and scoring. This pipeline automatically processes candidate compounds (e.g. docking to target proteins) and ranks them by predicted efficacy. The result was a streamlined screening process that accelerated discovery by reducing manual steps, improving efficiency in identifying promising drug candidates.</p>
-                      <li><b>Sales Demand Forecasting (LSTM-Based)</b></li>
-                      <p>Built a time-series forecasting system to predict product demand. Developed LSTM neural networks on historical sales data, yielding high accuracy (RMSE ≈ 2.5%) in forecasting future demand. The model supported data-driven planning, enabling better inventory and supply-chain decisions.</p>
-                      <li><b>Document Data Extraction (PDFs & Tables)</b></li>
-                      <p>Created automated pipelines to parse and extract data from documents. For PDFs, the system segments paragraphs (using rule-based image processing) and applies Tesseract OCR to convert scanned or digital PDFs into structured content. For tables, a combination of rule-based methods and a Faster R-CNN model detects and isolates tables; a custom "Table-Maker" then normalizes any table format into standard CSV and uses Tesseract to extract text. These tools together enabled reliable conversion of complex documents into machine-readable datasets.</p>
-                      <li><b>Hierarchical Disease Classification</b></li>
-                      <p>Developed a two-stage classifier for medical documents. First, fine-tuned BERT models classify text into disease categories. Then, a Graph Convolution Network (GCN) refines predictions based on disease ontology. This hierarchical pipeline organizes diseases into a taxonomy, improving classification accuracy for complex, multi-label data.</p>
-                      <li><b>ML Deployment Infrastructure (TorchServe & MLflow)</b></li>
-                      <p>Established a scalable model-serving and version-control framework. Packaged deep-learning models with TorchServe and tracked experiments in MLflow, automating deployment to production. This infrastructure enabled continuous integration and versioning of ML models, significantly reducing manual overhead in operations.</p>
-                    </ul>
-                </p>
+            <div data-date="June 2019 – Nov 2021">
+                <div class="company-header">
+                    <img src="images/Logo/Innoplexus-logo.png" alt="Innoplexus Logo" class="company-logo">
+                    <div class="company-info">
+                        <h3>Innoplexus</h3>
+                        <h4>Associate Data Scientist</h4>
+                    </div>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <h5>Novel Molecule Generation</h5>
+                        <p>Developed generative AI for drug discovery using VAE/GAN with RL rewards, awarded $1M Hessen
+                            grant and featured in WSJ & Forbes.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Disease-Gene Prediction</h5>
+                        <p>Designed explainable ML model with SHAP achieving ~85% mAP in top-5 gene predictions.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Automated Drug-Design Pipeline</h5>
+                        <p>Implemented end-to-end workflow integrating molecule filtering, protein-ligand docking, and
+                            scoring.</p>
+                    </div>
+                    <div class="project-item">
+                        <h5>Document Extraction & ML Infrastructure</h5>
+                        <p>Built PDF/table extraction pipelines with Faster R-CNN and established TorchServe/MLflow
+                            deployment framework.</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-    <div id="experience" class="background-alt">
+    <div id="internships" class="background-alt">
         <h2 class="heading">Internships</h2>
         <div id="internship-timeline">
             <div data-date="May 2018 - July 2018">
                 <h3>Innoplexus Consulting Services, Pvt. Ltd.</h3>
                 <h4>Data Science Intern</h4>
                 <p>
-                    <ul>
-                      <li><b>Document Image Segmentation & Table Extraction</b></li>
-                      <p>Built tools to extract structured data from scientific paper images. Used classical image-processing and machine-learning techniques to segment a page into Title, Authors, Affiliations, Abstract, etc., then applied Tesseract OCR (and improved Asprise/Tabula wrappers) to convert each region into text. Simultaneously, a deep-learning table-detection model identified tables and converted them into CSV format. These pipelines enabled automated conversion of document images to structured data, and contributions were made upstream to the open-source Tesseract project.</p>
-                    </ul>
+                <ul>
+                    <li><b>Document Image Segmentation & Table Extraction</b></li>
+                    <p>Built tools to extract structured data from scientific paper images. Used classical
+                        image-processing and machine-learning techniques to segment a page into Title, Authors,
+                        Affiliations, Abstract, etc., then applied Tesseract OCR (and improved Asprise/Tabula
+                        wrappers) to convert each region into text. Simultaneously, a deep-learning table-detection
+                        model identified tables and converted them into CSV format. These pipelines enabled
+                        automated conversion of document images to structured data, and contributions were made
+                        upstream to the open-source Tesseract project.</p>
+                </ul>
                 </p>
             </div>
             <div data-date="May 2017 - July 2017">
                 <h3>Invention Labs</h3>
                 <h4>Data Science Intern</h4>
                 <p>
-                    <ul>
-                      <li><b>Language Processing Engine</b></li>
-                      <p>Developed a prototype NLP engine capable of parsing and structuring text for a new language. Applied machine learning with decision-tree algorithms to convert raw sentences into parse-tree structures and then map these to a universal representation. This work contributed to building a language-specific processing pipeline, enabling automated understanding of sentence structure.</p>
-                    </ul>
+                <ul>
+                    <li><b>Language Processing Engine</b></li>
+                    <p>Developed a prototype NLP engine capable of parsing and structuring text for a new language.
+                        Applied machine learning with decision-tree algorithms to convert raw sentences into
+                        parse-tree structures and then map these to a universal representation. This work
+                        contributed to building a language-specific processing pipeline, enabling automated
+                        understanding of sentence structure.</p>
+                </ul>
                 </p>
             </div>
         </div>
@@ -197,39 +292,171 @@
             <span class="education-date">May 2014 - May 2019</span>
             <h4>Dual Degree (Master of Technology and Bachelor of Technology)</h4>
             <p>
-                <ul>
-                    <li><b>Major in Aerospace Engineering</b> with CGPA <b>8.45/10</b></li>
-                    <li><b>Minor in Computer Science Engineering</b> with CGPA <b>8.20/10</b></li>
-                </ul>
+            <ul>
+                <li><b>Major in Aerospace Engineering</b> with CGPA <b>8.45/10</b></li>
+                <li><b>Minor in Computer Science Engineering</b> with CGPA <b>8.20/10</b></li>
+            </ul>
             </p>
         </div>
         <!-- End .education-block -->
     </div>
     <!-- End #education -->
 
-    <div id="projects" class="background-alt">
-        <h2 class="heading">Academic Projects</h2>
-        <div class="container">
-            <div class="row">
-                <div class="project shadow-large">
-                    <div class="project-image">
-                        <img src="images/project.jpg" />
-                    </div>
-                    <!-- End .project-image -->
-                    <div class="project-info">
-                        <h3>Optimal Simultaneous Rendezvous of Fixed-Wing UAVs in 3D</h3>
-                        <p>
-                            This paper finds the solution for simultaneous arrival of a swarm of fixed-wing UAVs in a three-dimensional (3D) environment filled with obstacles. For generating obstacle free waypoint segments in the cluttered environment 3D Voronoi diagram is used and then to select the k-best paths Yen’s algorithm is adopted. Finally, to make the path flyable and of equal length for all the fixedwing UAVs, an innovative approach is presented here for simultaneous rendezvous. Simulation results are presented here to demonstrate the efficacy of the algorithms and finally the presence of dynamic obstacles are also considered to enhance the applicability of the algorithm in real-life scenarios.
-                        </p>
-                        <a href="https://arc.aiaa.org/doi/abs/10.2514/6.2019-1166" target="_blank" rel="noopener noreferrer">View Project</a>
-                    </div>
-                    <!-- End .project-info -->
-                </div>
-                <!-- End .project -->
+    <div id="papers-patents" class="background-alt">
+        <h2 class="heading">Papers & Patents</h2>
+        <div class="publications-container">
+            <!-- Paper -->
+            <div class="publication-card">
+                <span class="pub-type paper">Paper</span>
+                <h3>Optimal Path Generation for Simultaneous Rendezvous of Fixed-Wing UAVs in 3D Dynamic
+                    Environments</h3>
+                <p class="pub-venue">AIAA Scitech 2019 Forum</p>
+                <p class="pub-year">2019</p>
+                <a href="https://arc.aiaa.org/doi/10.2514/6.2019-1166" target="_blank" rel="noopener noreferrer">View
+                    Paper <i class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Patent 1 -->
+            <div class="publication-card patent">
+                <span class="pub-type patent">Patent</span>
+                <h3>Quantum Computing Approaches for Resource Allocation</h3>
+                <p class="pub-venue">US Patent</p>
+                <p class="pub-year">2025</p>
+                <a href="https://patents.google.com/patent/US20250252335A1" target="_blank">View Patent <i
+                        class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Patent 2 -->
+            <div class="publication-card patent">
+                <span class="pub-type patent">Patent</span>
+                <h3>Quantum-Computing-Enhanced Systems and Methods for Entity Allocation</h3>
+                <p class="pub-venue">US Patent</p>
+                <p class="pub-year">2025</p>
+                <a href="https://patents.google.com/patent/US20250165824A1" target="_blank">View Patent <i
+                        class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Patent 3 -->
+            <div class="publication-card patent">
+                <span class="pub-type patent">Patent</span>
+                <h3>Traffic Flow Optimization for Multi-Class Vehicle Network Using Quantum Computing</h3>
+                <p class="pub-venue">US Patent</p>
+                <p class="pub-year">2025</p>
+                <a href="https://patents.google.com/patent/US20250104559A1" target="_blank">View Patent <i
+                        class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Patent 4 -->
+            <div class="publication-card patent">
+                <span class="pub-type patent">Patent</span>
+                <h3>System and Method for Generating Novel Molecular Structure Using Protein Structure</h3>
+                <p class="pub-venue">US Patent</p>
+                <p class="pub-year">2022</p>
+                <a href="https://patents.google.com/patent/US20220406403A1/en?oq=20220406403" target="_blank">View
+                    Patent <i class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Patent 5 -->
+            <div class="publication-card patent">
+                <span class="pub-type patent">Patent</span>
+                <h3>System and Method for Generating Customizable Molecular Structures for Drug Discovery</h3>
+                <p class="pub-venue">US Patent</p>
+                <p class="pub-year">2023</p>
+                <a href="https://patents.google.com/patent/US20230115171A1/en?oq=US20230115171A1" target="_blank">View
+                    Patent <i class="fa fa-external-link"></i></a>
             </div>
         </div>
     </div>
-    <!-- End #projects -->
+    <!-- End #papers-patents -->
+
+    <div id="certifications">
+        <h2 class="heading">Certifications</h2>
+        <div class="certifications-container">
+            <!-- AWS Certifications -->
+            <div class="certification-card">
+                <span class="cert-provider aws">AWS</span>
+                <h3>AWS Certified Machine Learning - Specialty</h3>
+                <a href="https://cp.certmetrics.com/amazon/en/public/verify/credential/e7b1ab967c3247bc8b8477a0f0da0019"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider aws">AWS</span>
+                <h3>AWS Certified AI Practitioner</h3>
+                <a href="https://cp.certmetrics.com/amazon/en/public/verify/credential/2c6a95f7989046d0a5bcc4352e351e5d"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider aws">AWS</span>
+                <h3>AWS Certified Cloud Practitioner</h3>
+                <a href="https://cp.certmetrics.com/amazon/en/public/verify/credential/2d038a52d6a8441190b429a55d87c7d4"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Microsoft -->
+            <div class="certification-card">
+                <span class="cert-provider microsoft">Microsoft</span>
+                <h3>Microsoft Certified: Azure AI Engineer - Associate</h3>
+                <a href="https://learn.microsoft.com/api/credentials/share/en-us/BibhashMitra/90AEC65E5A4A8FFD?sharingId=39DEA8414B60265"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Google -->
+            <div class="certification-card">
+                <span class="cert-provider google">Google</span>
+                <h3>Google Data Analytics Professional Certificate</h3>
+                <a href="https://www.credly.com/badges/c5987d48-dac8-462d-a6ea-28cf6b72b5fa/public_url"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- IBM -->
+            <div class="certification-card">
+                <span class="cert-provider ibm">IBM</span>
+                <h3>Data Science Professional Certificate</h3>
+                <a href="https://www.credly.com/badges/e6ed7df5-7daf-4240-943c-8ba585985be0/public_url"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+
+            <!-- Coursera -->
+            <div class="certification-card">
+                <span class="cert-provider coursera">Coursera</span>
+                <h3>Deep Learning Specialization</h3>
+                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/7YA55DLQFVQ4"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider coursera">Coursera</span>
+                <h3>Generative Adversarial Networks (GANs) Specialization</h3>
+                <a href="https://www.coursera.org/account/accomplishments/specialization/8XBN32GQLH7B"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider coursera">Coursera</span>
+                <h3>Google Data Analytics Specialization</h3>
+                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/62QBRLAXMQPY"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider coursera">Coursera</span>
+                <h3>IBM Data Science Specialization</h3>
+                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/B69K4TTFL7D5"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider coursera">Coursera</span>
+                <h3>Python 3 Programming Specialization</h3>
+                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/UF4HUSYMR7GW"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+            <div class="certification-card">
+                <span class="cert-provider coursera">Coursera</span>
+                <h3>Generative AI Specialization</h3>
+                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/GZ4QPHKSPPEJ"
+                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- End #certifications -->
+
 
     <div id="skills">
         <h2 class="heading">Skills</h2>
@@ -275,10 +502,16 @@
     <div id="contact">
         <h2>Get in Touch</h2>
         <div class="row text-center icons-group">
-            <div class="col-md-3"><a href="https://github.com/Bibyutatsu" target="_blank"><i class="fa fa-github" style="color:white; font-size: 3em" aria-hidden="true"></i></a></div>
-            <div class="col-md-3"><a href="https://www.linkedin.com/in/bibhashmitra220896" target="_blank"><i class="fa fa-linkedin-square" style="color:white; font-size: 3em" aria-hidden="true"></i></a></div>
-            <div class="col-md-3"><a href="https://bibyutatsu.github.io/Blogs/" target="_blank"><i class="fa fa-globe" style="color:white; font-size: 3em" aria-hidden="true"></i></a></div>
-            <div class="col-md-3"><a href="https://www.facebook.com/coolbibhash" target="_blank"><i class="fa fa-facebook-official" style="color:white; font-size: 3em" aria-hidden="true"></i></a></div>
+            <div class="col-md-3"><a href="https://github.com/Bibyutatsu" target="_blank"><i class="fa fa-github"
+                        style="color:white; font-size: 3em" aria-hidden="true"></i></a></div>
+            <div class="col-md-3"><a href="https://www.linkedin.com/in/bibhashmitra220896" target="_blank"><i
+                        class="fa fa-linkedin-square" style="color:white; font-size: 3em" aria-hidden="true"></i></a>
+            </div>
+            <div class="col-md-3"><a href="https://bibyutatsu.github.io/Blogs/" target="_blank"><i class="fa fa-globe"
+                        style="color:white; font-size: 3em" aria-hidden="true"></i></a></div>
+            <div class="col-md-3"><a href="https://www.facebook.com/coolbibhash" target="_blank"><i
+                        class="fa fa-facebook-official" style="color:white; font-size: 3em" aria-hidden="true"></i></a>
+            </div>
         </div>
         <!-- End #contact-form -->
     </div>
@@ -300,13 +533,16 @@
                 <div class="col-sm-5 social">
                     <ul>
                         <li>
-                            <a href="https://github.com/Bibyutatsu" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+                            <a href="https://github.com/Bibyutatsu" target="_blank"><i class="fa fa-github"
+                                    aria-hidden="true"></i></a>
                         </li>
                         <li>
-                            <a href="https://www.linkedin.com/in/bibhashmitra220896" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                            <a href="https://www.linkedin.com/in/bibhashmitra220896" target="_blank"><i
+                                    class="fa fa-linkedin" aria-hidden="true"></i></a>
                         </li>
                         <li>
-                            <a href="https://www.facebook.com/coolbibhash" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="https://www.facebook.com/coolbibhash" target="_blank"><i class="fa fa-facebook"
+                                    aria-hidden="true"></i></a>
                         </li>
                     </ul>
                 </div>
