@@ -133,9 +133,11 @@ $text-light: var(--text-light);
 
     // Light Mode Override
     html[data-theme='light'] & {
-        background: rgba(255, 255, 255, 0.6);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.35); // More transparent for "glossy" look
+        backdrop-filter: blur(12px); // Stronger blur
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.7); // Whiter/frosted border
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); // Softer, deeper shadow
     }
 }
 
@@ -1582,7 +1584,7 @@ html[data-theme='light'] #contact {
     padding: 50px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
-    background: $background;
+    background: transparent; // Let gradient show
 
     h2 {
         color: $heading;
@@ -1599,9 +1601,8 @@ html[data-theme='light'] #contact {
 }
 
 .certification-card {
-    background: $background;
-    border: 1px solid $border;
-    border-radius: 8px;
+    @include glass-card; // Glassmorphism
+    border-radius: 12px;
     padding: 20px;
     text-align: left;
     @include transition();
