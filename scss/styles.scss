@@ -618,7 +618,7 @@ footer {
     margin: 30px auto 0 auto;
     position: relative;
     max-width: 1000px;
-    padding: 0 20px;
+
 
     &:before {
         position: absolute;
@@ -1478,7 +1478,8 @@ footer {
 // Collapse timeline
 @media only screen and (max-width: 750px) {
 
-    #experience-timeline {
+    #experience-timeline,
+    #internship-timeline {
 
         &:before,
         &:after {
