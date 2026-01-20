@@ -318,12 +318,13 @@
                 if (header) {
                     header.style.cursor = 'pointer';
                     header.style.display = 'flex';
-                    header.style.justifyContent = 'space-between';
+                    // header.style.justifyContent = 'space-between'; // Removed to keep text near logo
 
                     // Add icon
                     const toggleIcon = document.createElement('i');
                     toggleIcon.className = 'fa fa-angle-up toggle-icon'; // Default expanded
                     toggleIcon.style.fontSize = '1.5em';
+                    toggleIcon.style.marginLeft = 'auto'; // Push icon to the right
                     header.appendChild(toggleIcon);
 
                     header.addEventListener('click', () => {
