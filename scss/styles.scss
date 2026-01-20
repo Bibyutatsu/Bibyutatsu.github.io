@@ -133,11 +133,11 @@ $text-light: var(--text-light);
 
     // Light Mode Override
     html[data-theme='light'] & {
-        background: rgba(255, 255, 255, 0.35); // More transparent for "glossy" look
-        backdrop-filter: blur(12px); // Stronger blur
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.7); // Whiter/frosted border
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); // Softer, deeper shadow
+        background: rgba(255, 255, 255, 0.4); // More transparent as requested
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 2px solid rgba(13, 53, 128, 0.15); // Subtle blue border (base-color)
+        box-shadow: 0 10px 40px rgba(13, 53, 128, 0.15); // Colored shadow
     }
 }
 
@@ -478,17 +478,19 @@ footer {
     display: inline-block;
     color: #fff;
     padding: 15px 25px;
-    border: 3px solid #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5); // Semi-transparent border
     border-radius: 30px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); // Glass gradient
+    backdrop-filter: blur(4px);
     @include transition();
 
     &:hover {
         color: #fff;
-        background: $accent-color;
-        border-color: $accent-color;
+        background: linear-gradient(to right, $accent-color, $accent-color-hover); // Red gradient
+        border-color: transparent; // Hide border on hover
         text-decoration: none;
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(210, 41, 45, 0.4); // Hardcoded RGBA for now
+        box-shadow: 0 4px 15px rgba(210, 41, 45, 0.4);
     }
 }
 
@@ -535,8 +537,7 @@ footer {
     height: auto;
     min-height: 100vh;
     // max-height removed to support 1440p+ screens
-    background: url(../images/lead-bg.jpg);
-    background-size: cover;
+    background: transparent; // Let global gradient show
     padding: 15px;
     overflow: hidden;
     display: flex;
@@ -552,7 +553,9 @@ footer {
     justify-content: center;
     gap: 60px;
     max-width: 1000px;
-    padding: 0 30px;
+    padding: 50px; // Increased padding for the card
+    @include glass-card; // Frame the content
+    border-radius: 20px;
 }
 
 #lead-image-container {

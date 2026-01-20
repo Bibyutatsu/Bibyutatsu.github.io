@@ -110,7 +110,7 @@
 
             // Check theme for particle color
             const isDark = html.getAttribute('data-theme') === 'dark';
-            const color = '255, 255, 255'; // Always white/light on the hero bg which is dark/image
+            const color = isDark ? '255, 255, 255' : '13, 53, 128'; // White for Dark, Blue (base-color) for Light
 
             particles.forEach(p => {
                 ctx.beginPath();
