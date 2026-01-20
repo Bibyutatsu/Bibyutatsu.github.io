@@ -1,7 +1,6 @@
 /*!
     Title: Dev Portfolio Template
-    Version: 1.2.1
-    Last Change: 08/28/2017
+    Version: 1.2.2
     Author: Ryan Fitzgerald
     Repo: https://github.com/RyanFitzgerald/devportfolio-template
     Issues: https://github.com/RyanFitzgerald/devportfolio-template/issues
@@ -10,6 +9,7 @@
     that don't come from third party libraries. This file gets compiled using
     Gulp and send to the /css folder which is then loaded on the page.
 */
+
 /*
     File Contents:
 
@@ -33,26 +33,63 @@
     ------------------------
 */
 
-// Define base and accent colors (Blue/Black/Red scheme)
-$base-color: #0D3580; // Deep Blue - Primary (60%)
-$base-color-hover: darken($base-color, 10%);
-$base-color-light: #1761B0; // Lighter blue for gradients
-$accent-color: #D2292D; // Vibrant Red - Accent (10%)
-$accent-color-hover: darken($accent-color, 10%);
+:root {
+    --base-color: #0D3580;
+    --base-color-rgb: 13, 53, 128;
+    --base-color-hover: #0a2a66;
+    --base-color-light: #1761B0;
+    --accent-color: #D2292D;
+    --accent-color-hover: #b01f22;
+    --background: #fff;
+    --background-rgb: 255, 255, 255;
+    --background-alt: #f2f2f5;
+    --background-dark: #181818;
+    --background-dark-alt: #282828;
+    --border: #dcd9d9;
+    --heading: #181818;
+    --text: #454545;
+    --text-light: #74808a;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --shadow-large: 0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.15);
+}
 
-// Define background colors
-$background: #fff;
-$background-alt: #f2f2f5;
-$background-dark: #181818; // Rich Black - Secondary (30%)
-$background-dark-alt: #282828; // Charleston Green
+[data-theme="dark"] {
+    --base-color: #60a5fa;
+    --base-color-rgb: 96, 165, 250;
+    --base-color-hover: #3b82f6;
+    --base-color-light: #93c5fd;
+    --accent-color: #f87171;
+    --accent-color-hover: #ef4444;
+    --background: #0f172a;
+    --background-rgb: 15, 23, 42;
+    --background-alt: #1e293b;
+    --background-dark: #020617;
+    --background-dark-alt: #0f172a;
+    --border: #334155;
+    --heading: #f1f5f9;
+    --text: #cbd5e1;
+    --text-light: #94a3b8;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.6);
+    --shadow-large: 0 3px 6px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.5);
+}
 
-// Define border colors
-$border: #dcd9d9;
+// SCSS Variables mapping to CSS Variables
+$base-color: var(--base-color);
+$base-color-hover: var(--base-color-hover);
+$base-color-light: var(--base-color-light);
+$accent-color: var(--accent-color);
+$accent-color-hover: var(--accent-color-hover);
 
-// Define text colors
-$heading: #181818; // Rich Black for headings
-$text: #454545; // Dark Gray for body text
-$text-light: #74808a;
+$background: var(--background);
+$background-alt: var(--background-alt);
+$background-dark: var(--background-dark);
+$background-dark-alt: var(--background-dark-alt);
+
+$border: var(--border);
+
+$heading: var(--heading);
+$text: var(--text);
+$text-light: var(--text-light);
 
 /*
     ---------------------
@@ -91,15 +128,46 @@ $text-light: #74808a;
 */
 
 body {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Inter', sans-serif; // Updated font
     font-size: 16px;
     scroll-behavior: smooth;
+    background: $background;
+    color: $text; // Ensure body text color is set
+    @include transition(0.3s); // Smooth theme transition
 
     &.active {
         overflow: hidden;
         z-index: -1;
     }
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Outfit', sans-serif; // Updated heading font
+}
+
+code,
+pre,
+.tech-tag {
+    font-family: 'Fira Code', monospace; // Code font
+}
+
+// Reveal Animation
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+
+    &.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 // No JS styles
 .no-js {
@@ -181,7 +249,7 @@ header {
         padding: 10px;
 
         &:hover {
-            color: $base-color-hover;
+            color: $base-color-hover; // Changed from darken SCSS function
             text-decoration: none;
             background: #eee;
             border-radius: 4px;
@@ -200,7 +268,7 @@ header {
     &.sticky {
         position: fixed;
         z-index: 999;
-        background: rgba($background, 0.95);
+        background: rgba(var(--background-rgb), 0.95);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -248,6 +316,33 @@ header {
     }
 }
 
+// Theme Toggle
+#theme-toggle {
+    cursor: pointer;
+    position: fixed;
+    right: 15px;
+    top: 10px; // Aligned with mobile menu
+    color: $base-color;
+    font-size: 1.5em;
+    z-index: 20;
+    padding: 0 7px;
+    border-radius: 4px;
+    background: $background;
+    margin-right: 50px; // Spacing from mobile menu if both present
+
+    @media (min-width: 769px) {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        margin-right: 0;
+        background: $background;
+    }
+
+    &:hover {
+        color: $accent-color;
+    }
+}
+
 footer {
     padding: 50px 0;
 }
@@ -271,7 +366,9 @@ footer {
         width: 35px;
         height: 35px;
         border-radius: 50%;
-        border: 3px solid lighten($text, 25%);
+        border: 3px solid #74808a; // Hardcoded fallback or use var
+        // Since lighten($text, 25%) cannot be used with var(--text), we use a rough substitute or new var
+        border-color: $text-light;
         text-align: center;
     }
 
@@ -319,16 +416,16 @@ footer {
         border-color: $accent-color;
         text-decoration: none;
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba($accent-color, 0.4);
+        box-shadow: 0 4px 15px rgba(210, 41, 45, 0.4); // Hardcoded RGBA for now
     }
 }
 
 .shadow {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    box-shadow: var(--shadow);
 }
 
 .shadow-large {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-large);
 }
 
 .heading {
@@ -396,23 +493,23 @@ footer {
     border-radius: 50%;
     object-fit: cover;
     border: 6px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 40px rgba($accent-color, 0.3), 0 0 80px rgba($base-color, 0.2);
+    box-shadow: 0 0 40px rgba(210, 41, 45, 0.3), 0 0 80px rgba(13, 53, 128, 0.2);
     animation: profileGlow 3s ease-in-out infinite alternate;
     @include transition(0.3s);
 
     &:hover {
         transform: scale(1.03);
-        box-shadow: 0 0 50px rgba($accent-color, 0.5), 0 0 100px rgba($base-color, 0.4);
+        box-shadow: 0 0 50px rgba(210, 41, 45, 0.5), 0 0 100px rgba(13, 53, 128, 0.4);
     }
 }
 
 @keyframes profileGlow {
     0% {
-        box-shadow: 0 0 40px rgba($accent-color, 0.3), 0 0 80px rgba($base-color, 0.2);
+        box-shadow: 0 0 40px rgba(210, 41, 45, 0.3), 0 0 80px rgba(13, 53, 128, 0.2);
     }
 
     100% {
-        box-shadow: 0 0 50px rgba($accent-color, 0.4), 0 0 100px rgba($base-color, 0.3);
+        box-shadow: 0 0 50px rgba(210, 41, 45, 0.4), 0 0 100px rgba(13, 53, 128, 0.3);
     }
 }
 
@@ -430,7 +527,7 @@ footer {
     }
 
     h2 {
-        color: lighten($base-color, 25%);
+        color: $base-color-light; // Used var
         font-weight: 500;
         font-size: 1.8em;
         margin: 0 0 25px 0;
@@ -466,7 +563,7 @@ footer {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba($base-color-hover, 0.8);
+    background: rgba(var(--base-color-rgb), 0.8);
     z-index: 1;
 }
 
@@ -487,7 +584,7 @@ footer {
         width: 35px;
         height: 35px;
         border-radius: 50%;
-        border: 3px solid lighten($base-color, 25%);
+        border: 3px solid $base-color-light;
         text-align: center;
     }
 
@@ -523,6 +620,7 @@ footer {
     padding: 75px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
+    background: $background; // Ensure bg
 
     h2 {
         color: $heading;
@@ -598,6 +696,7 @@ footer {
     padding: 50px 15px;
     text-align: center;
     border-bottom: 1px solid $border;
+    background: $background-alt;
 
     h2 {
         color: $heading;
@@ -608,6 +707,7 @@ footer {
     padding: 50px 15px;
     text-align: center;
     border-bottom: 1px solid $border;
+    background: $background-alt;
 
     h2 {
         color: $heading;
@@ -639,7 +739,7 @@ footer {
         width: 3px;
         height: 40px;
         background: $base-color;
-        background: linear-gradient(to bottom, $base-color, rgba($base-color, 0));
+        background: linear-gradient(to bottom, $base-color, rgba(var(--base-color-rgb), 0));
         top: 100%;
         left: 263px;
     }
@@ -669,7 +769,7 @@ footer {
         width: 3px;
         height: 40px;
         background: $base-color;
-        background: linear-gradient(to bottom, $base-color, rgba($base-color, 0));
+        background: linear-gradient(to bottom, $base-color, rgba(var(--base-color-rgb), 0));
         top: 100%;
         left: 263px;
     }
@@ -677,8 +777,8 @@ footer {
 
 .vtimeline-content {
     margin-left: 310px;
-    background: #fff;
-    border: 1px solid #e6e6e6;
+    background: $background;
+    border: 1px solid $border; // Use var
     padding: 15px;
     border-radius: 3px;
     text-align: left;
@@ -694,7 +794,7 @@ footer {
     h4 {
         font-size: 1.2em;
         font-weight: 300;
-        color: #7e8890;
+        color: $text-light;
         margin: 0 0 15px 0;
     }
 
@@ -743,7 +843,7 @@ footer {
 }
 
 .project-item {
-    background: rgba($base-color, 0.03);
+    background: rgba(var(--base-color-rgb), 0.03);
     border-left: 3px solid $accent-color;
     padding: 12px 15px;
     border-radius: 0 8px 8px 0;
@@ -795,7 +895,7 @@ footer {
     left: 0;
     top: 10px;
     font-weight: 300;
-    color: #374054;
+    color: $text; // Changed from fixed color
 }
 
 /*
@@ -808,6 +908,7 @@ footer {
     padding: 50px 15px 20px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
+    background: $background;
 
     h2 {
         color: $heading;
@@ -909,6 +1010,7 @@ footer {
     padding: 50px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
+    background: $background;
 
     h2 {
         color: $heading;
@@ -921,7 +1023,7 @@ footer {
     max-width: 900px;
     margin: 0 auto 30px auto;
     overflow: hidden;
-    background: #fff;
+    background: $background;
     border-radius: 4px;
 }
 
@@ -972,6 +1074,7 @@ footer {
 #skills {
     padding: 50px 15px;
     text-align: center;
+    background: $background;
 
     h2 {
         color: $heading;
@@ -990,10 +1093,17 @@ footer {
         margin: 7px;
         padding: 5px 10px;
         color: $heading;
-        background: darken($background-alt, 5%);
+        background: $background-alt;
         list-style: none;
         cursor: default;
         font-size: 1.2em;
+        @include transition();
+
+        &:hover {
+            transform: scale(1.1);
+            background: $base-color;
+            color: #fff;
+        }
     }
 }
 
@@ -1027,7 +1137,7 @@ footer {
         border-radius: 4px;
         border: none;
         margin-bottom: 10px;
-        background: darken($base-color, 15%);
+        background: rgba(var(--base-color-rgb), 0.6); // Harder to do darken with var
         color: #fff;
         @include transition();
 
@@ -1037,7 +1147,7 @@ footer {
 
         &:focus {
             outline: none;
-            background: darken($base-color, 25%);
+            background: rgba(var(--base-color-rgb), 0.8);
         }
     }
 
@@ -1074,6 +1184,7 @@ footer {
     padding: 50px 15px;
     text-align: center;
     border-top: 1px solid $border;
+    background: $background;
 
     h2 {
         color: $heading;
@@ -1085,7 +1196,7 @@ footer {
     margin: 0 auto 30px auto;
     padding: 15px;
     border: 1px solid $border;
-    background: #fff;
+    background: $background;
     text-align: left;
 
     h3 {
@@ -1123,6 +1234,7 @@ footer {
     padding: 50px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
+    background: $background-alt;
 
     h2 {
         color: $heading;
@@ -1139,7 +1251,7 @@ footer {
 }
 
 .publication-card {
-    background: #fff;
+    background: $background;
     border: 1px solid $border;
     border-radius: 8px;
     padding: 25px;
@@ -1178,12 +1290,12 @@ footer {
         margin-bottom: 15px;
 
         &.paper {
-            background: rgba($base-color, 0.1);
+            background: rgba(var(--base-color-rgb), 0.1);
             color: $base-color;
         }
 
         &.patent {
-            background: rgba($accent-color, 0.1);
+            background: rgba(210, 41, 45, 0.1); // Hard for var
             color: $accent-color;
         }
     }
@@ -1235,6 +1347,7 @@ footer {
     padding: 50px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
+    background: $background;
 
     h2 {
         color: $heading;
@@ -1251,7 +1364,7 @@ footer {
 }
 
 .certification-card {
-    background: #fff;
+    background: $background;
     border: 1px solid $border;
     border-radius: 8px;
     padding: 20px;
@@ -1411,7 +1524,7 @@ footer {
     .timeline-line {
         flex: 1;
         width: 3px;
-        background: linear-gradient(to bottom, $base-color, rgba($base-color, 0.3));
+        background: linear-gradient(to bottom, $base-color, rgba(var(--base-color-rgb), 0.3));
     }
 }
 
@@ -1420,7 +1533,7 @@ footer {
     text-align: left;
 
     .project-list {
-        background: #fff;
+        background: $background;
         border: 1px solid $border;
         border-radius: 8px;
         padding: 20px;
@@ -1598,9 +1711,7 @@ footer {
 
 }
 
-// Small Devices
 @media only screen and (max-width : 768px) {
-
     header {
         position: fixed;
         display: none;
@@ -1673,12 +1784,9 @@ footer {
     .social {
         text-align: center;
     }
-
 }
 
-// Extra Small Devices
 @media only screen and (max-width : 480px) {
-
     #lead-content {
         h1 {
             font-size: 1.5em;
@@ -1693,5 +1801,4 @@ footer {
             padding: 5px 10px;
         }
     }
-
 }
