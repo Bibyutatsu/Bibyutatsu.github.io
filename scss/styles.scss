@@ -280,6 +280,10 @@ header {
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); // Add shadow to the menu itself
             pointer-events: auto; // Re-enable clicks on the menu
         }
+
+        #mobile-menu-close {
+            pointer-events: auto; // Re-enable clicks on the close button
+        }
     }
 }
 
