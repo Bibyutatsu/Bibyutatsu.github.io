@@ -123,6 +123,22 @@ $text-light: var(--text-light);
     }
 }
 
+// Glassmorphism Card Mixin
+@mixin glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+    // Light Mode Override
+    html[data-theme='light'] & {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    }
+}
+
 /*
     ----------------------------
     ----- 3. Global Styles -----
@@ -133,7 +149,10 @@ body {
     font-family: 'Inter', sans-serif; // Updated font
     font-size: 16px;
     scroll-behavior: smooth;
-    background: $background;
+    scroll-behavior: smooth;
+    // Dark Mode Global Gradient
+    background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+    background-attachment: fixed; // Parallax-ish effect
     color: $text; // Ensure body text color is set
     @include transition(0.3s); // Smooth theme transition
 
@@ -141,6 +160,12 @@ body {
         overflow: hidden;
         z-index: -1;
     }
+}
+
+// Light Mode Global Gradient
+html[data-theme='light'] body {
+    background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);
+    background-attachment: fixed;
 }
 
 h1,
@@ -636,7 +661,7 @@ footer {
     padding: 75px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
-    background: $background; // Ensure bg
+    background: transparent; // Ensure bg
 
     h2 {
         color: $heading;
@@ -712,10 +737,11 @@ footer {
     padding: 50px 15px;
     text-align: center;
     border-bottom: 1px solid $border;
-    background: $background-alt;
+    background: transparent;
 
     h2 {
         color: $heading;
+        margin-bottom: 50px;
     }
 }
 
@@ -723,7 +749,7 @@ footer {
     padding: 50px 15px;
     text-align: center;
     border-bottom: 1px solid $border;
-    background: $background-alt;
+    background: transparent; // Let gradient show
 
     h2 {
         color: $heading;
@@ -793,10 +819,9 @@ footer {
 
 .vtimeline-content {
     margin-left: 310px;
-    background: $background;
-    border: 1px solid $border; // Use var
+    @include glass-card; // Glassmorphism
     padding: 15px;
-    border-radius: 3px;
+    border-radius: 12px; // More rounded
     text-align: left;
 
     h3 {
@@ -924,7 +949,7 @@ footer {
     padding: 50px 15px 20px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
-    background: $background;
+    background: transparent; // Let gradient show
 
     h2 {
         color: $heading;
@@ -935,8 +960,9 @@ footer {
 .education-block {
     max-width: 700px;
     margin: 0 auto 30px auto;
-    padding: 15px;
-    border: 1px solid $border;
+    padding: 25px;
+    @include glass-card; // Glassmorphism
+    border-radius: 12px;
     text-align: left;
 
     h3 {
@@ -1026,7 +1052,7 @@ footer {
     padding: 50px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
-    background: $background;
+    background: transparent; // Let gradient show
 
     h2 {
         color: $heading;
@@ -1052,7 +1078,9 @@ footer {
     top: 50%;
     transform: translateY(-50%);
     margin-left: 300px;
-    padding: 15px;
+    padding: 25px;
+    @include glass-card; // Glassmorphism
+    border-radius: 12px;
 
     h3 {
         font-size: 1.5em;
@@ -1090,7 +1118,7 @@ footer {
 #skills {
     padding: 50px 15px;
     text-align: center;
-    background: $background;
+    background: transparent; // Let gradient show
 
     h2 {
         color: $heading;
@@ -1129,9 +1157,10 @@ footer {
         /* Grow, shrink, base width */
         max-width: 400px;
         /* Prevent them from getting too wide on large screens */
-        background: $background-alt;
+        /* Prevent them from getting too wide on large screens */
+        @include glass-card; // Glassmorphism
         padding: 20px;
-        border-radius: 8px;
+        border-radius: 12px;
         border-bottom: 3px solid $accent-color;
         @include transition();
         cursor: pointer;
@@ -1357,7 +1386,7 @@ html[data-theme='light'] #contact {
     padding: 50px 15px;
     text-align: center;
     border-top: 1px solid $border;
-    background: $background;
+    background: transparent;
 
     h2 {
         color: $heading;
@@ -1367,9 +1396,11 @@ html[data-theme='light'] #contact {
 .optional-section-block {
     max-width: 700px;
     margin: 0 auto 30px auto;
-    padding: 15px;
+    padding: 25px;
     border: 1px solid $border;
-    background: $background;
+    background: transparent;
+    @include glass-card; // Glassmorphism
+    border-radius: 12px;
     text-align: left;
 
     h3 {
@@ -1407,7 +1438,7 @@ html[data-theme='light'] #contact {
     padding: 50px 15px;
     border-bottom: 1px solid $border;
     text-align: center;
-    background: $background-alt;
+    background: transparent; // Let gradient show
 
     h2 {
         color: $heading;
@@ -1424,9 +1455,8 @@ html[data-theme='light'] #contact {
 }
 
 .publication-card {
-    background: $background;
-    border: 1px solid $border;
-    border-radius: 8px;
+    @include glass-card; // Glassmorphism
+    border-radius: 12px;
     padding: 25px;
     text-align: left;
     @include transition();
