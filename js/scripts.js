@@ -65,7 +65,7 @@
 
     /* 
        ------------------------------------------------
-       3. Hero Animation (Canvas Particles)
+       3. Hero Animation (Canvas Particles) - Enhanced Visibility
        ------------------------------------------------
     */
     const leadSection = select('#lead');
@@ -92,15 +92,15 @@
 
         const createParticles = () => {
             particles = [];
-            const particleCount = Math.floor(width / 10); // Density based on width
+            const particleCount = Math.floor(width / 5); // Slightly reduced density for larger particles to avoid clutter
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
                     vx: (Math.random() - 0.5) * 0.5,
                     vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2 + 1,
-                    opacity: Math.random() * 0.5 + 0.1
+                    size: Math.random() * 2 + 3, // Increased size: 2px to 5px
+                    opacity: Math.random() * 0.3 + 0.7 // Increased opacity: 0.3 to 0.7
                 });
             }
         };
@@ -135,10 +135,10 @@
                     const dy = p1.y - p2.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 100) {
+                    if (dist < 150) { // Increased connection distance
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(${color}, ${0.1 * (1 - dist / 100)})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.strokeStyle = `rgba(${color}, ${1 * (1 - dist / 100)})`; // Increased line opacity
+                        ctx.lineWidth = 1;
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
