@@ -658,6 +658,31 @@ function renderCredlyBadges() {
     createTimeline('#experience-timeline');
     createTimeline('#internship-timeline');
 
+    // Helper to update timeline icons based on theme
+    const updateTimelineIcons = (theme) => {
+        const icons = document.querySelectorAll('.vtimeline-icon');
+        icons.forEach(icon => {
+            if (theme === 'batman') {
+                // Use Batman Logo (Inverted to black for visibility on yellow background)
+                icon.innerHTML = `<img src="images/particles/batman.png" alt="Batman" style="width: 90%; height: auto; margin-top: 12%; display: block; margin-left: auto; margin-right: auto; filter: invert(1);">`;
+            } else {
+                // Restore Default Icon
+                icon.innerHTML = '<i class="fa fa-map-marker"></i>';
+            }
+        });
+    };
+
+    // Initial Icon Update
+    updateTimelineIcons(currentTheme);
+
+    if (themeSelector) {
+        themeSelector.addEventListener('change', () => {
+            const selectedTheme = themeSelector.value;
+            // ... (existing logic handled by previous listener) ...
+            updateTimelineIcons(selectedTheme);
+        });
+    }
+
     // Load additional projects
     const viewMore = select('#view-more-projects');
     if (viewMore) {
