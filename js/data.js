@@ -1,5 +1,5 @@
 // Auto-generated from ResumeAssets.xlsx
-// Last updated: 2026-01-25T09:33:48.005Z
+// Last updated: 2026-01-25T10:29:02.358Z
 const portfolioData = {
   "PatentsPublications": [
     {
@@ -97,80 +97,99 @@ const portfolioData = {
   ],
   "Credly": [
     {
-      "Badge": "AWS Certified Machine Learning – Specialty",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"0bc048fc-c019-411f-ab6f-1544664ec033\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "AWS Certified Machine Learning – Specialty",
+      "badgeUrl": "https://www.credly.com/badges/0bc048fc-c019-411f-ab6f-1544664ec033/public_url",
+      "imageUrl": "https://images.credly.com/images/778bde6c-ad1c-4312-ac33-2fa40d50a147/image.png"
     },
     {
-      "Badge": "AWS Certified Cloud Practitioner",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"407c748f-568d-4aab-97bc-7153f79550f6\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "AWS Certified Cloud Practitioner",
+      "badgeUrl": "https://www.credly.com/badges/407c748f-568d-4aab-97bc-7153f79550f6/public_url",
+      "imageUrl": "https://images.credly.com/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png"
     },
     {
-      "Badge": "AWS Certified AI Practitioner Early Adopter",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"6e3b9311-fc18-47a9-b204-f8ebfac7e154\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "AWS Certified AI Practitioner",
+      "badgeUrl": "https://www.credly.com/badges/dbe3e6eb-01f9-4f3b-b431-fa887016698e/public_url",
+      "imageUrl": "https://images.credly.com/images/4d4693bb-530e-4bca-9327-de07f3aa2348/image.png"
     },
     {
-      "Badge": "AWS Certified AI Practitioner",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"dbe3e6eb-01f9-4f3b-b431-fa887016698e\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "AWS Certified AI Practitioner Early Adopter",
+      "badgeUrl": "https://www.credly.com/badges/6e3b9311-fc18-47a9-b204-f8ebfac7e154/public_url",
+      "imageUrl": "https://images.credly.com/images/834f2c8d-2d2c-4ce7-9580-02a351c31626/image.png"
     },
     {
-      "Badge": "Inclusive Mindset",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"ae2fc8da-312d-486d-ba9c-55981d08dea2\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Inclusive Mindset",
+      "badgeUrl": "https://www.credly.com/badges/ae2fc8da-312d-486d-ba9c-55981d08dea2/public_url",
+      "imageUrl": "https://images.credly.com/images/fe67b426-6284-4aeb-b76c-b74923d2e957/697157-2020_Global_Your_Tomorrow_Badging_Redesign_KNOWLEDGE_Credly_Inclusive_Mindset.png"
     },
     {
-      "Badge": "Digital Acumen",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"7fad8267-8713-4aff-805c-6f7490198d89\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Digital Acumen",
+      "badgeUrl": "https://www.credly.com/badges/7fad8267-8713-4aff-805c-6f7490198d89/public_url",
+      "imageUrl": "https://images.credly.com/images/28d63e0e-fccc-4b3e-83f6-38d98f742cd3/697157-2020_Global_Your_Tomorrow_Badging_Redesign_KNOWLEDGE_Credly_Digital_Acumen.png"
     },
     {
-      "Badge": "Human-Centered Design",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"96703463-59fb-4e6d-b281-e0ccdad46461\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Human-Centered Design",
+      "badgeUrl": "https://www.credly.com/badges/96703463-59fb-4e6d-b281-e0ccdad46461/public_url",
+      "imageUrl": "https://images.credly.com/images/73f04bcf-055b-4c11-b4ec-c816380c5a1e/697157-2020_Global_Your_Tomorrow_Badging_Redesign_KNOWLEDGE_Credly_Human_Centered_Design.png"
     },
     {
-      "Badge": "Google Data Analytics Professional Certificate",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"c5987d48-dac8-462d-a6ea-28cf6b72b5fa\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Google Data Analytics Professional Certificate",
+      "badgeUrl": "https://www.credly.com/badges/c5987d48-dac8-462d-a6ea-28cf6b72b5fa/public_url",
+      "imageUrl": "https://images.credly.com/images/d41de2b7-cbc2-47ec-bcf1-ebecbe83872f/GCC_badge_DA_1000x1000.png"
     },
     {
-      "Badge": "Data Science Professional Certificate",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"e6ed7df5-7daf-4240-943c-8ba585985be0\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Data Science Professional Certificate",
+      "badgeUrl": "https://www.credly.com/badges/e6ed7df5-7daf-4240-943c-8ba585985be0/public_url",
+      "imageUrl": "https://images.credly.com/images/0da411a5-24e9-4991-9756-ca5f6073e7af/image.png"
     },
     {
-      "Badge": "Machine Learning with Python",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"5569b3c5-0893-480b-8e36-2c751b5276fa\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Machine Learning with Python",
+      "badgeUrl": "https://www.credly.com/badges/5569b3c5-0893-480b-8e36-2c751b5276fa/public_url",
+      "imageUrl": "https://images.credly.com/images/f283df3d-1780-4c2d-947d-fc80eae0953b/image.png"
     },
     {
-      "Badge": "Data Visualization with Python",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"67a6bfaa-57e6-4e11-ab19-b6947f33baca\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Data Analysis with Python",
+      "badgeUrl": "https://www.credly.com/badges/cb0eb950-676a-476e-81be-167ae1655eaf/public_url",
+      "imageUrl": "https://images.credly.com/images/950038fc-2519-4f79-8827-f71caf0f5095/image.png"
     },
     {
-      "Badge": "Data Analysis with Python",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"cb0eb950-676a-476e-81be-167ae1655eaf\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Databases and SQL for Data Science",
+      "badgeUrl": "https://www.credly.com/badges/f09e587c-71ed-4e2b-8785-d7b03013e45f/public_url",
+      "imageUrl": "https://images.credly.com/images/f2573aac-d21c-483d-acda-afaa366b4f51/image.png"
     },
     {
-      "Badge": "Databases and SQL for Data Science",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"f09e587c-71ed-4e2b-8785-d7b03013e45f\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Data Science Methodology",
+      "badgeUrl": "https://www.credly.com/badges/d6b09c86-3730-433c-93be-fc06ea4852e3/public_url",
+      "imageUrl": "https://images.credly.com/images/46defa53-a922-47bd-94ea-b43488f5cd8a/Data_Science_Methodology_Foundational.png"
     },
     {
-      "Badge": "Python for Data Science and AI",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"58a7097b-f0f4-41dd-9f71-c4c5b1ddb99f\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Data Visualization with Python",
+      "badgeUrl": "https://www.credly.com/badges/67a6bfaa-57e6-4e11-ab19-b6947f33baca/public_url",
+      "imageUrl": "https://images.credly.com/images/9da3eedf-fda3-4e81-bb46-d174b4699bf1/image.png"
     },
     {
-      "Badge": "Data Science Methodology",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"d6b09c86-3730-433c-93be-fc06ea4852e3\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Python for Data Science and AI",
+      "badgeUrl": "https://www.credly.com/badges/58a7097b-f0f4-41dd-9f71-c4c5b1ddb99f/public_url",
+      "imageUrl": "https://images.credly.com/images/40bee502-a5b3-4365-90e7-57eed5067594/image.png"
     },
     {
-      "Badge": "Tools for Data Science",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"47562298-1cd3-492e-8c5d-6517f1873638\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Data Science Orientation",
+      "badgeUrl": "https://www.credly.com/badges/4ce08ed3-114f-4150-b280-b366721cf3e4/public_url",
+      "imageUrl": "https://images.credly.com/images/5fc2d535-e716-46c4-881a-f4822b8da0e5/Cognitive_Class_-_What_is_Data_Science.png"
     },
     {
-      "Badge": "Data Science Orientation",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"4ce08ed3-114f-4150-b280-b366721cf3e4\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "Tools for Data Science",
+      "badgeUrl": "https://www.credly.com/badges/47562298-1cd3-492e-8c5d-6517f1873638/public_url",
+      "imageUrl": "https://images.credly.com/images/60cf69ce-6129-425d-9a42-7732fa07da1e/Tools_for_Data_Science_Foundational.png"
     },
     {
-      "Badge": "ADAA 2017 Participant",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"6815f7ab-eeda-46ca-8f26-fd219b4076c8\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "ADAA 2017 Participant",
+      "badgeUrl": "https://www.credly.com/badges/6815f7ab-eeda-46ca-8f26-fd219b4076c8/public_url",
+      "imageUrl": "https://images.credly.com/images/9daef4dc-829c-4b99-af72-708509364e8a/13ace4449d94ca44efce3fc731929682.png"
     },
     {
-      "Badge": "IBM Blockchain Essentials",
-      "Embed code": "<div data-iframe-width=\"150\" data-iframe-height=\"270\" data-share-badge-id=\"1b755f40-0aed-45a4-b8df-2f087d82f57c\" data-share-badge-host=\"https://www.credly.com\"></div><script type=\"text/javascript\" async src=\"//cdn.credly.com/assets/utilities/embed.js\"></script>"
+      "title": "IBM Blockchain Essentials",
+      "badgeUrl": "https://www.credly.com/badges/1b755f40-0aed-45a4-b8df-2f087d82f57c/public_url",
+      "imageUrl": "https://images.credly.com/images/c2137484-b8fa-4c38-b1ca-a2618a7360e9/Blockchain_Essentials.png"
     }
   ],
   "Internships": [

@@ -338,7 +338,15 @@
             </div>
         </div>
     </div>
+    <!-- Credly Badges Carousel -->
+    <h3 style="text-align:center; color:var(--heading); margin-top:50px; font-weight:300;">Digital Badges</h3>
+    <div id="credly-badges" class="credly-wrapper">
+        <!-- Badges injected via JS -->
+    </div>
+    </div>
     <!-- End #certifications -->
+
+
 
 
     <div id="skills">
@@ -505,7 +513,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const startDate = new Date(2019, 5); // June 2019
             const now = new Date();
-            const years = Math.floor((now - startDate) / (365.25 * 24 * 60 * 60 * 1000));
+            const years = ((now - startDate) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1);
 
             document.getElementById('years-count').textContent = years + '+';
 

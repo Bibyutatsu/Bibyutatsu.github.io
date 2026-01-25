@@ -140,6 +140,72 @@ function renderInternships() {
     });
 }
 
+// =============================================
+// Dynamic Credly Badges Renderer
+// =============================================
+function renderCredlyBadges() {
+    const container = document.getElementById('credly-badges');
+    if (!container || typeof portfolioData === 'undefined' || !portfolioData.Credly) {
+        return;
+    }
+
+    const scrollContainer = document.createElement('div');
+    scrollContainer.className = 'credly-scroll';
+
+    // Drag to scroll logic variables
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    scrollContainer.addEventListener('mousedown', (e) => {
+        isDown = true;
+        scrollContainer.classList.add('active');
+        startX = e.pageX - scrollContainer.offsetLeft;
+        scrollLeft = scrollContainer.scrollLeft;
+    });
+
+    scrollContainer.addEventListener('mouseleave', () => {
+        isDown = false;
+        scrollContainer.classList.remove('active');
+    });
+
+    scrollContainer.addEventListener('mouseup', () => {
+        isDown = false;
+        scrollContainer.classList.remove('active');
+    });
+
+    scrollContainer.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - scrollContainer.offsetLeft;
+        const walk = (x - startX) * 2; // Scroll-fast
+        scrollContainer.scrollLeft = scrollLeft - walk;
+    });
+
+    portfolioData.Credly.forEach(badge => {
+        const div = document.createElement('div');
+        div.className = 'credly-item';
+        div.style.minWidth = "160px";
+
+        if (badge.imageUrl && badge.badgeUrl) {
+            // New format: Image + Link
+            div.innerHTML = `
+                <a href="${badge.badgeUrl}" target="_blank" rel="noopener noreferrer" style="display:block; transition: transform 0.3s;" title="${badge.title}">
+                    <img src="${badge.imageUrl}" alt="${badge.title}" style="width:150px; height:auto; display:block;">
+                </a>
+            `;
+        } else if (badge['Embed code']) {
+            // Fallback to old format
+            div.innerHTML = badge['Embed code'];
+        }
+
+        scrollContainer.appendChild(div);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(scrollContainer);
+}
+
 (function () {
     'use strict';
 
@@ -149,6 +215,7 @@ function renderInternships() {
     // =============================================
     renderExperience();
     renderInternships();
+    renderCredlyBadges();
 
     // Remove no-js class
     document.documentElement.classList.remove('no-js');
