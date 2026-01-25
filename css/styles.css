@@ -15,6 +15,7 @@
     --base-color-hover: #0a2a66;
     --base-color-light: #1761B0;
     --accent-color: #D2292D;
+    --accent-color-rgb: 210, 41, 45;
     --accent-color-hover: #b01f22;
     --background: #fff;
     --background-rgb: 255, 255, 255;
@@ -27,7 +28,9 @@
     --text-light: #74808a;
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     --shadow-large: 0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.15);
-    --hero-overlay: rgba(13, 53, 128, 0.85)
+    --hero-overlay: rgba(13, 53, 128, 0.85);
+    --particle-color: 13, 53, 128;
+    --chart-grid-color: #dcd9d9
 }
 
 [data-theme=dark] {
@@ -36,6 +39,7 @@
     --base-color-hover: #3b82f6;
     --base-color-light: #93c5fd;
     --accent-color: #f87171;
+    --accent-color-rgb: 248, 113, 113;
     --accent-color-hover: #ef4444;
     --background: #0f172a;
     --background-rgb: 15, 23, 42;
@@ -48,7 +52,55 @@
     --text-light: #94a3b8;
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.6);
     --shadow-large: 0 3px 6px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.5);
-    --hero-overlay: rgba(2, 6, 23, 0.9)
+    --hero-overlay: rgba(2, 6, 23, 0.9);
+    --particle-color: 255, 255, 255;
+    --chart-grid-color: #334155
+}
+
+[data-theme=batman] {
+    --base-color: #FFE919;
+    --base-color-rgb: 255, 233, 25;
+    --base-color-hover: #e6d217;
+    --base-color-light: #fff280;
+    --accent-color: #ff0000;
+    --accent-color-rgb: 255, 0, 0;
+    --accent-color-hover: #cc0000;
+    --background: #000000;
+    --background-rgb: 0, 0, 0;
+    --background-alt: #1a1a1a;
+    --background-dark: #000000;
+    --background-dark-alt: #1a1a1a;
+    --border: #333333;
+    --heading: #FFE919;
+    --text: #ffffff;
+    --text-light: #cccccc;
+    --shadow: 0 1px 3px rgba(255, 233, 25, 0.2), 0 1px 2px rgba(255, 233, 25, 0.4);
+    --shadow-large: 0 4px 10px rgba(255, 233, 25, 0.3), 0 4px 15px rgba(255, 233, 25, 0.4);
+    --hero-overlay: rgba(0, 0, 0, 0.85);
+    --particle-color: 255, 233, 25;
+    --chart-grid-color: #333333
+}
+
+/* Batman Theme Font Overrides */
+[data-theme=batman] h1,
+[data-theme=batman] h2,
+[data-theme=batman] h3,
+[data-theme=batman] h4 {
+    font-family: 'Bangers', cursive;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 400;
+    /* Bangers is bold by default, resetting weight helps uniformity */
+}
+
+/* Specific adjustments for Batman headers to match visual size of Outline */
+[data-theme=batman] h1 {
+    font-size: 4em !important;
+    line-height: 1;
+}
+
+[data-theme=batman] h2 {
+    font-size: 2.2em !important;
 }
 
 body {
@@ -114,6 +166,11 @@ html[data-theme=light] .btn-glassy:hover {
 
 html[data-theme=light] body {
     background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);
+    background-attachment: fixed
+}
+
+html[data-theme=batman] body {
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
     background-attachment: fixed
 }
 
@@ -293,31 +350,77 @@ header.sticky #mobile-menu-close {
     vertical-align: middle
 }
 
-#theme-toggle {
-    cursor: pointer;
+#theme-selector-container {
     position: fixed;
     right: 15px;
     top: 10px;
-    color: var(--base-color);
-    font-size: 1.5em;
     z-index: 1001;
-    padding: 0 7px;
-    border-radius: 4px;
-    background: var(--background);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: hsla(0, 0%, 100%, .03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid hsla(0, 0%, 100%, .05);
+    padding: 5px 10px;
+    border-radius: 50px;
+    box-shadow: var(--shadow-large);
+    transition: 0.3s ease all;
     margin-right: 50px
 }
 
+html[data-theme=light] #theme-selector-container {
+    background: hsla(0, 0%, 100%, .4);
+    border: 1px solid rgba(13, 53, 128, .1);
+}
+
+html[data-theme=batman] #theme-selector-container {
+    background: rgba(0, 0, 0, .6);
+    border: 1px solid rgba(255, 233, 25, .3);
+    box-shadow: 0 0 15px rgba(255, 233, 25, 0.2);
+}
+
+#theme-selector-container i {
+    color: var(--base-color);
+    font-size: 1.1em
+}
+
+#theme-selector {
+    background: transparent;
+    border: none;
+    color: var(--heading);
+    font-family: inherit;
+    font-size: .9em;
+    cursor: pointer;
+    outline: none;
+    padding: 2px 5px;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 2px center;
+    padding-right: 20px;
+    text-transform: capitalize;
+}
+
+#theme-selector option {
+    background: var(--background-alt);
+    color: var(--heading);
+}
+
 @media(min-width: 769px) {
-    #theme-toggle {
+    #theme-selector-container {
         top: 15px;
         right: 15px;
         margin-right: 0;
-        background: var(--background)
     }
 }
 
-#theme-toggle:hover {
-    color: var(--accent-color)
+#theme-selector-container:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .2);
+    transform: translateY(-2px);
 }
 
 footer {
@@ -453,6 +556,7 @@ footer {
     align-items: center;
     justify-content: center;
     gap: 60px;
+    width: 100%;
     max-width: 1000px;
     padding: 50px;
     background: hsla(0, 0%, 100%, .03);
@@ -470,6 +574,12 @@ html[data-theme=light] .hero-container {
     box-shadow: 0 10px 40px rgba(13, 53, 128, .15)
 }
 
+html[data-theme=batman] .hero-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 233, 25, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, .5);
+}
+
 .hero-container {
     border-radius: 20px
 }
@@ -484,28 +594,29 @@ html[data-theme=light] .hero-container {
     border-radius: 50%;
     object-fit: cover;
     border: 6px solid hsla(0, 0%, 100%, .3);
-    box-shadow: 0 0 40px rgba(210, 41, 45, .3), 0 0 80px rgba(13, 53, 128, .2);
+    box-shadow: 0 0 40px rgba(var(--accent-color-rgb), .3), 0 0 80px rgba(var(--base-color-rgb), .2);
     animation: profileGlow 3s ease-in-out infinite alternate;
     transition: 0.3s ease all
 }
 
 #lead-image:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 50px rgba(210, 41, 45, .5), 0 0 100px rgba(13, 53, 128, .4)
+    box-shadow: 0 0 50px rgba(var(--accent-color-rgb), .5), 0 0 100px rgba(var(--base-color-rgb), .4)
 }
 
 @keyframes profileGlow {
     0% {
-        box-shadow: 0 0 40px rgba(210, 41, 45, .3), 0 0 80px rgba(13, 53, 128, .2)
+        box-shadow: 0 0 40px rgba(var(--accent-color-rgb), .3), 0 0 80px rgba(var(--base-color-rgb), .2)
     }
 
     100% {
-        box-shadow: 0 0 50px rgba(210, 41, 45, .4), 0 0 100px rgba(13, 53, 128, .3)
+        box-shadow: 0 0 50px rgba(var(--accent-color-rgb), .4), 0 0 100px rgba(var(--base-color-rgb), .3)
     }
 }
 
 #lead-content {
-    text-align: left
+    text-align: left;
+    flex: 1
 }
 
 #lead-content h1 {

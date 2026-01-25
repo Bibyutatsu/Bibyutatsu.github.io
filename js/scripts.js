@@ -232,40 +232,47 @@ function renderCredlyBadges() {
 
     /* 
        ------------------------------------------------
-       2. Theme Toggle (Dark Mode)
+       2. Theme Selector (Multi-Theme Support)
        ------------------------------------------------
     */
-    const themeToggle = select('#theme-toggle');
+    const themeSelector = select('#theme-selector');
     const html = document.documentElement;
-    const icon = themeToggle ? themeToggle.querySelector('i') : null;
 
     // Check local storage
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme) {
-        html.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'dark' && icon) {
-            icon.classList.remove('fa-moon-o');
-            icon.classList.add('fa-sun-o');
-        }
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', currentTheme);
+    if (themeSelector) {
+        themeSelector.value = currentTheme;
     }
 
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                if (icon) {
-                    icon.classList.remove('fa-sun-o');
-                    icon.classList.add('fa-moon-o');
-                }
+    // Helper to switch profile image
+    const updateProfileImage = (theme) => {
+        const profileImg = select('#lead-image');
+        if (profileImg) {
+            if (theme === 'batman') {
+                profileImg.src = 'images/img_profile_batman.png';
             } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                if (icon) {
-                    icon.classList.remove('fa-moon-o');
-                    icon.classList.add('fa-sun-o');
-                }
+                profileImg.src = 'images/img_profile.jpg';
             }
+        }
+    };
+
+    // Initial check
+    updateProfileImage(currentTheme);
+
+    if (themeSelector) {
+        themeSelector.addEventListener('change', () => {
+            const selectedTheme = themeSelector.value;
+            html.setAttribute('data-theme', selectedTheme);
+            localStorage.setItem('theme', selectedTheme);
+
+            // Update profile image
+            updateProfileImage(selectedTheme);
+
+            // Trigger Chart and Canvas updates if needed
+            setTimeout(() => {
+                if (typeof initSkillsChart === 'function') initSkillsChart();
+            }, 50);
         });
     }
 
@@ -314,9 +321,9 @@ function renderCredlyBadges() {
         const drawParticles = () => {
             ctx.clearRect(0, 0, width, height);
 
-            // Check theme for particle color
-            const isDark = html.getAttribute('data-theme') === 'dark';
-            const color = isDark ? '255, 255, 255' : '13, 53, 128'; // White for Dark, Blue (base-color) for Light
+            // Check theme for particle color from CSS variable
+            const getVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            const color = getVar('--particle-color') || '255, 255, 255';
 
             particles.forEach(p => {
                 ctx.beginPath();
@@ -450,9 +457,9 @@ function renderCredlyBadges() {
     // Initialize Chart
     initSkillsChart();
 
-    // Update Chart on Theme Toggle
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
+    // Update Chart on Theme Selector Change
+    if (themeSelector) {
+        themeSelector.addEventListener('change', () => {
             // Tiny delay to allow CSS variables to update
             setTimeout(initSkillsChart, 50);
         });
