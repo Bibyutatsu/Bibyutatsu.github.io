@@ -8,8 +8,147 @@
     Description: This file contains all the scripts associated with the single-page
     portfolio website.
 */
+
+// =============================================
+// Simple Markdown Parser for Project Descriptions
+// =============================================
+function parseMarkdown(text) {
+    if (!text) return '';
+
+    // Escape HTML first
+    let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    // Convert markdown bullet points to HTML list
+    // Match lines starting with - or * (with optional leading whitespace)
+    const lines = html.split('\n');
+    let inList = false;
+    let result = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const bulletMatch = line.match(/^\s*[-*]\s+(.+)$/);
+
+        if (bulletMatch) {
+            if (!inList) {
+                result.push('<ul>');
+                inList = true;
+            }
+            result.push(`<li>${bulletMatch[1]}</li>`);
+        } else {
+            if (inList) {
+                result.push('</ul>');
+                inList = false;
+            }
+            if (line.trim()) {
+                result.push(`<p>${line}</p>`);
+            }
+        }
+    }
+
+    if (inList) {
+        result.push('</ul>');
+    }
+
+    html = result.join('\n');
+
+    // Convert **bold** and *italic*
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+    // Convert `code`
+    html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+
+    return html;
+}
+
+// =============================================
+// Dynamic Experience Renderer
+// =============================================
+function renderExperience() {
+    const container = document.getElementById('experience-timeline');
+    if (!container || typeof portfolioData === 'undefined' || !portfolioData.Experience) {
+        return;
+    }
+
+    container.innerHTML = '';
+
+    portfolioData.Experience.forEach(exp => {
+        const div = document.createElement('div');
+        div.setAttribute('data-date', exp.dateRange);
+
+        let projectsHtml = '';
+        if (exp.projects && exp.projects.length > 0) {
+            projectsHtml = exp.projects.map(proj => `
+                <div class="project-item">
+                    <h5>${proj.title}</h5>
+                    <p>${proj.description}</p>
+                </div>
+            `).join('');
+        }
+
+        div.innerHTML = `
+            <div class="company-header">
+                ${exp.logoPath ? `<img src="${exp.logoPath}" alt="${exp.company} Logo" class="company-logo">` : ''}
+                <div class="company-info">
+                    <h3>${exp.company}</h3>
+                    <h4>${exp.role}</h4>
+                </div>
+            </div>
+            <div class="projects-list">
+                ${projectsHtml}
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+// =============================================
+// Dynamic Internships Renderer
+// =============================================
+function renderInternships() {
+    const container = document.getElementById('internship-timeline');
+    if (!container || typeof portfolioData === 'undefined' || !portfolioData.Internships) {
+        return;
+    }
+
+    container.innerHTML = '';
+
+    portfolioData.Internships.forEach(intern => {
+        const div = document.createElement('div');
+        div.setAttribute('data-date', intern.dateRange);
+
+        div.innerHTML = `
+            <div class="company-header">
+                <div class="company-info">
+                    <h3>${intern.company}</h3>
+                    <h4>${intern.role}</h4>
+                </div>
+            </div>
+            <div class="projects-list">
+                <div class="project-item">
+                    <h5>${intern.projectTitle}</h5>
+                    <p>${intern.projectDescription}</p>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
 (function () {
     'use strict';
+
+    // =============================================
+    // Render dynamic content from portfolioData FIRST
+    // (before createTimeline processes them)
+    // =============================================
+    renderExperience();
+    renderInternships();
 
     // Remove no-js class
     document.documentElement.classList.remove('no-js');
