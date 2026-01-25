@@ -2,6 +2,9 @@
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
 export function initThreeScene() {
+    // Only load 3D scene on desktop
+    if (window.innerWidth <= 768) return;
+
     const container = document.getElementById('three-container');
     if (!container) return;
 
@@ -19,20 +22,27 @@ export function initThreeScene() {
     container.appendChild(renderer.domElement);
 
     // Geometry - Floating Icosahedron (Techy look)
-    const geometry = new THREE.IcosahedronGeometry(2, 1); // Radius 2, Detail 1
+    const geometry = new THREE.IcosahedronGeometry(3.5, 1); // Increased Radius
     const material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         wireframe: true,
         transparent: true,
-        opacity: 0.15
+        opacity: 0.4 // Increased opacity
     });
 
     const shape = new THREE.Mesh(geometry, material);
     scene.add(shape);
 
+    // Load Textures
+    const textureLoader = new THREE.TextureLoader();
+    const bokehTexture = textureLoader.load('images/particles/bokeh.png'); // Replaced bubble with bokeh
+    const moonTexture = textureLoader.load('images/particles/moon.png');
+    const batmanTexture = textureLoader.load('images/particles/batman.png');
+
+
     // Particles (Stars/Dust)
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 700;
+    const particlesCount = 300; // Reduced count for better visibility of individual textures
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
@@ -41,10 +51,13 @@ export function initThreeScene() {
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.02,
+        size: 0.5,
         color: 0xffffff,
         transparent: true,
-        opacity: 0.5
+        opacity: 0.8,
+        map: bokehTexture, // Default
+        alphaTest: 0.5, // Helps with transparency
+        depthWrite: false
     });
 
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
@@ -82,16 +95,23 @@ export function initThreeScene() {
         if (theme === 'batman') {
             material.color.setHex(0xFFE919); // Yellow
             particlesMaterial.color.setHex(0xFFE919);
-            material.opacity = 0.3;
+            particlesMaterial.map = batmanTexture;
+            particlesMaterial.opacity = 0.8;
+            particlesMaterial.size = 0.35;
         } else if (theme === 'dark') {
             material.color.setHex(0x60a5fa); // Blue
-            particlesMaterial.color.setHex(0xffffff);
-            material.opacity = 0.15;
+            particlesMaterial.color.setHex(0xffffff); // Restore White for visibility
+            particlesMaterial.map = moonTexture;
+            particlesMaterial.opacity = 0.5; // Increased from 0.4
+            particlesMaterial.size = 0.25; // Increased from 0.25
         } else {
             material.color.setHex(0x0D3580); // Dark Blue
-            particlesMaterial.color.setHex(0x0D3580);
-            material.opacity = 0.1;
+            particlesMaterial.color.setHex(0x1761B0); // Light Blue Tint for Bokeh
+            particlesMaterial.map = bokehTexture;
+            particlesMaterial.opacity = 0.6; // Soft but visible opacity
+            particlesMaterial.size = 0.35; // Good size for bokeh
         }
+        particlesMaterial.needsUpdate = true;
     }
 
     // Observe theme changes

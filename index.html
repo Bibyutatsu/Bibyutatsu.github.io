@@ -93,6 +93,7 @@
     <!-- End header -->
 
     <div id="lead">
+        <div id="three-container"></div>
         <div class="hero-container">
             <div id="lead-image-container">
                 <img id="lead-image" src="images/img_profile.jpg" alt="Bibhash Mitra">
@@ -529,6 +530,10 @@
                 document.getElementById('badges-count').textContent = portfolioData.Credly.length;
             }
         });
+    </script>
+    <script type="module">
+        import { initThreeScene } from './js/three-scene.js';
+        initThreeScene();
     </script>
 </body>
 

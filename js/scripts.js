@@ -282,7 +282,8 @@ function renderCredlyBadges() {
        ------------------------------------------------
     */
     const leadSection = select('#lead');
-    if (leadSection) {
+    // Only enable 2D particles on mobile
+    if (window.innerWidth <= 768 && leadSection) {
         const canvas = document.createElement('canvas');
         canvas.id = 'hero-canvas';
         canvas.style.position = 'absolute';
