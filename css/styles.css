@@ -986,6 +986,10 @@ html[data-theme=light] .vtimeline-content {
     margin-left: 240px
 }
 
+html[data-theme=batman] .vtimeline-icon {
+    color: #000000;
+}
+
 .vtimeline-icon i {
     display: block;
     font-size: 2em;
@@ -1437,6 +1441,30 @@ html[data-theme=light] #contact {
 
 html[data-theme=light] #contact h2 {
     color: var(--heading)
+}
+
+html[data-theme=batman] #contact h2 {
+    font-family: 'Bangers', cursive;
+    color: var(--heading);
+    font-size: 3em;
+    letter-spacing: 2px;
+}
+
+html[data-theme=batman] .connect-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 233, 25, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, .5);
+}
+
+html[data-theme=batman] #contact {
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+}
+
+html[data-theme=batman] footer {
+    background: #000000;
+    border-top: 1px solid var(--base-color);
 }
 
 .optional-section {
