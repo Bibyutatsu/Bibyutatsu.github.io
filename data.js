@@ -1,5 +1,5 @@
 // Auto-generated from ResumeAssets.xlsx
-// Last updated: 2026-01-25T10:29:02.358Z
+// Last updated: 2026-04-28T06:11:06.719Z
 const portfolioData = {
   "PatentsPublications": [
     {

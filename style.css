@@ -365,7 +365,12 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s; z-index: 10; will-change: transform;
 }
-.carousel-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
+.carousel-btn:hover { 
+  background: var(--accent); 
+  color: var(--bg); 
+  border-color: var(--accent); 
+  box-shadow: var(--glow); 
+}
 .carousel-btn.prev { left: -4px; }
 .carousel-btn.next { right: -4px; }
 .carousel-badge {
@@ -378,7 +383,11 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
   transition: border-color var(--t), transform var(--t), box-shadow var(--t);
   will-change: transform;
 }
-.carousel-badge:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: var(--glow); }
+.carousel-badge:hover { 
+  border-color: var(--accent); 
+  background: var(--surface-2);
+  box-shadow: var(--glow); 
+}
 .carousel-badge img { width: 56px; height: 56px; object-fit: contain; pointer-events: none; }
 .carousel-badge span { font-size: 0.62rem; line-height: 1.3; pointer-events: none; }
 

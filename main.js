@@ -173,7 +173,7 @@
   }
   // Run after DOM population
   document.addEventListener('portfolio-ready', () => {
-    applyMagnetic('.btn-primary,.btn-ghost,.social-btn,.tl-toggle,.carousel-btn,.theme-opt');
+    applyMagnetic('.btn-primary,.btn-ghost,.social-btn,.tl-toggle,.theme-opt');
   });
   applyMagnetic('.btn-primary,.btn-ghost');
 })();

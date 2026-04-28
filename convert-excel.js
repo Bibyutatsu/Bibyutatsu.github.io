@@ -1,4 +1,4 @@
-const XLSX = require('/opt/homebrew/lib/node_modules/xlsx');
+const XLSX = require('xlsx');
 const fs = require('fs');
 const https = require('https');
 
@@ -132,8 +132,8 @@ async function main() {
 const portfolioData = ${JSON.stringify(data, null, 2)};
 `;
 
-    fs.writeFileSync('js/data.js', jsContent);
-    console.log('\n\n✅ Generated js/data.js');
+    fs.writeFileSync('data.js', jsContent);
+    console.log('\n\n✅ Generated data.js');
 }
 
 main().catch(console.error);
