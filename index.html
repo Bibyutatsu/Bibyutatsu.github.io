@@ -1,540 +1,293 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description"
-        content="Bibhash Chandra Mitra - Senior Data Scientist with 6+ years of experience in AI/ML, specializing in Generative AI, NLP, Computer Vision, and Quantum Computing. View my portfolio, projects, and patents.">
-    <meta name="keywords"
-        content="Data Scientist, AI, Machine Learning, Deep Learning, NLP, Computer Vision, Quantum Computing, Portfolio">
-    <meta name="author" content="Bibhash Chandra Mitra">
-    <title>Bibhash Mitra | Data Scientist & AI/ML Expert</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bibhash Chandra Mitra — Senior Data Scientist with 6+ years in Generative AI, NLP, Computer Vision & Quantum Computing.">
+  <title>Bibhash Mitra | Data Scientist &amp; AI/ML Expert</title>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bibyutatsu.github.io/">
-    <meta property="og:title" content="Bibhash Mitra | Data Scientist & AI/ML Expert">
-    <meta property="og:description"
-        content="Senior Data Scientist with 6+ years of experience in AI/ML, Generative AI, NLP, and Quantum Computing.">
-    <meta property="og:image" content="https://bibyutatsu.github.io/images/img_profile.jpg">
+  <!-- Fonts: Space Grotesk · Inter · Fira Code · Bangers (Batman theme) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&family=Bangers&display=swap" rel="stylesheet">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://bibyutatsu.github.io/">
-    <meta property="twitter:title" content="Bibhash Mitra | Data Scientist & AI/ML Expert">
-    <meta property="twitter:description"
-        content="Senior Data Scientist with 6+ years of experience in AI/ML, Generative AI, NLP, and Quantum Computing.">
-    <meta property="twitter:image" content="https://bibyutatsu.github.io/images/img_profile.jpg">
-    <link rel="shortcut icon" href="images/icon.webp" type="image/x-icon">
-    <link rel="icon" href="images/icon.webp" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@300;400;600&family=Outfit:wght@300;500;700;900&family=Bangers&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W9EW0QE84W"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-W9EW0QE84W');
-    </script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <!-- Critical overrides: bypass any CSS cache -->
+  <style>
+    .hero-content {
+      opacity: 1 !important;
+      animation: heroSlide 0.85s cubic-bezier(0.4,0,0.2,1) both !important;
+    }
+    @keyframes heroSlide {
+      from { transform: translateY(38px); }
+      to   { transform: none; }
+    }
+    /* Theme popover: hidden by default, shown when .open */
+    .theme-popover {
+      display: flex !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translateY(-10px) scale(0.95) !important;
+      transition: opacity 0.22s, transform 0.22s, visibility 0.22s !important;
+    }
+    .theme-popover.open {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: none !important;
+    }
+  </style>
 </head>
 
 <body>
-    <div id="mobile-menu-open" class="shadow-large">
-        <i class="fa fa-bars" aria-hidden="true"></i>
+
+<!-- ░░ PROGRESS BAR (CSS scroll-driven) ░░ -->
+<div id="progress-bar"></div>
+
+<!-- ░░ CUSTOM CURSOR ░░ -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- ░░ HERO CANVAS ░░ -->
+<canvas id="hero-canvas"></canvas>
+
+<!-- ░░ NAV ░░ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">BM<span class="dot">.</span></a>
+
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#publications">Research</a></li>
+      <li><a href="#certifications">Certs</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <!-- Theme selector -->
+    <div class="theme-wrap">
+      <button class="theme-icon-btn" id="theme-btn" aria-label="Change theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"/>
+        </svg>
+        <span class="theme-label">Dark</span>
+      </button>
+      <div class="theme-popover" id="theme-popover">
+        <button class="theme-opt active" data-theme="dark">
+          <span class="theme-swatch" style="background:#00ccff"></span> Dark
+        </button>
+        <button class="theme-opt" data-theme="light">
+          <span class="theme-swatch" style="background:#0055cc"></span> Light
+        </button>
+        <button class="theme-opt" data-theme="batman">
+          <span class="theme-swatch" style="background:#FFE919"></span> Batman
+        </button>
+        <button class="theme-opt" data-theme="cyberpunk">
+          <span class="theme-swatch" style="background:#ff0080"></span> Cyberpunk
+        </button>
+        <button class="theme-opt" data-theme="ocean">
+          <span class="theme-swatch" style="background:#00e5b0"></span> Ocean
+        </button>
+      </div>
     </div>
-    <!-- End #mobile-menu-toggle -->
-    <div id="theme-selector-container" class="shadow-large">
-        <i class="fa fa-paint-brush" aria-hidden="true"></i>
-        <select id="theme-selector">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="batman">Batman</option>
-        </select>
+
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ░░ HERO ░░ -->
+<section id="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow"><span class="mono">Hello, world. I'm</span></p>
+    <h1 class="hero-name">Bibhash<br>Mitra</h1>
+    <div class="hero-role">
+      <span class="mono">&gt;&nbsp;</span><span id="typed-text"></span><span class="cursor-blink">|</span>
     </div>
-    <header class="sticky">
-        <div id="mobile-menu-close">
-            <i class="fa fa-times" aria-hidden="true"></i>
+    <p class="hero-tagline">Building intelligent systems that solve real-world problems — from Fortune 500 pipelines to quantum algorithms.</p>
+    <div class="hero-cta">
+      <a href="#about" class="btn-primary">Explore My Work</a>
+      <a href="https://bibyutatsu.github.io/Blogs/" target="_blank" rel="noopener" class="btn-ghost">Dev Blog ↗</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ░░ ABOUT ░░ -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">01 / About</span>
+      <h2>The Mind Behind the Models</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-image reveal from-left">
+        <img id="profile-img" src="images/img_profile.jpg" alt="Bibhash Mitra" width="340" height="453">
+        <div class="img-frame"></div>
+      </div>
+      <div class="about-body reveal from-right d1">
+        <p class="about-intro">I'm a Senior Data Scientist passionate about building AI systems that solve real-world problems. I've led teams delivering production ML systems for Fortune 500 companies, filed patents in Generative AI and Quantum Computing, and published research in aerospace AI.</p>
+        <p>My expertise spans Generative AI, NLP, Computer Vision, and Quantum Computing. I excel at translating complex analytical insights into actionable business outcomes through production-ready ML systems and cloud-native deployments.</p>
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-row"><span class="stat-num" data-target="6.9">0</span><span class="stat-suffix">+</span></div>
+            <span class="stat-label">Years Exp.</span>
+          </div>
+          <div class="stat">
+            <div class="stat-row"><span class="stat-num" data-target="6">0</span></div>
+            <span class="stat-label">Publications</span>
+          </div>
+          <div class="stat">
+            <div class="stat-row"><span class="stat-num" data-target="12">0</span></div>
+            <span class="stat-label">Certifications</span>
+          </div>
+          <div class="stat">
+            <div class="stat-row"><span class="stat-num" data-target="19">0</span></div>
+            <span class="stat-label">Credly Badges</span>
+          </div>
         </div>
-        <ul id="menu" class="shadow">
-            <li>
-                <a href="#about">About</a>
-            </li>
-            <li>
-                <a href="#experience">Experience</a>
-            </li>
-            <li>
-                <a href="#education">Education</a>
-            </li>
-            <li>
-                <a href="#papers-patents">Papers & Patents</a>
-            </li>
-            <li>
-                <a href="#certifications">Certifications</a>
-            </li>
-            <li>
-                <a href="#skills">Skills</a>
-            </li>
-            <li>
-                <a href="#contact">Contact</a>
-            </li>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ EXPERIENCE ░░ -->
+<section id="experience" class="section section-alt">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">02 / Experience</span>
+      <h2>Work Experience</h2>
+    </div>
+    <div id="timeline" class="timeline"></div>
+  </div>
+</section>
+
+<!-- ░░ EDUCATION ░░ -->
+<section id="education" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">03 / Education</span>
+      <h2>Education</h2>
+    </div>
+    <div class="edu-card reveal d1">
+      <img src="images/Logo/IIT-Kharagpur-logo-01.png" alt="IIT Kharagpur" class="edu-logo" width="90" height="90">
+      <div class="edu-body">
+        <h3>Indian Institute of Technology, Kharagpur</h3>
+        <span class="edu-date">May 2014 – May 2019</span>
+        <p class="edu-degree">Dual Degree — M.Tech &amp; B.Tech</p>
+        <ul>
+          <li><strong>Major:</strong> Aerospace Engineering — CGPA 8.45/10</li>
+          <li><strong>Minor:</strong> Computer Science Engineering — CGPA 8.20/10</li>
         </ul>
-    </header>
-    <!-- End header -->
-
-    <div id="lead">
-        <div id="three-container"></div>
-        <div class="hero-container">
-            <div id="lead-image-container">
-                <img id="lead-image" src="images/img_profile.jpg" alt="Bibhash Mitra">
-            </div>
-            <div id="lead-content">
-                <h1>Bibhash Mitra</h1>
-                <h2>Data Scientist & AI/ML Expert</h2>
-                <p class="tagline">Building intelligent systems with 6+ years of experience in Generative AI, NLP,
-                    Computer Vision & Quantum Computing.</p>
-                <div class="btn-container">
-
-                    <a href="https://bibyutatsu.github.io/Blogs/" target="_blank" class="btn-rounded-white">Developer
-                        Blog</a>
-                </div>
-            </div>
-        </div>
-        <!-- End .hero-container -->
-        <div id="lead-overlay"></div>
-        <div id="lead-down">
-            <span>
-                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-            </span>
-        </div>
-        <!-- End #lead-down -->
+      </div>
     </div>
-    <!-- End #lead -->
+    <p class="sub-heading reveal">// Internships</p>
+    <div id="internships-container"></div>
+  </div>
+</section>
 
-    <div id="about">
-        <div class="container">
-            <h2 class="heading">About Me</h2>
-            <div class="about-content">
-                <p class="about-intro">
-                    Hi! I'm a Senior Data Scientist passionate about building AI systems that solve real-world problems.
-                    I've led teams to deliver production ML systems for Fortune 500 companies, filed patents in
-                    Generative AI and Quantum Computing, and published research in aerospace AI.
-                </p>
-                <div class="about-highlights">
-                    <div class="highlight-card">
-                        <span class="highlight-number" id="years-count">6+</span>
-                        <span class="highlight-label">Years Experience</span>
-                    </div>
-                    <div class="highlight-card">
-                        <span class="highlight-number" id="publications-count">6</span>
-                        <span class="highlight-label">Publications</span>
-                    </div>
-                    <div class="highlight-card">
-                        <span class="highlight-number" id="certifications-count">12</span>
-                        <span class="highlight-label">Certifications</span>
-                    </div>
-                    <div class="highlight-card">
-                        <span class="highlight-number" id="badges-count">19</span>
-                        <span class="highlight-label">Credly Badges</span>
-                    </div>
-                </div>
-                <p class="about-details">
-                    My expertise spans Generative AI, NLP, Computer Vision, and Quantum Computing. I excel at
-                    translating complex analytical insights into actionable business outcomes through production-ready
-                    ML systems and cloud-native deployments.
-                </p>
-            </div>
-        </div>
+<!-- ░░ PUBLICATIONS ░░ -->
+<section id="publications" class="section section-alt">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">04 / Research</span>
+      <h2>Papers &amp; Patents</h2>
     </div>
-    <!-- End #about -->
+    <div class="pub-grid" id="pub-grid"></div>
+  </div>
+</section>
 
-    <div id="experience" class="background-alt">
-        <h2 class="heading">Work Experience</h2>
-        <!-- Content dynamically generated from portfolioData.Experience -->
-        <div id="experience-timeline"></div>
+<!-- ░░ CERTIFICATIONS ░░ -->
+<section id="certifications" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">05 / Credentials</span>
+      <h2>Certifications</h2>
     </div>
+    <div class="cert-grid" id="cert-grid"></div>
 
-    <div id="internships" class="background-alt">
-        <h2 class="heading">Internships</h2>
-        <!-- Content dynamically generated from portfolioData.Internships -->
-        <div id="internship-timeline"></div>
+    <p class="sub-heading reveal">// Digital Badges</p>
+    <!-- Horizontal drag-to-scroll carousel -->
+    <div class="carousel-outer">
+      <button class="carousel-btn prev" aria-label="Scroll left">&#8249;</button>
+      <div class="carousel-track" id="badges-carousel"></div>
+      <button class="carousel-btn next" aria-label="Scroll right">&#8250;</button>
     </div>
-    <!-- End #internships -->
+  </div>
+</section>
 
-    <div id="education">
-        <h2 class="heading">Education</h2>
-        <div class="education-block">
-            <div class="education-header">
-                <img src="images/Logo/IIT-Kharagpur-logo-01.png" alt="IIT Kharagpur Logo" class="education-logo">
-                <div class="education-info">
-                    <h3>Indian Institute of Technology, Kharagpur</h3>
-                    <span class="education-date">May 2014 - May 2019</span>
-                    <h4>Dual Degree (Master of Technology and Bachelor of Technology)</h4>
-                </div>
-            </div>
-            <ul class="education-details">
-                <li><b>Major in Aerospace Engineering</b> with CGPA <b>8.45/10</b></li>
-                <li><b>Minor in Computer Science Engineering</b> with CGPA <b>8.20/10</b></li>
-            </ul>
-        </div>
-        <!-- End .education-block -->
+<!-- ░░ SKILLS ░░ -->
+<section id="skills" class="section section-alt">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">06 / Skills</span>
+      <h2>Technical Expertise</h2>
     </div>
-    <!-- End #education -->
-
-    <div id="papers-patents" class="background-alt">
-        <h2 class="heading">Papers & Patents</h2>
-        <div class="publications-container">
-            <!-- Paper -->
-            <div class="publication-card">
-                <span class="pub-type paper">Paper</span>
-                <h3>Optimal Path Generation for Simultaneous Rendezvous of Fixed-Wing UAVs in 3D Dynamic
-                    Environments</h3>
-                <p class="pub-venue">AIAA Scitech 2019 Forum</p>
-                <p class="pub-year">2019</p>
-                <a href="https://arc.aiaa.org/doi/10.2514/6.2019-1166" target="_blank" rel="noopener noreferrer">View
-                    Paper <i class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Patent 1 -->
-            <div class="publication-card patent">
-                <span class="pub-type patent">Patent</span>
-                <h3>Quantum Computing Approaches for Resource Allocation</h3>
-                <p class="pub-venue">US Patent</p>
-                <p class="pub-year">2025</p>
-                <a href="https://patents.google.com/patent/US20250252335A1" target="_blank">View Patent <i
-                        class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Patent 2 -->
-            <div class="publication-card patent">
-                <span class="pub-type patent">Patent</span>
-                <h3>Quantum-Computing-Enhanced Systems and Methods for Entity Allocation</h3>
-                <p class="pub-venue">US Patent</p>
-                <p class="pub-year">2025</p>
-                <a href="https://patents.google.com/patent/US20250165824A1" target="_blank">View Patent <i
-                        class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Patent 3 -->
-            <div class="publication-card patent">
-                <span class="pub-type patent">Patent</span>
-                <h3>Traffic Flow Optimization for Multi-Class Vehicle Network Using Quantum Computing</h3>
-                <p class="pub-venue">US Patent</p>
-                <p class="pub-year">2025</p>
-                <a href="https://patents.google.com/patent/US20250104559A1" target="_blank">View Patent <i
-                        class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Patent 4 -->
-            <div class="publication-card patent">
-                <span class="pub-type patent">Patent</span>
-                <h3>System and Method for Generating Novel Molecular Structure Using Protein Structure</h3>
-                <p class="pub-venue">US Patent</p>
-                <p class="pub-year">2022</p>
-                <a href="https://patents.google.com/patent/US20220406403A1/en?oq=20220406403" target="_blank">View
-                    Patent <i class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Patent 5 -->
-            <div class="publication-card patent">
-                <span class="pub-type patent">Patent</span>
-                <h3>System and Method for Generating Customizable Molecular Structures for Drug Discovery</h3>
-                <p class="pub-venue">US Patent</p>
-                <p class="pub-year">2023</p>
-                <a href="https://patents.google.com/patent/US20230115171A1/en?oq=US20230115171A1" target="_blank">View
-                    Patent <i class="fa fa-external-link"></i></a>
-            </div>
-        </div>
+    <div class="skills-layout">
+      <!-- Radar chart — sticky on desktop -->
+      <div class="chart-wrap reveal from-left">
+        <h3>// Proficiency Radar</h3>
+        <canvas id="skills-chart"></canvas>
+      </div>
+      <!-- Skill tag categories -->
+      <div class="skills-grid" id="skills-grid"></div>
     </div>
-    <!-- End #papers-patents -->
+  </div>
+</section>
 
-    <div id="certifications">
-        <h2 class="heading">Certifications</h2>
-        <div class="certifications-container">
-            <!-- AWS Certifications -->
-            <div class="certification-card">
-                <span class="cert-provider aws">AWS</span>
-                <h3>AWS Certified Machine Learning - Specialty</h3>
-                <a href="https://cp.certmetrics.com/amazon/en/public/verify/credential/e7b1ab967c3247bc8b8477a0f0da0019"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider aws">AWS</span>
-                <h3>AWS Certified AI Practitioner</h3>
-                <a href="https://cp.certmetrics.com/amazon/en/public/verify/credential/2c6a95f7989046d0a5bcc4352e351e5d"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider aws">AWS</span>
-                <h3>AWS Certified Cloud Practitioner</h3>
-                <a href="https://cp.certmetrics.com/amazon/en/public/verify/credential/2d038a52d6a8441190b429a55d87c7d4"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Microsoft -->
-            <div class="certification-card">
-                <span class="cert-provider microsoft">Microsoft</span>
-                <h3>Microsoft Certified: Azure AI Engineer - Associate</h3>
-                <a href="https://learn.microsoft.com/api/credentials/share/en-us/BibhashMitra/90AEC65E5A4A8FFD?sharingId=39DEA8414B60265"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Google -->
-            <div class="certification-card">
-                <span class="cert-provider google">Google</span>
-                <h3>Google Data Analytics Professional Certificate</h3>
-                <a href="https://www.credly.com/badges/c5987d48-dac8-462d-a6ea-28cf6b72b5fa/public_url"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- IBM -->
-            <div class="certification-card">
-                <span class="cert-provider ibm">IBM</span>
-                <h3>Data Science Professional Certificate</h3>
-                <a href="https://www.credly.com/badges/e6ed7df5-7daf-4240-943c-8ba585985be0/public_url"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-
-            <!-- Coursera -->
-            <div class="certification-card">
-                <span class="cert-provider coursera">Coursera</span>
-                <h3>Deep Learning Specialization</h3>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/7YA55DLQFVQ4"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider coursera">Coursera</span>
-                <h3>Generative Adversarial Networks (GANs) Specialization</h3>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/8XBN32GQLH7B"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider coursera">Coursera</span>
-                <h3>Google Data Analytics Specialization</h3>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/62QBRLAXMQPY"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider coursera">Coursera</span>
-                <h3>IBM Data Science Specialization</h3>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/B69K4TTFL7D5"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider coursera">Coursera</span>
-                <h3>Python 3 Programming Specialization</h3>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/UF4HUSYMR7GW"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-            <div class="certification-card">
-                <span class="cert-provider coursera">Coursera</span>
-                <h3>Generative AI Specialization</h3>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/GZ4QPHKSPPEJ"
-                    target="_blank">Verify <i class="fa fa-external-link"></i></a>
-            </div>
-        </div>
+<!-- ░░ CONTACT ░░ -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="section-header reveal" style="text-align:center;">
+      <span class="section-label" style="display:block;text-align:center;">07 / Contact</span>
+      <h2>Let's Build Something Together</h2>
     </div>
-    <!-- Credly Badges Carousel -->
-    <h3 style="text-align:center; color:var(--heading); margin-top:50px; font-weight:300;">Digital Badges</h3>
-    <div id="credly-badges" class="credly-wrapper">
-        <!-- Badges injected via JS -->
+    <div class="contact-card reveal d1">
+      <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's connect.</p>
+      <div class="social-links">
+        <a href="https://github.com/Bibyutatsu" target="_blank" rel="noopener" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/bibhashm/" target="_blank" rel="noopener" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://bibyutatsu.github.io/Blogs/" target="_blank" rel="noopener" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          Dev Blog
+        </a>
+        <a href="mailto:bibhash.c.mitra@gmail.com" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          Email
+        </a>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ░░ FOOTER ░░ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <p>Designed &amp; built by <strong>Bibhash Chandra Mitra</strong> &nbsp;·&nbsp; 2025</p>
+      <a href="#hero" class="back-top">↑ Back to top</a>
     </div>
-    <!-- End #certifications -->
+  </div>
+</footer>
 
-
-
-
-    <div id="skills">
-        <h2 class="heading">Skills</h2>
-
-        <div class="skills-wrapper">
-            <!-- Radar Chart Container -->
-            <div class="skills-chart-container">
-                <canvas id="skills-chart"></canvas>
-            </div>
-
-            <!-- Categorized Skills List -->
-            <div class="skills-list-container">
-                <div class="skill-category">
-                    <h3>Core Programming & Systems</h3>
-                    <ul>
-                        <li>Python (Production-grade)</li>
-                        <li>SQL (PostgreSQL)</li>
-                        <li>REST APIs (FastAPI, Flask)</li>
-                        <li>System Design (HLD/LLD)</li>
-                        <li>Distributed Systems</li>
-                        <li>Caching (Redis)</li>
-                        <li>Message Queues</li>
-                        <li>Multithreading & Async</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category">
-                    <h3>Machine Learning & Deep Learning</h3>
-                    <ul>
-                        <li>Supervised/Unsupervised Learning</li>
-                        <li>Feature Engineering</li>
-                        <li>Model Evaluation</li>
-                        <li>Hyperparameter Optimization</li>
-                        <li>Time Series (LSTM)</li>
-                        <li>Explainable AI (SHAP)</li>
-                        <li>PyTorch</li>
-                        <li>TensorFlow / Keras</li>
-                        <li>scikit-learn</li>
-                        <li>Transformers</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category">
-                    <h3>Generative AI & LLMs</h3>
-                    <ul>
-                        <li>LLMs (GPT-3.5/4 APIs)</li>
-                        <li>Prompt Engineering</li>
-                        <li>Multi-Agent Architectures</li>
-                        <li>Text-to-SQL Systems</li>
-                        <li>RAG</li>
-                        <li>Semantic Search</li>
-                        <li>LangChain / Semantic Kernel</li>
-                        <li>Multimodal Models</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category">
-                    <h3>Computer Vision & OCR</h3>
-                    <ul>
-                        <li>OpenCV</li>
-                        <li>Tesseract OCR</li>
-                        <li>Faster R-CNN</li>
-                        <li>YOLO</li>
-                        <li>Document Layout Analysis</li>
-                        <li>Table Detection</li>
-                        <li>Multimodal Search</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category">
-                    <h3>Graphs & Knowledge Systems</h3>
-                    <ul>
-                        <li>Graph Databases (Neo4j)</li>
-                        <li>Graph Algorithms</li>
-                        <li>Knowledge Graphs</li>
-                        <li>GCN</li>
-                        <li>Entity Normalization</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category">
-                    <h3>Quantum Computing</h3>
-                    <ul>
-                        <li>Quantum Annealing</li>
-                        <li>D-Wave Leap</li>
-                        <li>CQM Solvers</li>
-                        <li>Quantum Optimization</li>
-                        <li>Hybrid Pipelines</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category">
-                    <h3>MLOps, Cloud & Deployment</h3>
-                    <ul>
-                        <li>Docker</li>
-                        <li>Kubernetes</li>
-                        <li>TorchServe</li>
-                        <li>MLflow</li>
-                        <li>CI/CD for ML</li>
-                        <li>AWS (ECS, EC2, S3)</li>
-                        <li>Azure (AI Search)</li>
-                        <li>Model Versioning</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End #skills -->
-
-    <div id="contact">
-        <h2>Get in Touch</h2>
-        <div id="contact-form">
-            <!-- Glassmorphism Connect Card -->
-            <div class="connect-card shadow-large">
-                <p class="connect-text">
-                    I'm always open to discussing new projects, creative ideas, or opportunities to be part of your
-                    visions.
-                </p>
-                <div class="social-links">
-                    <a href="https://github.com/Bibyutatsu" target="_blank" class="social-icon github"
-                        aria-label="GitHub">
-                        <i class="fa fa-github" aria-hidden="true"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/in/bibhashm/" target="_blank" class="social-icon linkedin"
-                        aria-label="LinkedIn">
-                        <i class="fa fa-linkedin" aria-hidden="true"></i>
-                    </a>
-                    <a href="https://bibyutatsu.github.io/Blogs/" target="_blank" class="social-icon globe"
-                        aria-label="My Blog">
-                        <i class="fa fa-globe" aria-hidden="true"></i>
-                    </a>
-                    <a href="mailto:bibhash.c.mitra@gmail.com" class="social-icon email" aria-label="Email">
-                        <i class="fa fa-envelope" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End #contact -->
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="copyright">
-                    <p>Designed & Built by <strong>Bibhash Chandra Mitra</strong></p>
-                    <p class="copyright-year">&copy; 2025</p>
-                </div>
-
-                <div class="to-top-btn" id="to-top">
-                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- End footer -->
-
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-    <script src="js/data.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/scripts.js"></script>
-    <script>
-        // Dynamic year calculation
-        document.addEventListener('DOMContentLoaded', function () {
-            const startDate = new Date(2019, 5); // June 2019
-            const now = new Date();
-            const years = ((now - startDate) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1);
-
-            document.getElementById('years-count').textContent = years + '+';
-
-            // Update counts from data if available
-            if (typeof portfolioData !== 'undefined') {
-                document.getElementById('publications-count').textContent = portfolioData.PatentsPublications.length;
-                document.getElementById('certifications-count').textContent = portfolioData.Certifications.length;
-                document.getElementById('badges-count').textContent = portfolioData.Credly.length;
-            }
-        });
-    </script>
-    <script type="module">
-        import { initThreeScene } from './js/three-scene.js';
-        initThreeScene();
-    </script>
+<script src="data.js?v=3"></script>
+<script src="main.js?v=3"></script>
 </body>
-
 </html>
