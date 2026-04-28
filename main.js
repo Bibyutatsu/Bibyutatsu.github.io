@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`;
       const btn=entry.querySelector('.tl-toggle'), proj=entry.querySelector('.tl-projects');
       btn.addEventListener('click', () => { const o=proj.classList.toggle('open'); btn.textContent=o?'[ hide ]':`[ ${job.projects.length} projects ]`; });
-      if (i===0) { proj.classList.add('open'); btn.textContent='[ hide ]'; }
+      // if (i===0) { proj.classList.add('open'); btn.textContent='[ hide ]'; } // Removed to collapse by default
       timeline.appendChild(entry);
     });
   }
