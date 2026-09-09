@@ -124,7 +124,7 @@
 (function () {
   const el = document.getElementById('typed-text');
   if (!el) return;
-  const roles = ['Senior Data Scientist','Generative AI Engineer','ML Systems Architect','Quantum Computing Researcher','NLP & Vision Expert'];
+  const roles = ['Lead Data Scientist','Generative AI Engineer','ML Systems Architect','Quantum Computing Researcher','NLP & Vision Expert'];
   let ri=0,ci=0,del=false;
   function tick() {
     const r=roles[ri];
@@ -264,7 +264,18 @@
 
 
 /* ─── 9. COUNTER ANIMATION ──────────────────────────────── */
+function updateDynamicExperience() {
+  const expEl = document.getElementById('stat-exp');
+  if (!expEl) return;
+  const start = new Date(2019, 5, 1); // June 2019
+  const now = new Date();
+  const diffYears = Math.max(0, (now - start) / (1000 * 60 * 60 * 24 * 365.25));
+  expEl.dataset.target = diffYears.toFixed(1);
+}
+updateDynamicExperience();
+
 function animateCounters() {
+  updateDynamicExperience();
   document.querySelectorAll('.stat-num[data-target]').forEach(el => {
     const target=parseFloat(el.dataset.target), isF=target%1!==0, dur=1800, start=performance.now();
     (function step(now) {
@@ -410,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof portfolioData === 'undefined') return;
 
   const logoMap = {
+    'Mastercard': 'images/Logo/mastercard-logo.svg',
     'PwC': 'images/Logo/pwc-logo.png',
     'Innoplexus': 'images/Logo/Innoplexus-logo.png',
     'Innoplexus Consulting Services, Pvt. Ltd.': 'images/Logo/Innoplexus-logo.png',

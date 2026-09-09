@@ -210,10 +210,22 @@ const portfolioData = {
   ],
   "Experience": [
     {
+      "company": "Mastercard",
+      "logoPath": "images/Logo/mastercard-logo.svg",
+      "role": "Lead Data Scientist",
+      "dateRange": "August 2026 – Present",
+      "projects": [
+        {
+          "title": "Cross-Border Transaction Categorization & Active Learning Pipeline",
+          "description": "Leading development of a transaction categorization system for cross-border entities, sourcing and processing large-scale transaction data via Databricks and Spark pipelines to power downstream customer insights and decision-making; built an active learning pipeline for end-to-end model training and inference deployment."
+        }
+      ]
+    },
+    {
       "company": "PwC",
       "logoPath": "images/Logo/pricewaterhousecoopers-pwc-logo-png_seeklogo-619359.png",
-      "role": "Manager (AI/ML)",
-      "dateRange": "June 2024 – Present",
+      "role": "Lead Engineer (Manager AI/ML)",
+      "dateRange": "June 2024 – August 2026",
       "projects": [
         {
           "title": "Azure Agentic Data Ingestion & Schema Standardization Platform (Financial Services)\n",

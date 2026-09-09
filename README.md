@@ -3,7 +3,7 @@
 [![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-blue?logo=github)](https://bibyutatsu.github.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 
-A high-performance, immersive portfolio website for **Bibhash Mitra**, Senior Data Scientist & AI/ML Expert. This version features a complete redesign with a focus on **immersive 3D visuals**, **dynamic themes**, and **modern web APIs**.
+A high-performance, immersive portfolio website for **Bibhash Mitra**, Lead Data Scientist & AI/ML Expert. This version features a complete redesign with a focus on **immersive 3D visuals**, **dynamic themes**, and **modern web APIs**.
 
 🔗 **Live Site**: [bibyutatsu.github.io](https://bibyutatsu.github.io)
 
@@ -65,5 +65,5 @@ This project is licensed under the [MIT License](LICENSE.md).
 
 ---
 
-*Last Updated: April 2026*
+*Last Updated: September 2026*
 
