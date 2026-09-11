@@ -517,3 +517,145 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.dispatchEvent(new Event('portfolio-ready'));
 });
+
+/* ─── 14. 3D STAGE PROJECTS CAROUSEL (OPTION A) ─────────── */
+(function initStageCarousel() {
+  const cards = Array.from(document.querySelectorAll('.stage-card'));
+  const dots = Array.from(document.querySelectorAll('.stage-dot'));
+  const prevBtn = document.getElementById('stage-prev');
+  const nextBtn = document.getElementById('stage-next');
+  const wrapper = document.querySelector('.stage-carousel-wrapper');
+
+  if (!cards.length) return;
+
+  let activeIndex = 0;
+  const total = cards.length;
+  let autoplayTimer = null;
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  function updateStage(newIndex) {
+    activeIndex = (newIndex + total) % total;
+
+    cards.forEach((card, i) => {
+      card.classList.remove('is-center', 'is-left', 'is-right', 'is-hidden');
+      
+      const diff = (i - activeIndex + total) % total;
+
+      if (diff === 0) {
+        card.classList.add('is-center');
+      } else if (diff === 1 || (total === 2 && diff === 1)) {
+        card.classList.add('is-right');
+      } else if (diff === total - 1) {
+        card.classList.add('is-left');
+      } else {
+        card.classList.add('is-hidden');
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === activeIndex);
+    });
+  }
+
+  // Click on cards
+  cards.forEach((card, i) => {
+    card.addEventListener('click', (e) => {
+      // Don't intercept actual clicks on links/buttons inside center card
+      if (e.target.closest('a') || e.target.closest('button')) {
+        return;
+      }
+      if (i !== activeIndex) {
+        updateStage(i);
+        restartAutoplay();
+      }
+    });
+  });
+
+  // Buttons
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      updateStage(activeIndex - 1);
+      restartAutoplay();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      updateStage(activeIndex + 1);
+      restartAutoplay();
+    });
+  }
+
+  // Dots
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      updateStage(i);
+      restartAutoplay();
+    });
+  });
+
+  // Keyboard navigation when hovered or in viewport
+  window.addEventListener('keydown', (e) => {
+    const projectsSec = document.getElementById('projects');
+    if (!projectsSec) return;
+    const rect = projectsSec.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight * 0.7 && rect.bottom > window.innerHeight * 0.3;
+    if (!inView) return;
+
+    if (e.key === 'ArrowLeft') {
+      updateStage(activeIndex - 1);
+      restartAutoplay();
+    } else if (e.key === 'ArrowRight') {
+      updateStage(activeIndex + 1);
+      restartAutoplay();
+    }
+  });
+
+  // Touch swipe
+  if (wrapper) {
+    wrapper.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeDistance = touchEndX - touchStartX;
+      if (Math.abs(swipeDistance) > 45) {
+        if (swipeDistance > 0) {
+          updateStage(activeIndex - 1);
+        } else {
+          updateStage(activeIndex + 1);
+        }
+        restartAutoplay();
+      }
+    }, { passive: true });
+
+    wrapper.addEventListener('mouseenter', stopAutoplay);
+    wrapper.addEventListener('mouseleave', startAutoplay);
+  }
+
+  // Autoplay functionality
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayTimer = setInterval(() => {
+      updateStage(activeIndex + 1);
+    }, 6000);
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  function restartAutoplay() {
+    stopAutoplay();
+    startAutoplay();
+  }
+
+  // Initial stage setup
+  updateStage(0);
+  startAutoplay();
+})();

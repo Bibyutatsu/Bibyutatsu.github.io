@@ -264,6 +264,363 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
 .scroll-line { width: 1px; height: 56px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scroll-pulse 2s ease-in-out infinite; }
 @keyframes scroll-pulse { 0%,100%{opacity:.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.1)} }
 
+/* === 3D STAGE PROJECTS CAROUSEL (OPTION A) === */
+.section-subdesc {
+  color: var(--text-muted);
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  max-width: 680px;
+  margin-top: 14px;
+  line-height: 1.65;
+}
+
+.stage-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 24px 0 10px;
+  margin: 0 auto;
+}
+
+.stage-scene {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  width: 100%;
+  min-height: 560px;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-track {
+  width: 100%;
+  position: relative;
+  height: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Base Card Style */
+.stage-card {
+  position: absolute;
+  width: min(720px, 86vw);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.65s cubic-bezier(0.2, 0.9, 0.3, 1),
+              opacity 0.65s cubic-bezier(0.2, 0.9, 0.3, 1),
+              filter 0.65s cubic-bezier(0.2, 0.9, 0.3, 1),
+              box-shadow 0.65s cubic-bezier(0.2, 0.9, 0.3, 1);
+  will-change: transform, opacity, filter;
+  transform-style: preserve-3d;
+}
+
+.stage-card-glass {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  position: relative;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.stage-card-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(6, 6, 15, 0.78);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-hover);
+  color: var(--accent);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.stage-img-wrap {
+  position: relative;
+  height: 100%;
+  min-height: 380px;
+  overflow: hidden;
+  background: #020208;
+}
+
+.stage-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.6s var(--ease);
+}
+
+.stage-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 60%, var(--card-bg) 100%);
+  pointer-events: none;
+}
+
+.stage-card-content {
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stage-card-header {
+  margin-bottom: 12px;
+}
+
+.stage-counter {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.76rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: 0.1em;
+}
+
+.stage-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.4rem, 2.4vw, 1.95rem);
+  font-weight: 700;
+  color: var(--heading-color);
+  line-height: 1.2;
+}
+
+.stage-desc {
+  font-size: 0.92rem;
+  line-height: 1.68;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.stage-desc strong {
+  color: var(--heading-color);
+  font-weight: 600;
+}
+
+.stage-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 26px;
+}
+
+.stage-tag {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.7rem;
+  padding: 4px 11px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.stage-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stage-action-btn {
+  padding: 10px 22px !important;
+  font-size: 0.84rem !important;
+}
+
+/* 3D Stage States */
+/* Center (Active) */
+.stage-card.is-center {
+  z-index: 30;
+  opacity: 1;
+  filter: blur(0px) brightness(1);
+  transform: translate3d(0, 0, 80px) scale(1.02);
+  pointer-events: auto;
+}
+
+.stage-card.is-center .stage-card-glass {
+  border-color: var(--accent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), var(--glow);
+}
+
+.stage-card.is-center:hover .stage-img-wrap img {
+  transform: scale(1.05);
+}
+
+/* Left Recessed */
+.stage-card.is-left {
+  z-index: 15;
+  opacity: 0.52;
+  filter: blur(1.8px) brightness(0.7);
+  transform: translate3d(-52%, 0, -120px) rotateY(22deg) scale(0.85);
+}
+
+.stage-card.is-left:hover {
+  opacity: 0.85;
+  filter: blur(0px) brightness(0.9);
+  transform: translate3d(-48%, 0, -80px) rotateY(16deg) scale(0.88);
+}
+
+/* Right Recessed */
+.stage-card.is-right {
+  z-index: 15;
+  opacity: 0.52;
+  filter: blur(1.8px) brightness(0.7);
+  transform: translate3d(52%, 0, -120px) rotateY(-22deg) scale(0.85);
+}
+
+.stage-card.is-right:hover {
+  opacity: 0.85;
+  filter: blur(0px) brightness(0.9);
+  transform: translate3d(48%, 0, -80px) rotateY(-16deg) scale(0.88);
+}
+
+/* Hidden (if more than 3) */
+.stage-card.is-hidden {
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, -250px) scale(0.65);
+}
+
+/* Arrow Navigation */
+.stage-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--heading-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 40;
+  transition: border-color var(--t), background var(--t), box-shadow var(--t), transform var(--t);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.stage-arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.stage-arrow:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--glow);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.stage-prev {
+  left: 8px;
+}
+
+.stage-next {
+  right: 8px;
+}
+
+/* Dots */
+.stage-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.stage-dot {
+  width: 32px;
+  height: 5px;
+  border-radius: 4px;
+  border: none;
+  background: var(--border-hover);
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+
+.stage-dot.active {
+  background: var(--accent);
+  width: 46px;
+  box-shadow: var(--glow);
+}
+
+/* Responsive styles for 3D Stage */
+@media (max-width: 1024px) {
+  .stage-scene {
+    min-height: 580px;
+  }
+  .stage-track {
+    height: 560px;
+  }
+  .stage-card {
+    width: min(640px, 88vw);
+  }
+  .stage-card.is-left {
+    transform: translate3d(-38%, 0, -100px) rotateY(16deg) scale(0.85);
+  }
+  .stage-card.is-right {
+    transform: translate3d(38%, 0, -100px) rotateY(-16deg) scale(0.85);
+  }
+}
+
+@media (max-width: 768px) {
+  .stage-scene {
+    min-height: auto;
+    perspective: none;
+  }
+  .stage-track {
+    height: auto;
+    min-height: 620px;
+  }
+  .stage-card-glass {
+    grid-template-columns: 1fr;
+  }
+  .stage-img-wrap {
+    min-height: 220px;
+    max-height: 240px;
+  }
+  .stage-img-overlay {
+    background: linear-gradient(to bottom, transparent 60%, var(--card-bg) 100%);
+  }
+  .stage-card-content {
+    padding: 24px 20px;
+  }
+  .stage-card {
+    width: 92vw;
+  }
+  .stage-card.is-left {
+    transform: translate3d(-100%, 0, 0) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .stage-card.is-right {
+    transform: translate3d(100%, 0, 0) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .stage-card.is-center {
+    transform: none;
+  }
+  .stage-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .stage-prev { left: -6px; }
+  .stage-next { right: -6px; }
+}
+
 /* === ABOUT === */
 .about-grid { display: grid; grid-template-columns: 340px 1fr; gap: clamp(40px,7vw,100px); align-items: start; }
 .about-image { position: relative; }
