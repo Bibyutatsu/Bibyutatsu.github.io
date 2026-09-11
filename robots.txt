@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Canonical Sitemaps
 Sitemap: https://bibyutatsu.github.io/sitemap.xml
+Sitemap: https://bibyutatsu.github.io/Blogs/sitemap.xml
+Sitemap: https://bibyutatsu.github.io/ebooks/sitemap.xml
