@@ -37,6 +37,19 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "ProfilePage",
+        "@id": "https://bibyutatsu.github.io/#profilepage",
+        "url": "https://bibyutatsu.github.io/",
+        "name": "Bibhash Mitra | Lead Data Scientist & AI/ML Expert",
+        "description": "Portfolio and research works of Bibhash Chandra Mitra — Lead Data Scientist specializing in Generative AI, Computer Vision, and Quantum Computing.",
+        "isPartOf": {
+          "@id": "https://bibyutatsu.github.io/#website"
+        },
+        "mainEntity": {
+          "@id": "https://bibyutatsu.github.io/#person"
+        }
+      },
+      {
         "@type": "Person",
         "@id": "https://bibyutatsu.github.io/#person",
         "name": "Bibhash Chandra Mitra",
@@ -68,8 +81,9 @@
         "@type": "WebSite",
         "@id": "https://bibyutatsu.github.io/#website",
         "url": "https://bibyutatsu.github.io/",
-        "name": "Bibhash Mitra Portfolio",
-        "author": {
+        "name": "Bibhash Mitra",
+        "alternateName": "Bibhash Mitra Portfolio",
+        "publisher": {
           "@id": "https://bibyutatsu.github.io/#person"
         }
       },
