@@ -1268,10 +1268,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Publications */
   const pubGrid = document.getElementById('pub-grid');
+  const pubAbstracts = [
+    "Hybrid classical-quantum resource allocation pipelines formulating constrained combinatorial optimization on quantum annealers and gate-based QPUs for distributed enterprise workload partitioning.",
+    "Quadratic unconstrained binary optimization (QUBO) formulations and CQM solvers for high-throughput entity assignment under non-linear operational constraints.",
+    "Quantum annealing graph optimization for multi-commodity traffic networks, minimizing congestion latency across mixed autonomous and human-driven vehicular fleets.",
+    "Structure-based de novo drug design generating tailored 3D ligand candidates within target receptor binding pockets using geometric deep learning and graph neural networks.",
+    "Junction-tree variational autoencoders and conditional generative reinforcement learning for lead compound optimization under multi-objective ADMET properties.",
+    "Non-linear optimal control and 3D Dubins path synthesis for simultaneous multi-UAV temporal-spatial rendezvous under kinematic turning constraints and dynamic obstacle fields."
+  ];
+
   if (pubGrid) {
-    portfolioData.PatentsPublications.forEach((pub,i) => {
-      const card=document.createElement('div'); card.className='pub-card reveal'; card.style.transitionDelay=(i*.07)+'s';
-      card.innerHTML=`<span class="pub-tag ${pub.Type.toLowerCase()}">${pub.Type}</span><h3>${pub.Name}</h3><p class="pub-venue">${pub.Type==='Paper'?'AIAA Scitech 2019 Forum':'US Patent Office'}</p><a href="${pub.URL}" target="_blank" rel="noopener" class="pub-link">View ${pub.Type} →</a>`;
+    portfolioData.PatentsPublications.forEach((pub, i) => {
+      const card = document.createElement('div');
+      card.className = 'pub-card reveal';
+      card.style.transitionDelay = (i * 0.07) + 's';
+
+      let canvasType = 'quantum';
+      if (/molecular|drug|protein/i.test(pub.Name)) canvasType = 'molecular';
+      else if (/uav|rendezvous|flight/i.test(pub.Name)) canvasType = 'aerospace';
+
+      const absText = pubAbstracts[i] || 'Advanced research in machine learning, generative modeling, and optimization.';
+
+      card.innerHTML = `
+        <div class="pub-card-head">
+          <span class="pub-tag ${pub.Type.toLowerCase()}">${pub.Type}</span>
+          <canvas class="pub-circuit-canvas" width="88" height="88" data-type="${canvasType}" aria-hidden="true"></canvas>
+        </div>
+        <h3>${pub.Name}</h3>
+        <p class="pub-venue">${pub.Type === 'Paper' ? 'AIAA Scitech 2019 Forum' : 'US Patent Office'}</p>
+        <div class="pub-drawer">
+          <p class="pub-abstract">${absText}</p>
+        </div>
+        <div class="pub-actions">
+          <button class="pub-preview-btn" type="button" aria-expanded="false">[ + Abstract ]</button>
+          <a href="${pub.URL}" target="_blank" rel="noopener" class="pub-link">View ${pub.Type} →</a>
+        </div>
+      `;
       pubGrid.appendChild(card);
     });
   }
@@ -2435,4 +2467,282 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   }
+})();
+
+
+/* ─── 19. PRETEXT: ZERO-REFLOW ARITHMETIC TEXT LAYOUT ENGINE ─── */
+const Pretext = (function () {
+  const cache = new Map();
+  let ctx = null;
+
+  function getContext(font) {
+    if (!ctx) {
+      const c = document.createElement('canvas');
+      ctx = c.getContext('2d');
+    }
+    ctx.font = font;
+    return ctx;
+  }
+
+  // Pretext Step 1: prepare(text, font)
+  // Evaluates and caches character metrics once; returns an immutable handle
+  function prepare(text, font) {
+    const key = font + '::' + text;
+    if (cache.has(key)) return cache.get(key);
+
+    const c = getContext(font);
+    const words = text.split(/\s+/);
+    const wordWidths = new Float32Array(words.length);
+    const spaceWidth = c.measureText(' ').width;
+
+    for (let i = 0; i < words.length; i++) {
+      wordWidths[i] = c.measureText(words[i]).width;
+    }
+
+    const prep = { text, font, words, wordWidths, spaceWidth };
+    cache.set(key, prep);
+    return prep;
+  }
+
+  // Pretext Step 2: layout(prep, containerWidth, lineHeight)
+  // Pure arithmetic evaluation in microseconds with ZERO DOM touch (0ms layout reflow)
+  function layout(prep, containerWidth, lineHeight) {
+    if (containerWidth <= 0) return { height: 0, lineCount: 0 };
+    const { wordWidths, spaceWidth } = prep;
+    let currentLineWidth = 0;
+    let lineCount = 1;
+
+    for (let i = 0; i < wordWidths.length; i++) {
+      const w = wordWidths[i];
+      if (currentLineWidth + w <= containerWidth || currentLineWidth === 0) {
+        currentLineWidth += w + spaceWidth;
+      } else {
+        currentLineWidth = w + spaceWidth;
+        lineCount++;
+      }
+    }
+
+    const height = Math.round(lineCount * lineHeight);
+    return { height, lineCount };
+  }
+
+  return { prepare, layout };
+})();
+
+
+/* ─── 20. SPARK: QUANTUM CIRCUIT & MOLECULAR DISSOLUTION ─── */
+(function initSparkPublications() {
+  document.addEventListener('portfolio-ready', () => {
+    const pubCanvases = document.querySelectorAll('.pub-circuit-canvas');
+    if (!pubCanvases.length) return;
+
+    pubCanvases.forEach(canvas => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const type = canvas.dataset.type || 'quantum';
+      const w = 88, h = 88;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+
+      // Generate lattice geometry particles based on publication domain
+      const particles = [];
+      const links = [];
+
+      if (type === 'quantum') {
+        // 3 Qubit Rails + Hadamard Gate Box + Entanglement Links
+        const yRails = [24, 44, 64];
+        yRails.forEach(y => {
+          particles.push({ baseX: 16, baseY: y, seed: Math.random() });
+          particles.push({ baseX: 44, baseY: y, seed: Math.random() });
+          particles.push({ baseX: 72, baseY: y, seed: Math.random() });
+        });
+        // Entanglement vertical links
+        links.push([1, 4], [4, 7], [0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8]);
+      } else if (type === 'molecular') {
+        // Benzene Ring Hexagon + Functional Branches
+        const cx = 44, cy = 44, r = 24;
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2;
+          particles.push({ baseX: cx + Math.cos(a) * r, baseY: cy + Math.sin(a) * r, seed: Math.random() });
+          links.push([i, (i + 1) % 6]);
+        }
+        // Functional offshoot atoms
+        particles.push({ baseX: cx + Math.cos(0) * r * 1.5, baseY: cy + Math.sin(0) * r * 1.5, seed: Math.random() });
+        particles.push({ baseX: cx + Math.cos(Math.PI) * r * 1.5, baseY: cy + Math.sin(Math.PI) * r * 1.5, seed: Math.random() });
+        links.push([0, 6], [3, 7]);
+      } else {
+        // Aerospace UAV Trajectory Path Loop
+        const points = 10;
+        for (let i = 0; i < points; i++) {
+          const t = (i / points) * Math.PI * 2;
+          const x = 44 + Math.sin(t) * 28;
+          const y = 44 + Math.sin(t * 2) * 18;
+          particles.push({ baseX: x, baseY: y, seed: Math.random() });
+          if (i > 0) links.push([i - 1, i]);
+        }
+        links.push([points - 1, 0]);
+      }
+
+      let dissolve = 0;
+      let targetDissolve = 0;
+      let isAnimating = false;
+      let clock = 0;
+
+      function render() {
+        ctx.clearRect(0, 0, w, h);
+        clock += 0.04;
+        dissolve += (targetDissolve - dissolve) * 0.12;
+
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        let accentColor = '#00ccff';
+        let subColor = 'rgba(136, 85, 255, 0.7)';
+        if (theme === 'batman') {
+          accentColor = '#ffe919';
+          subColor = 'rgba(255, 68, 68, 0.7)';
+        } else if (theme === 'cyberpunk') {
+          accentColor = '#ff0080';
+          subColor = 'rgba(0, 255, 204, 0.7)';
+        } else if (theme === 'ocean') {
+          accentColor = '#00e5ff';
+          subColor = 'rgba(0, 255, 170, 0.7)';
+        } else if (theme === 'light') {
+          accentColor = '#0055cc';
+          subColor = 'rgba(108, 60, 224, 0.7)';
+        }
+
+        // Compute Simplex noise dispersion positions
+        const curPositions = particles.map(p => {
+          if (dissolve <= 0.001) return { x: p.baseX, y: p.baseY, alpha: 1.0 };
+          const angle = p.seed * 6.28;
+          const dx = Math.sin(angle * 3.0 + clock) * dissolve * 32.0;
+          const dy = -(Math.cos(angle * 2.0) + 0.6) * dissolve * 34.0;
+          const alpha = Math.max(0, 1.0 - dissolve * 1.15);
+          return { x: p.baseX + dx, y: p.baseY + dy, alpha };
+        });
+
+        // 1. Draw structural connecting links (fades with dissolve)
+        const lineAlpha = Math.max(0, 0.35 * (1.0 - dissolve * 1.5));
+        if (lineAlpha > 0.01) {
+          ctx.strokeStyle = subColor;
+          ctx.lineWidth = 1.2;
+          ctx.globalAlpha = lineAlpha;
+          links.forEach(([i, j]) => {
+            const p1 = curPositions[i];
+            const p2 = curPositions[j];
+            if (p1 && p2) {
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          });
+        }
+
+        // 2. Draw Spark nodes & dispersed dust
+        curPositions.forEach((p, idx) => {
+          if (p.alpha <= 0.01) return;
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = idx % 2 === 0 ? accentColor : subColor;
+          ctx.shadowColor = accentColor;
+          ctx.shadowBlur = 4;
+          const r = Math.max(1.2, 2.8 * (1.0 - dissolve * 0.4));
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // If target was set to 1.0, automatically return to intact 0.0
+        if (targetDissolve === 1.0 && dissolve > 0.88) {
+          targetDissolve = 0.0;
+        }
+
+        if (Math.abs(dissolve - targetDissolve) > 0.005 || targetDissolve > 0) {
+          requestAnimationFrame(render);
+        } else {
+          dissolve = targetDissolve;
+          isAnimating = false;
+        }
+      }
+
+      function startAnimation() {
+        if (!isAnimating) {
+          isAnimating = true;
+          requestAnimationFrame(render);
+        }
+      }
+
+      // Initial static draw
+      render();
+
+      canvas._triggerDissolve = function () {
+        targetDissolve = 1.0;
+        startAnimation();
+      };
+
+      canvas._triggerMiniDissolve = function () {
+        targetDissolve = 0.55;
+        startAnimation();
+        setTimeout(() => {
+          targetDissolve = 0.0;
+          startAnimation();
+        }, 320);
+      };
+    });
+
+    // Wire up Pretext Drawers and Spark interaction
+    const cards = document.querySelectorAll('.pub-card');
+    cards.forEach(card => {
+      const btn = card.querySelector('.pub-preview-btn');
+      const drawer = card.querySelector('.pub-drawer');
+      const abs = card.querySelector('.pub-abstract');
+      const canvas = card.querySelector('.pub-circuit-canvas');
+      if (!btn || !drawer || !abs) return;
+
+      const absText = abs.textContent.trim();
+      const prep = Pretext.prepare(absText, '12.5px "Inter", sans-serif');
+
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const isOpen = drawer.classList.contains('open');
+
+        // 1. Spark Dissolution on micro-canvas
+        if (canvas && canvas._triggerDissolve) {
+          canvas._triggerDissolve();
+        }
+
+        // 2. Tactile Quantum Ket Canvas Shockwave
+        const rect = btn.getBoundingClientRect();
+        if (window.triggerCanvasUIQuantumGate) {
+          window.triggerCanvasUIQuantumGate(rect.left + rect.width / 2, rect.top + rect.height / 2, 'H');
+        }
+
+        // 3. Pretext Zero-Reflow arithmetic height measurement (0ms layout reflow)
+        if (!isOpen) {
+          const cardWidth = card.clientWidth || 320;
+          const availableWidth = Math.max(180, cardWidth - 48 - 24);
+          const { height } = Pretext.layout(prep, availableWidth, 20.2);
+          drawer.style.height = (height + 28) + 'px';
+          drawer.classList.add('open');
+          btn.textContent = '[ − Abstract ]';
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          drawer.style.height = '0px';
+          drawer.classList.remove('open');
+          btn.textContent = '[ + Abstract ]';
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      card.addEventListener('mouseenter', () => {
+        if (canvas && canvas._triggerMiniDissolve) {
+          canvas._triggerMiniDissolve();
+        }
+      });
+    });
+  });
 })();
