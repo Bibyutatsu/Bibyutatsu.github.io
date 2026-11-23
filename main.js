@@ -590,6 +590,57 @@ const GLSL_SNOISE = `
     startLoop();
   };
 
+  // Quantum Gate Canvas Shockwaves & Ket Particle Bursts
+  window.triggerCanvasUIQuantumGate = function (x, y, gate) {
+    const gatePalettes = {
+      'H': ['#00ccff', '#8855ff', '#ffffff'],
+      'X': ['#ff0080', '#ffaa00', '#ffffff'],
+      'Y': ['#00ffaa', '#00ccff', '#ffffff'],
+      'Z': ['#00e5ff', '#3b82f6', '#ffffff'],
+      'reset': ['#ffffff', '#00ccff', '#8855ff']
+    };
+    const colors = gatePalettes[gate] || ['#00ccff', '#8855ff', '#ffffff'];
+
+    // 1. Concentric Quantum Probability Orbital Rings
+    for (let r = 1; r <= 3; r++) {
+      shockwaves.push({
+        x, y,
+        radius: 8 * r,
+        maxRadius: 105 + r * 28,
+        opacity: 0.85 / r,
+        color: colors[(r - 1) % colors.length],
+        strokeWidth: 2.2 - r * 0.4,
+        dashed: r % 2 === 0
+      });
+    }
+
+    // 2. Quantum State Ket Particles (|0⟩, |1⟩, |ψ⟩, etc.)
+    const symbols = gate === 'H' ? ['|+⟩', '|−⟩', '1/√2', '|ψ⟩'] :
+                    gate === 'X' ? ['|1⟩', '|0⟩', '¬X', 'NOT'] :
+                    gate === 'Y' ? ['|i⟩', '|−i⟩', 'σ_y', '|ψ⟩'] :
+                    gate === 'Z' ? ['|ψ⟩', 'e^{iπ}', 'σ_z', '−|1⟩'] :
+                    ['|0⟩', '|0⟩', 'Reset', '|ψ₀⟩'];
+
+    for (let i = 0; i < 14; i++) {
+      const angle = (Math.PI * 2 * i) / 14 + (Math.random() - 0.5) * 0.45;
+      const speed = Math.random() * 4.8 + 3.2;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 1.4, // upward quantum drift towards bloch sphere
+        rot: (Math.random() - 0.5) * 0.4,
+        vrot: (Math.random() - 0.5) * 0.06,
+        size: Math.random() * 8 + 11,
+        color: colors[i % colors.length],
+        symbol: symbols[i % symbols.length],
+        life: 1.0,
+        decay: Math.random() * 0.024 + 0.018
+      });
+    }
+
+    startLoop();
+  };
+
   // Theme Switcher Easter Egg: Fullscreen Canvas UI Transitions
   window.triggerCanvasUIThemeEffect = function (theme, x, y) {
     if (x === undefined) x = window.innerWidth / 2;
@@ -653,6 +704,7 @@ const GLSL_SNOISE = `
       const sw = shockwaves[i];
       if (sw.radius > 0) {
         ctx.save();
+        if (sw.dashed) ctx.setLineDash([6, 5]);
         ctx.beginPath();
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
         ctx.strokeStyle = sw.color;
@@ -668,7 +720,7 @@ const GLSL_SNOISE = `
       }
     }
 
-    // 2. Draw glass shards (Canvas UI signature)
+    // 2. Draw glass shards & quantum particles (Canvas UI signature)
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       p.x += p.vx;
@@ -687,18 +739,31 @@ const GLSL_SNOISE = `
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
       ctx.globalAlpha = p.life;
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.moveTo(-p.size * 0.5, p.size * 0.5);
-      ctx.lineTo(p.size * 0.8, -p.size * 0.2);
-      ctx.lineTo(p.size * 0.2, -p.size * 0.7);
-      ctx.closePath();
-      ctx.fill();
 
-      // Specular edge line
-      ctx.strokeStyle = 'rgba(255,255,255,0.65)';
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
+      if (p.symbol) {
+        // Quantum Ket Text Particle
+        ctx.fillStyle = p.color;
+        ctx.font = `600 ${Math.round(p.size)}px "Fira Code", monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 8;
+        ctx.fillText(p.symbol, 0, 0);
+      } else {
+        // Tactile Glass Shard Polygon
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.moveTo(-p.size * 0.5, p.size * 0.5);
+        ctx.lineTo(p.size * 0.8, -p.size * 0.2);
+        ctx.lineTo(p.size * 0.2, -p.size * 0.7);
+        ctx.closePath();
+        ctx.fill();
+
+        // Specular edge line
+        ctx.strokeStyle = 'rgba(255,255,255,0.65)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
       ctx.restore();
     }
 
@@ -846,7 +911,7 @@ const GLSL_SNOISE = `
     });
   }
   document.addEventListener('portfolio-ready', () => {
-    applyTilt('.pub-card,.skill-cat,.stat,.edu-card');
+    applyTilt('.pub-card,.skill-cat,.stat');
   });
 })();
 
@@ -871,9 +936,11 @@ const GLSL_SNOISE = `
         const dx = x - 0.5;
         const dy = y - 0.5;
 
-        // Subtle tilt angles (max ~11 deg)
-        const rotX = (dy * -11).toFixed(2);
-        const rotY = (dx * 11).toFixed(2);
+        // Subtle tilt angles (max ~11 deg, gentler for compact badges)
+        const isBadge = card.classList.contains('carousel-badge');
+        const maxDeg = isBadge ? 7 : 11;
+        const rotX = (dy * -maxDeg).toFixed(2);
+        const rotY = (dx * maxDeg).toFixed(2);
 
         // Angle and foil shift based on cursor
         const angle = (Math.atan2(dy, dx) * (180 / Math.PI) + 90).toFixed(1);
@@ -888,7 +955,7 @@ const GLSL_SNOISE = `
           card.style.setProperty('--foil-y', `${foilY}%`);
           card.style.setProperty('--angle', `${angle}deg`);
           card.style.setProperty('--holo-opacity', '1');
-          card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px) translateZ(8px)`;
+          card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(${isBadge ? -3 : -6}px) translateZ(${isBadge ? 4 : 8}px)`;
         });
       }
 
@@ -1213,7 +1280,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const certGrid = document.getElementById('cert-grid');
   if (certGrid) {
     portfolioData.Certifications.forEach((cert,i) => {
-      const card=document.createElement('div'); card.className='cert-card reveal'; card.style.transitionDelay=(i*.05)+'s';
+      const isTopCert = /aws|azure|databricks|deeplearning|quantum/i.test(cert.Name + ' ' + cert.Provider);
+      const card=document.createElement('div');
+      card.className=`cert-card holo-card ${isTopCert ? 'holo-gold' : ''} reveal`;
+      card.style.transitionDelay=(i*.05)+'s';
       card.innerHTML=`<span class="cert-tag ${cert.Provider.toLowerCase()}">${cert.Provider}</span><h3>${cert.Name}</h3><a href="${cert.URL}" target="_blank" rel="noopener">Verify ↗</a>`;
       certGrid.appendChild(card);
     });
@@ -1223,7 +1293,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const carouselTrack = document.getElementById('badges-carousel');
   if (carouselTrack) {
     portfolioData.Credly.forEach(badge => {
-      const a=document.createElement('a'); a.className='carousel-badge';
+      const isGoldBadge = /master|specialty|expert|professional|associate/i.test(badge.title);
+      const a=document.createElement('a');
+      a.className=`carousel-badge holo-card ${isGoldBadge ? 'holo-gold' : ''}`;
       a.href=badge.badgeUrl; a.target='_blank'; a.rel='noopener';
       a.innerHTML=`<img src="${badge.imageUrl}" alt="${badge.title}" loading="lazy"><span>${badge.title}</span>`;
       carouselTrack.appendChild(a);
@@ -1246,6 +1318,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const card=document.createElement('div'); card.className='skill-cat reveal'; card.style.transitionDelay=(i*.07)+'s';
       card.innerHTML=`<h3>${cat.name}</h3><div class="skill-tags">${cat.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div>`;
       skillsGrid.appendChild(card);
+    });
+    // Wire up skill-tag clicks to trigger quantum burst
+    skillsGrid.querySelectorAll('.skill-tag').forEach(tag => {
+      tag.style.cursor = 'pointer';
+      tag.addEventListener('click', e => {
+        const rect = tag.getBoundingClientRect();
+        if (window.triggerCanvasUIQuantumGate) {
+          window.triggerCanvasUIQuantumGate(rect.left + rect.width / 2, rect.top + rect.height / 2, 'H');
+        }
+      });
     });
   }
 
@@ -1437,6 +1519,37 @@ document.addEventListener('DOMContentLoaded', () => {
   laserRing.position.y = 32;
   group.add(laserRing);
 
+  // Shockwave Pulse Rings (Spark / Milestone FX)
+  const pulseRings = [];
+  for (let i = 0; i < 4; i++) {
+    const pRingGeo = new THREE.TorusGeometry(8.8, 0.42, 6, 32);
+    const pRingMat = new THREE.MeshBasicMaterial({ color: hexColor, transparent: true, opacity: 0 });
+    const pRing = new THREE.Mesh(pRingGeo, pRingMat);
+    pRing.rotation.x = Math.PI / 2;
+    pRing.visible = false;
+    group.add(pRing);
+    pulseRings.push({ mesh: pRing, mat: pRingMat, life: 0, speed: 0.032, scaleSpeed: 2.4 });
+  }
+
+  window.triggerChronoPillarPulse = function (progressVal) {
+    const p = pulseRings.find(pr => pr.life <= 0);
+    const targetY = 32 - (progressVal !== undefined ? progressVal : currentProgress) * 64;
+    if (p) {
+      p.life = 1.0;
+      p.mesh.visible = true;
+      p.mesh.position.y = targetY;
+      p.mesh.scale.set(1, 1, 1);
+    }
+    // Disperse Spark particles at this coordinate
+    const positions = partGeo.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      if (Math.random() < 0.45) {
+        partYBase[i] = targetY + (Math.random() - 0.5) * 8;
+        partRadius[i] = 12 + Math.random() * 8;
+      }
+    }
+  };
+
   // Orbiting Particle Sparks along the rail
   const particleCount = 28;
   const partGeo = new THREE.BufferGeometry();
@@ -1496,6 +1609,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ringMat.color.copy(hexColor);
     partMat.color.copy(hexColor);
     coreMat.color.copy(coreColor);
+    pulseRings.forEach(p => p.mat.color.copy(hexColor));
   });
 
   let inView = false;
@@ -1504,6 +1618,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (inView) requestAnimationFrame(render);
   }, { threshold: 0.05 });
   observer.observe(section);
+
+  // Hook Timeline Entries to Chrono-Pillar Milestones
+  document.addEventListener('portfolio-ready', () => {
+    const entries = document.querySelectorAll('.tl-entry');
+    if (!entries.length) return;
+    const entryObs = new IntersectionObserver(items => {
+      items.forEach(item => {
+        if (item.isIntersecting) {
+          const idx = Array.from(entries).indexOf(item.target);
+          const ratio = entries.length > 1 ? idx / (entries.length - 1) : 0;
+          if (window.triggerChronoPillarPulse) {
+            window.triggerChronoPillarPulse(ratio);
+          }
+        }
+      });
+    }, { rootMargin: '-20% 0px -20% 0px', threshold: 0.25 });
+    entries.forEach(e => entryObs.observe(e));
+  });
 
   let clock = 0;
   function render() {
@@ -1514,6 +1646,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Map progress 0..1 to Laser Ring Y: 32 down to -32
     laserRing.position.y = 32 - currentProgress * 64;
     laserRing.scale.setScalar(1 + Math.sin(clock * 3.5) * 0.06);
+
+    // Animate milestone pulse shockwave rings
+    pulseRings.forEach(p => {
+      if (p.life > 0) {
+        p.life -= p.speed;
+        const s = 1 + (1 - p.life) * p.scaleSpeed;
+        p.mesh.scale.set(s, s, 1);
+        p.mat.opacity = p.life * 0.95;
+        if (p.life <= 0) p.mesh.visible = false;
+      }
+    });
 
     // Rotate column slowly
     group.rotation.y += 0.007;
@@ -1683,10 +1826,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Connect Buttons
+  // Connect Buttons with Canvas UI Quantum Shockwaves
   document.querySelectorAll('.bloch-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      if (window.triggerCanvasUIQuantumGate) {
+        window.triggerCanvasUIQuantumGate(cx, cy, btn.dataset.gate);
+      }
       applyGate(btn.dataset.gate);
     });
   });
@@ -2130,5 +2279,160 @@ document.addEventListener('DOMContentLoaded', () => {
       renderer.render(scene, camera);
       requestAnimationFrame(renderMol);
     }
+  }
+})();
+
+
+/* ─── 18. FLUID SHADERGRADIENT (CONTACT SECTION PORTAL) ─── */
+(function initContactShaderGradient() {
+  const canvas = document.getElementById('contact-canvas');
+  const section = document.getElementById('contact');
+  if (!canvas || !section || typeof THREE === 'undefined') return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+  camera.position.set(0, 0, 160);
+
+  const cGradVertexShader = `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+    uniform vec2 uMouseWake;
+    void main() {
+      vUv = uv;
+      vec3 pos = position;
+      float d = distance(uv, uMouseWake);
+      float wake = sin(max(0.0, 1.0 - d * 2.8) * 3.14159) * 26.0;
+      float w1 = sin(pos.x * 0.005 + uTime * 0.38) * cos(pos.y * 0.005 + uTime * 0.3) * 32.0;
+      float w2 = sin((pos.x + pos.y) * 0.004 + uTime * 0.46) * 20.0;
+      pos.z += w1 + w2 + wake;
+      vElevation = (w1 + w2 + wake) / 55.0;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `;
+
+  const cGradFragmentShader = `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform vec3 uColor3;
+    uniform vec3 uColor4;
+    uniform float uOpacity;
+
+    float grain(vec2 uv, float t) {
+      return fract(sin(dot(uv + fract(t * 0.04), vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+    }
+
+    void main() {
+      vec2 p = vUv;
+      float f1 = sin(p.x * 3.14159 + uTime * 0.22) * 0.5 + 0.5;
+      float f2 = cos(p.y * 3.14159 + uTime * 0.19 + vElevation * 0.75) * 0.5 + 0.5;
+      float f3 = sin((p.x + p.y + vElevation) * 1.8 + uTime * 0.26) * 0.5 + 0.5;
+
+      vec3 colA = mix(uColor1, uColor2, f1);
+      vec3 colB = mix(uColor3, uColor4, f2);
+      vec3 finalCol = mix(colA, colB, f3);
+
+      float g = grain(gl_FragCoord.xy, uTime) * 0.065;
+      finalCol += vec3(g);
+
+      gl_FragColor = vec4(finalCol, uOpacity);
+    }
+  `;
+
+  const CONTACT_GRADIENTS = {
+    dark:      { c1: 0x051e3e, c2: 0x4a0e4e, c3: 0x004d66, c4: 0x5c003d, op: 0.90 },
+    light:     { c1: 0xbed4fc, c2: 0xd8c8f8, c3: 0xbef0e4, c4: 0xf4d2ec, op: 0.88 },
+    batman:    { c1: 0x121200, c2: 0x3d3500, c3: 0x220505, c4: 0x594c00, op: 0.92 },
+    cyberpunk: { c1: 0x6e0040, c2: 0x004743, c3: 0x4d0066, c4: 0x006659, op: 0.90 },
+    ocean:     { c1: 0x012b38, c2: 0x00594a, c3: 0x004766, c4: 0x00735e, op: 0.90 },
+  };
+
+  const curTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const initT = CONTACT_GRADIENTS[curTheme] || CONTACT_GRADIENTS.dark;
+
+  const cTargetColors = {
+    c1: new THREE.Color(initT.c1),
+    c2: new THREE.Color(initT.c2),
+    c3: new THREE.Color(initT.c3),
+    c4: new THREE.Color(initT.c4),
+    op: initT.op
+  };
+
+  const cUniforms = {
+    uTime: { value: 0 },
+    uMouseWake: { value: new THREE.Vector2(0.5, 0.5) },
+    uColor1: { value: new THREE.Color(initT.c1) },
+    uColor2: { value: new THREE.Color(initT.c2) },
+    uColor3: { value: new THREE.Color(initT.c3) },
+    uColor4: { value: new THREE.Color(initT.c4) },
+    uOpacity: { value: initT.op }
+  };
+
+  const cMat = new THREE.ShaderMaterial({
+    vertexShader: cGradVertexShader,
+    fragmentShader: cGradFragmentShader,
+    uniforms: cUniforms,
+    transparent: true,
+    depthWrite: false
+  });
+
+  const cGeo = new THREE.PlaneGeometry(1600, 1100, 48, 48);
+  const cMesh = new THREE.Mesh(cGeo, cMat);
+  cMesh.position.set(0, 0, -100);
+  scene.add(cMesh);
+
+  function resize() {
+    const rect = section.getBoundingClientRect();
+    const w = Math.max(rect.width || section.clientWidth, window.innerWidth, 800);
+    const h = Math.max(rect.height || section.clientHeight, 480);
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('portfolio-ready', resize);
+  setTimeout(resize, 200);
+
+  section.addEventListener('pointermove', e => {
+    const rect = section.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) / rect.width;
+    const my = 1.0 - (e.clientY - rect.top) / rect.height;
+    cUniforms.uMouseWake.value.set(mx, my);
+  });
+
+  window._threeThemeCallbacks = window._threeThemeCallbacks || [];
+  window._threeThemeCallbacks.push(theme => {
+    const g = CONTACT_GRADIENTS[theme] || CONTACT_GRADIENTS.dark;
+    cTargetColors.c1.setHex(g.c1);
+    cTargetColors.c2.setHex(g.c2);
+    cTargetColors.c3.setHex(g.c3);
+    cTargetColors.c4.setHex(g.c4);
+    cTargetColors.op = g.op;
+  });
+
+  let inView = false;
+  const obs = new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting;
+    if (inView) requestAnimationFrame(render);
+  }, { threshold: 0.05 });
+  obs.observe(section);
+
+  function render() {
+    if (!inView) return;
+    cUniforms.uTime.value += 0.016;
+    cUniforms.uColor1.value.lerp(cTargetColors.c1, 0.05);
+    cUniforms.uColor2.value.lerp(cTargetColors.c2, 0.05);
+    cUniforms.uColor3.value.lerp(cTargetColors.c3, 0.05);
+    cUniforms.uColor4.value.lerp(cTargetColors.c4, 0.05);
+    cUniforms.uOpacity.value += (cTargetColors.op - cUniforms.uOpacity.value) * 0.05;
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
   }
 })();
