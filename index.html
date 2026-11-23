@@ -91,16 +91,16 @@
       {
         "@type": "ItemList",
         "@id": "https://bibyutatsu.github.io/#projects",
-        "name": "Featured Personal Projects",
+        "name": "Personal Showcase",
         "itemListElement": [
           {
             "@type": "SoftwareSourceCode",
             "position": 1,
-            "name": "Bibyutatsu Ebooks",
-            "description": "Open-access digital library of 1,439 Bengali classics with dual-script transliteration search and instant multi-format downloads on GitHub Pages.",
-            "codeRepository": "https://github.com/Bibyutatsu/ebooks",
-            "programmingLanguage": "JavaScript, Python",
-            "url": "https://bibyutatsu.github.io/ebooks/"
+            "name": "Repolect",
+            "description": "Local-first reasoning-based code intelligence engine indexing codebases into a hierarchical semantic tree and knowledge graph with 14 MCP tools.",
+            "codeRepository": "https://github.com/Bibyutatsu/Repolect",
+            "programmingLanguage": "Python, Tree-Sitter",
+            "url": "https://bibyutatsu.github.io/Blogs/2026/03/28/Repolect/"
           },
           {
             "@type": "SoftwareSourceCode",
@@ -113,11 +113,20 @@
           {
             "@type": "SoftwareSourceCode",
             "position": 3,
-            "name": "Repolect",
-            "description": "Local-first reasoning-based code intelligence engine indexing codebases into a hierarchical semantic tree and knowledge graph with 14 MCP tools.",
-            "codeRepository": "https://github.com/Bibyutatsu/Repolect",
-            "programmingLanguage": "Python",
-            "url": "https://bibyutatsu.github.io/Blogs/2026/03/28/Repolect/"
+            "name": "Bibyutatsu Ebooks",
+            "description": "Open-access digital library of 2,900+ Bengali classics with dual-script transliteration search and instant multi-format downloads on GitHub Pages.",
+            "codeRepository": "https://github.com/Bibyutatsu/ebooks",
+            "programmingLanguage": "JavaScript, Python",
+            "url": "https://bibyutatsu.github.io/ebooks/"
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "position": 4,
+            "name": "FastJTNNpy3",
+            "description": "Optimized Python 3 Junction Tree Variational Autoencoder (ICML) with Bayesian optimization for molecular graph generation and de novo drug discovery.",
+            "codeRepository": "https://github.com/Bibyutatsu/FastJTNNpy3",
+            "programmingLanguage": "Python, PyTorch",
+            "url": "https://github.com/Bibyutatsu/FastJTNNpy3"
           }
         ]
       }
@@ -191,7 +200,7 @@
     <a href="#hero" class="nav-logo">BM<span class="dot">.</span></a>
 
     <ul class="nav-links">
-      <li><a href="#projects">Projects</a></li>
+      <li><a href="#projects">Showcase</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#education">Education</a></li>
@@ -255,137 +264,407 @@
   </div>
 </section>
 
-<!-- ░░ PERSONAL PROJECTS CAROUSEL (3D STAGE) ░░ -->
+<!-- ░░ PERSONAL SHOWCASE (APPLE BENTO GRID) ░░ -->
 <section id="projects" class="section section-alt">
   <div class="container">
     <div class="section-header reveal">
-      <span class="section-label">01 / Featured Projects</span>
+      <span class="section-label">01 / Personal Showcase</span>
+      <h2>Selected Works &amp; Systems</h2>
+      <p class="section-sub">A curated catalog of production tools, agent infrastructure, edge AI pipelines, and generative deep learning research.</p>
     </div>
 
-    <!-- 3D Stage Carousel Viewport -->
-    <div class="stage-carousel-wrapper reveal d1">
-      <button class="stage-arrow stage-prev" id="stage-prev" aria-label="Previous Project">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+    <div class="showcase-wrapper">
 
-      <div class="stage-scene" id="stage-scene">
-        <div class="stage-track" id="stage-track">
+      <!-- ── TIER 1: FLAGSHIP PLATFORMS ── -->
+      <div class="showcase-group reveal d1">
+        <div class="showcase-group-header">
+          <span class="showcase-group-badge">Flagship Platforms</span>
+          <div class="showcase-group-line"></div>
+        </div>
 
-          <!-- Card 1: Ebook Store -->
-          <article class="stage-card" data-index="0" id="project-card-0">
-            <div class="stage-card-glass">
-              <div class="stage-card-badge">Digital Library &amp; Static Search</div>
-              <div class="stage-img-wrap">
-                <img src="images/projects/ebooks.png" alt="Bibyutatsu Ebooks digital library search interface" loading="lazy">
-                <div class="stage-img-overlay"></div>
+        <div class="bento-grid">
+          <!-- Bento 1: Repolect (Col 7) -->
+          <article class="bento-card bento-col-7" id="project-repolect">
+            <div class="bento-img-wrap">
+              <img src="images/projects/repolect.png" alt="Repolect semantic tree and knowledge graph architecture" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Reasoning Code Intelligence</span>
+                <span class="bento-badge">14 MCP Tools</span>
               </div>
-              <div class="stage-card-content">
-                <div class="stage-card-header">
-                  <span class="stage-counter">01 / 03</span>
-                  <h3 class="stage-title">Bibyutatsu Ebooks</h3>
-                </div>
-                <p class="stage-desc">
-                  Open-access digital library of <strong>1,439 Bengali literary classics</strong> running 100% serverless on GitHub Pages. Features dual-script Unicode transliteration search (Bengali script &amp; phonetic English) with zero latency.
-                </p>
-                <div class="stage-tags">
-                  <span class="stage-tag">JavaScript</span>
-                  <span class="stage-tag">Python Transliteration</span>
-                  <span class="stage-tag">Dual-Script Search</span>
-                  <span class="stage-tag">GitHub Pages</span>
-                </div>
-                <div class="stage-actions">
-                  <a href="https://bibyutatsu.github.io/ebooks/" target="_blank" rel="noopener" class="btn-primary stage-action-btn">
-                    Launch Site ↗
-                  </a>
-                  <a href="https://bibyutatsu.github.io/Blogs/2026/09/11/Ebooks/" target="_blank" rel="noopener" class="btn-ghost stage-action-btn">
-                    Read Story ↗
-                  </a>
-                </div>
+              <h3 class="bento-title">Repolect</h3>
+              <p class="bento-desc">
+                Open-source, local-first code intelligence engine that indexes codebases into a <strong>hierarchical semantic tree and knowledge graph</strong>. Navigates architecture with LLM reasoning instead of vector similarity, exposing 14 native MCP tools.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python &amp; Tree-Sitter</span>
+                <span class="bento-tag">Knowledge Graph</span>
+                <span class="bento-tag">MCP Protocol</span>
+                <span class="bento-tag">Local LLMs</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/Repolect" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+                <a href="https://bibyutatsu.github.io/Blogs/2026/03/28/Repolect/" target="_blank" rel="noopener" class="btn-ghost bento-btn">
+                  Technical Post ↗
+                </a>
               </div>
             </div>
           </article>
 
-          <!-- Card 2: SnapGrade -->
-          <article class="stage-card" data-index="1" id="project-card-1">
-            <div class="stage-card-glass">
-              <div class="stage-card-badge">Classical CV &amp; Photo Intelligence</div>
-              <div class="stage-img-wrap">
-                <img src="images/projects/snapgrade.png" alt="SnapGrade photo triage and culling dashboard" loading="lazy">
-                <div class="stage-img-overlay"></div>
+          <!-- Bento 2: SnapGrade (Col 5) -->
+          <article class="bento-card bento-col-5" id="project-snapgrade">
+            <div class="bento-img-wrap">
+              <img src="images/projects/snapgrade.png" alt="SnapGrade photo triage and culling dashboard" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Classical CV &amp; Photo AI</span>
+                <span class="bento-star-badge">★ 1</span>
               </div>
-              <div class="stage-card-content">
-                <div class="stage-card-header">
-                  <span class="stage-counter">02 / 03</span>
-                  <h3 class="stage-title">SnapGrade</h3>
-                </div>
-                <p class="stage-desc">
-                  Local photo culling pipeline built with classical computer vision — no bulky transformers or VLMs. Evaluates blur, blink detection, duplicate bursts, and exposure at <strong>3.3 images/sec on 8 GB RAM</strong> with auditable verdict explanations.
-                </p>
-                <div class="stage-tags">
-                  <span class="stage-tag">Python</span>
-                  <span class="stage-tag">OpenCV &amp; MediaPipe</span>
-                  <span class="stage-tag">FastAPI</span>
-                  <span class="stage-tag">SQLite Cache</span>
-                </div>
-                <div class="stage-actions">
-                  <a href="https://bibyutatsu.github.io/Blogs/2026/05/21/SnapGradeTechnical/" target="_blank" rel="noopener" class="btn-primary stage-action-btn">
-                    Architecture Deep-Dive ↗
-                  </a>
-                  <a href="https://bibyutatsu.github.io/Blogs/2026/05/21/SnapGradePhotographer/" target="_blank" rel="noopener" class="btn-ghost stage-action-btn">
-                    Photographer Guide ↗
-                  </a>
-                </div>
+              <h3 class="bento-title">SnapGrade</h3>
+              <p class="bento-desc">
+                Local photo culling pipeline built with classical computer vision — no bulky transformers or VLMs. Evaluates blur, blink detection, duplicate bursts, and exposure at <strong>3.3 images/sec on 8 GB RAM</strong>.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python</span>
+                <span class="bento-tag">OpenCV &amp; MediaPipe</span>
+                <span class="bento-tag">FastAPI</span>
+                <span class="bento-tag">SQLite Cache</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://bibyutatsu.github.io/Blogs/2026/05/21/SnapGradeTechnical/" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  Architecture ↗
+                </a>
+                <a href="https://bibyutatsu.github.io/Blogs/2026/05/21/SnapGradePhotographer/" target="_blank" rel="noopener" class="btn-ghost bento-btn">
+                  Photographer Guide ↗
+                </a>
               </div>
             </div>
           </article>
 
-          <!-- Card 3: Repolect -->
-          <article class="stage-card" data-index="2" id="project-card-2">
-            <div class="stage-card-glass">
-              <div class="stage-card-badge">Reasoning-Based Code Intelligence</div>
-              <div class="stage-img-wrap">
-                <img src="images/projects/repolect.png" alt="Repolect semantic tree and knowledge graph architecture" loading="lazy">
-                <div class="stage-img-overlay"></div>
+          <!-- Bento 3: Ebooks (Col 12 - Split Horizontal) -->
+          <article class="bento-card bento-card-horizontal bento-col-12" id="project-ebooks">
+            <div class="bento-img-wrap">
+              <img src="images/projects/ebooks.png" alt="Bibyutatsu Ebooks digital library search interface" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Digital Library &amp; Static Search</span>
+                <span class="bento-badge">2,900+ Titles</span>
               </div>
-              <div class="stage-card-content">
-                <div class="stage-card-header">
-                  <span class="stage-counter">03 / 03</span>
-                  <h3 class="stage-title">Repolect</h3>
-                </div>
-                <p class="stage-desc">
-                  Open-source, local-first code intelligence engine that indexes codebases into a <strong>hierarchical semantic tree and knowledge graph</strong>. Navigates architecture with LLM reasoning instead of vector similarity, exposing 14 native MCP tools.
-                </p>
-                <div class="stage-tags">
-                  <span class="stage-tag">Python &amp; Tree-Sitter</span>
-                  <span class="stage-tag">Knowledge Graph</span>
-                  <span class="stage-tag">MCP Protocol</span>
-                  <span class="stage-tag">Local LLMs</span>
-                </div>
-                <div class="stage-actions">
-                  <a href="https://github.com/Bibyutatsu/Repolect" target="_blank" rel="noopener" class="btn-primary stage-action-btn">
-                    View on GitHub ↗
-                  </a>
-                  <a href="https://bibyutatsu.github.io/Blogs/2026/03/28/Repolect/" target="_blank" rel="noopener" class="btn-ghost stage-action-btn">
-                    Technical Post ↗
-                  </a>
-                </div>
+              <h3 class="bento-title">Bibyutatsu Ebooks</h3>
+              <p class="bento-desc">
+                Open-access digital library of <strong>2,900+ Bengali literary classics</strong> running 100% serverless on GitHub Pages. Features dual-script Unicode transliteration search (Bengali script &amp; phonetic English) with zero latency.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">JavaScript</span>
+                <span class="bento-tag">Python Transliteration</span>
+                <span class="bento-tag">Dual-Script Search</span>
+                <span class="bento-tag">GitHub Pages</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://bibyutatsu.github.io/ebooks/" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  Launch Site ↗
+                </a>
+                <a href="https://bibyutatsu.github.io/Blogs/2026/09/11/Ebooks/" target="_blank" rel="noopener" class="btn-ghost bento-btn">
+                  Read Story ↗
+                </a>
+                <a href="https://github.com/Bibyutatsu/ebooks" target="_blank" rel="noopener" class="btn-ghost bento-btn">
+                  GitHub ↗
+                </a>
               </div>
             </div>
           </article>
-
         </div>
       </div>
 
-      <button class="stage-arrow stage-next" id="stage-next" aria-label="Next Project">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </div>
+      <!-- ── TIER 2: AI AGENTS, SYSTEMS & EDGE TOOLS ── -->
+      <div class="showcase-group reveal d2">
+        <div class="showcase-group-header">
+          <span class="showcase-group-badge">AI Agents, Systems &amp; Edge Tools</span>
+          <div class="showcase-group-line"></div>
+        </div>
 
-    <!-- Carousel Dots & Status -->
-    <div class="stage-dots" id="stage-dots">
-      <button class="stage-dot active" data-index="0" aria-label="Project 1: Bibyutatsu Ebooks"></button>
-      <button class="stage-dot" data-index="1" aria-label="Project 2: SnapGrade"></button>
-      <button class="stage-dot" data-index="2" aria-label="Project 3: Repolect"></button>
+        <div class="bento-grid">
+          <!-- Bento 4: Steam Tracker MCP (Col 6) -->
+          <article class="bento-card bento-col-6" id="project-steam-tracker">
+            <div class="bento-img-wrap">
+              <img src="images/projects/steam_tracker_mcp.png" alt="Steam Tracker MCP server telemetry preview" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">AI Agent Infrastructure</span>
+                <span class="bento-badge">FastMCP</span>
+              </div>
+              <h3 class="bento-title">Steam Tracker MCP</h3>
+              <p class="bento-desc">
+                Model Context Protocol server providing real-time game price audits, wishlist discount alerts, social monitoring, and achievement analytics directly to LLM agents.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python</span>
+                <span class="bento-tag">FastMCP</span>
+                <span class="bento-tag">JSON-RPC</span>
+                <span class="bento-tag">Steam API</span>
+                <span class="bento-tag">Agent Tools</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/Steam-Tracker-MCP" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 5: macOS Computer Vision Models (Col 6) -->
+          <article class="bento-card bento-col-6" id="project-macos-cv">
+            <div class="bento-img-wrap">
+              <img src="images/projects/macos_cv.png" alt="macOS Computer Vision Models benchmark preview" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Apple Silicon &amp; Metal</span>
+                <span class="bento-badge">CoreML</span>
+              </div>
+              <h3 class="bento-title">macOS Computer Vision Models</h3>
+              <p class="bento-desc">
+                Computer vision pipelines fine-tuned and benchmarked for Apple Silicon (M-series), leveraging Metal Performance Shaders (MPS) and CoreML for high-throughput, low-latency edge inference.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python</span>
+                <span class="bento-tag">PyTorch MPS</span>
+                <span class="bento-tag">CoreML</span>
+                <span class="bento-tag">Apple Silicon</span>
+                <span class="bento-tag">Metal</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/macos-computer-vision-models" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 6: EdgeVoiceAssistant (Col 6) -->
+          <article class="bento-card bento-col-6" id="project-edge-voice">
+            <div class="bento-img-wrap">
+              <img src="images/projects/edge_voice.png" alt="EdgeVoiceAssistant audio waveform visualizer" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">On-Device Speech AI</span>
+                <span class="bento-badge">&lt; 45ms Latency</span>
+              </div>
+              <h3 class="bento-title">EdgeVoiceAssistant</h3>
+              <p class="bento-desc">
+                Ultra-low latency speech pipeline engineered for local and resource-constrained hardware. Features on-device wake-word detection, offline STT/TTS, and modular client-server execution.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python</span>
+                <span class="bento-tag">Edge AI</span>
+                <span class="bento-tag">Speech Recognition</span>
+                <span class="bento-tag">Audio DSP</span>
+                <span class="bento-tag">Offline Inference</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/EdgeVoiceAssistant" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 7: LenStratify (Col 6) -->
+          <article class="bento-card bento-col-6" id="project-lenstratify">
+            <div class="bento-img-wrap">
+              <img src="images/projects/lenstratify.png" alt="LenStratify sequence length distribution visualizer" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Visual Analytics</span>
+                <span class="bento-badge">Dataset Auditing</span>
+              </div>
+              <h3 class="bento-title">LenStratify</h3>
+              <p class="bento-desc">
+                Interactive web dashboard for sequence length distribution profiling and multi-strata data sampling. Accelerates dataset auditing and balance verification prior to deep learning model training.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">JavaScript</span>
+                <span class="bento-tag">Data Visualization</span>
+                <span class="bento-tag">ML Preprocessing</span>
+                <span class="bento-tag">Analytics</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/LenStratify" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ── TIER 3: FOUNDATIONAL ML & COMPUTATIONAL SCIENCE ── -->
+      <div class="showcase-group reveal d3">
+        <div class="showcase-group-header">
+          <span class="showcase-group-badge">Foundational ML &amp; Computational Science</span>
+          <div class="showcase-group-line"></div>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Bento 8: FastJTNNpy3 (Col 4) -->
+          <article class="bento-card bento-card-compact bento-col-4" id="project-fastjtnn">
+            <div class="bento-img-wrap">
+              <img src="images/projects/fastjtnn.png" alt="FastJTNNpy3 molecular graph VAE architecture" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Generative Chemistry</span>
+                <span class="bento-star-badge">★ 55</span>
+              </div>
+              <h3 class="bento-title">FastJTNNpy3</h3>
+              <p class="bento-desc">
+                Optimized Python 3 Junction Tree Variational Autoencoder (ICML) with Bayesian optimization for discovering 100% chemically valid drug candidates.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">PyTorch</span>
+                <span class="bento-tag">Graph VAE</span>
+                <span class="bento-tag">Bayesian Opt</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/FastJTNNpy3" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 9: Self_Driving_Car (Col 4) -->
+          <article class="bento-card bento-card-compact bento-col-4" id="project-self-driving">
+            <div class="bento-img-wrap">
+              <img src="images/projects/self_driving_car.png" alt="Autonomous driving perception and steering prediction HUD" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Autonomous Vision</span>
+                <span class="bento-star-badge">★ 9</span>
+              </div>
+              <h3 class="bento-title">Self_Driving_Car</h3>
+              <p class="bento-desc">
+                Deep convolutional perception pipeline predicting vehicle steering trajectories directly from front-facing camera video feeds.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">PyTorch</span>
+                <span class="bento-tag">Computer Vision</span>
+                <span class="bento-tag">CNN</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/Self_Driving_Car" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 10: proGENTRL (Col 4) -->
+          <article class="bento-card bento-card-compact bento-col-4" id="project-progentrl">
+            <div class="bento-img-wrap">
+              <img src="images/projects/progentrl.png" alt="proGENTRL generative tensorial reinforcement learning model" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Generative RL</span>
+                <span class="bento-star-badge">★ 4</span>
+              </div>
+              <h3 class="bento-title">proGENTRL</h3>
+              <p class="bento-desc">
+                PyTorch Lightning reimplementation of Generative Tensorial Reinforcement Learning for targeted de novo molecular drug design.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">PyTorch Lightning</span>
+                <span class="bento-tag">RL</span>
+                <span class="bento-tag">Cheminformatics</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/proGENTRL" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 11: proEMOGI (Col 6) -->
+          <article class="bento-card bento-card-compact bento-col-6" id="project-proemogi">
+            <div class="bento-img-wrap">
+              <img src="images/projects/proemogi.png" alt="proEMOGI cancer gene prioritization graph network" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">GNN Cancer Genomics</span>
+                <span class="bento-star-badge">★ 1</span>
+              </div>
+              <h3 class="bento-title">proEMOGI</h3>
+              <p class="bento-desc">
+                PyTorch implementation of EMOGI applying Graph Neural Networks across multi-omics protein-protein interaction (PPI) networks to identify and prioritize cancer driver genes.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python</span>
+                <span class="bento-tag">PyTorch</span>
+                <span class="bento-tag">Graph Neural Networks</span>
+                <span class="bento-tag">Genomics</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/proEMOGI" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 12: HF-docling-serve (Col 6) -->
+          <article class="bento-card bento-card-compact bento-col-6" id="project-docling">
+            <div class="bento-img-wrap">
+              <img src="images/projects/hf_docling.png" alt="HF-docling-serve document AI and VLM serving preview" loading="lazy">
+              <div class="bento-img-overlay"></div>
+            </div>
+            <div class="bento-content">
+              <div class="bento-badge-row">
+                <span class="bento-badge">Document AI Serving</span>
+                <span class="bento-star-badge">★ 1</span>
+              </div>
+              <h3 class="bento-title">HF-docling-serve</h3>
+              <p class="bento-desc">
+                Containerized inference serving engine for Docling multimodal vision-language models, parsing multi-page PDFs, tables, and figures into structured markdown and JSON.
+              </p>
+              <div class="bento-tags">
+                <span class="bento-tag">Python</span>
+                <span class="bento-tag">Docling</span>
+                <span class="bento-tag">VLM Serving</span>
+                <span class="bento-tag">Docker</span>
+              </div>
+              <div class="bento-actions">
+                <a href="https://github.com/Bibyutatsu/HF-docling-serve" target="_blank" rel="noopener" class="btn-primary bento-btn">
+                  View on GitHub ↗
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
