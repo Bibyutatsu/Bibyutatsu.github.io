@@ -52,7 +52,7 @@ const portfolioData = {
     {
       "Provider": "Microsoft",
       "Name": "Microsoft Certified: Azure AI Engineer - Associate",
-      "URL": "https://learn.microsoft.com/api/credentials/share/en-us/BibhashMitra/90AEC65E5A4A8FFD?sharingId=39DEA8414B60265"
+      "URL": "https://learn.microsoft.com/en-us/users/bibhashmitra/credentials/90AEC65E5A4A8FFD"
     },
     {
       "Provider": "Google",
