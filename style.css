@@ -544,6 +544,22 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
   pointer-events: none;
 }
 
+/* Bento 3D Micro-Holograms */
+.bento-3d-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.45;
+  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+}
+.bento-card:hover .bento-3d-canvas {
+  opacity: 0.95;
+  transform: scale(1.03);
+}
+
 .bento-card-horizontal .bento-img-overlay {
   background: linear-gradient(to right, transparent 65%, var(--card-bg) 100%);
 }
@@ -692,6 +708,31 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
 }
 
 /* === ABOUT === */
+#about {
+  position: relative;
+  overflow: hidden;
+}
+#about .container {
+  position: relative;
+  z-index: 1;
+}
+.manifold-backdrop {
+  position: absolute;
+  top: 0;
+  right: -5%;
+  width: 60%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.42;
+  z-index: 0;
+}
+@media (max-width: 860px) {
+  .manifold-backdrop {
+    right: 0;
+    width: 100%;
+    opacity: 0.25;
+  }
+}
 .about-grid { display: grid; grid-template-columns: 340px 1fr; gap: clamp(40px,7vw,100px); align-items: start; }
 .about-image { position: relative; }
 .about-image img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; border-radius: var(--radius-lg); filter: grayscale(25%) brightness(0.9); transition: filter 0.5s; }
@@ -709,6 +750,35 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
 .stat-label { display: block; margin-top: 4px; font-size: 0.68rem; font-family: 'Fira Code', monospace; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
 
 /* === TIMELINE === */
+.timeline-container-3d {
+  display: flex;
+  gap: 36px;
+  align-items: stretch;
+  position: relative;
+}
+.chrono-pillar-rail {
+  width: 80px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+#chrono-pillar-canvas {
+  position: sticky;
+  top: 110px;
+  width: 80px;
+  height: 480px;
+  display: block;
+  pointer-events: none;
+}
+.timeline-container-3d .timeline {
+  flex: 1;
+}
+@media (max-width: 860px) {
+  .chrono-pillar-rail {
+    display: none;
+  }
+}
 .timeline { position: relative; padding-left: 28px; }
 .timeline::before { content: ''; position: absolute; left: 0; top: 12px; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--accent), var(--accent-2), transparent 95%); }
 .tl-entry { position: relative; margin-bottom: 44px; }
@@ -827,8 +897,122 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
   transition: border-color var(--t), box-shadow var(--t);
 }
 .chart-wrap:hover { border-color: var(--border-hover); box-shadow: var(--glow); }
-.chart-wrap h3 { font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 20px; }
-#skills-chart { width: 100% !important; height: 300px !important; }
+.chart-wrap h3 { font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; }
+.radar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.radar-sync-tag {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  color: var(--accent-2);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+/* 3D Quantum-Linked Radar Stage */
+.radar-3d-stage {
+  perspective: 750px;
+  perspective-origin: 50% 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 0 10px;
+  overflow: visible;
+}
+.radar-chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 290px;
+  height: 275px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: grab;
+  touch-action: none;
+  transition: filter 0.3s ease;
+}
+.radar-chart-container:active {
+  cursor: grabbing;
+}
+#skills-chart {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Interactive 3D Bloch Sphere */
+.bloch-container {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bloch-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.bloch-title {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.bloch-state {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.72rem;
+  color: var(--accent-2);
+  letter-spacing: 0.04em;
+}
+#bloch-canvas {
+  width: 280px;
+  height: 240px;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+  border-radius: var(--radius);
+  background: radial-gradient(circle at center, rgba(0, 204, 255, 0.04) 0%, transparent 72%);
+}
+#bloch-canvas:active {
+  cursor: grabbing;
+}
+.bloch-controls {
+  display: flex;
+  gap: 7px;
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+}
+.bloch-btn {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 5px 11px;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.bloch-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px var(--glow);
+}
+.bloch-btn:active {
+  transform: translateY(0);
+}
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 16px; }
 .skill-cat { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; transition: border-color var(--t), box-shadow var(--t); will-change: transform; }
 .skill-cat:hover { border-color: var(--border-hover); }

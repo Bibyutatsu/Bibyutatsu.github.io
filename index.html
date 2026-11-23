@@ -153,7 +153,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=12">
   <!-- Critical overrides: bypass any CSS cache -->
   <style>
     .hero-content {
@@ -289,6 +289,7 @@
           <article class="bento-card bento-col-7 holo-card" id="project-repolect">
             <div class="bento-img-wrap">
               <img src="images/projects/repolect.png" alt="Repolect semantic tree and knowledge graph architecture" loading="lazy">
+              <canvas class="bento-3d-canvas" id="canvas-repolect" aria-label="3D AST Knowledge Graph"></canvas>
               <div class="bento-img-overlay"></div>
             </div>
             <div class="bento-content">
@@ -527,6 +528,7 @@
           <article class="bento-card bento-card-compact bento-col-4" id="project-fastjtnn">
             <div class="bento-img-wrap">
               <img src="images/projects/fastjtnn.png" alt="FastJTNNpy3 molecular graph VAE architecture" loading="lazy">
+              <canvas class="bento-3d-canvas" id="canvas-fastjtnn" aria-label="3D Molecular Graph"></canvas>
               <div class="bento-img-overlay"></div>
             </div>
             <div class="bento-content">
@@ -673,6 +675,7 @@
 
 <!-- ░░ ABOUT ░░ -->
 <section id="about" class="section">
+  <canvas id="manifold-canvas" class="manifold-backdrop" aria-hidden="true"></canvas>
   <div class="container">
     <div class="section-header reveal">
       <span class="section-label">02 / About</span>
@@ -716,7 +719,12 @@
       <span class="section-label">03 / Experience</span>
       <h2>Work Experience</h2>
     </div>
-    <div id="timeline" class="timeline"></div>
+    <div class="timeline-container-3d">
+      <div class="chrono-pillar-rail" aria-hidden="true">
+        <canvas id="chrono-pillar-canvas" width="100" height="600"></canvas>
+      </div>
+      <div id="timeline" class="timeline"></div>
+    </div>
   </div>
 </section>
 
@@ -784,8 +792,29 @@
     <div class="skills-layout">
       <!-- Radar chart — sticky on desktop -->
       <div class="chart-wrap reveal from-left">
-        <h3>// Proficiency Radar</h3>
-        <canvas id="skills-chart"></canvas>
+        <div class="radar-header">
+          <h3>// Proficiency Radar</h3>
+          <span class="radar-sync-tag" title="Orientation synchronized with Quantum Bloch Sphere">[ Quantum Linked ]</span>
+        </div>
+        <div class="radar-3d-stage">
+          <div class="radar-chart-container" id="radar-chart-container">
+            <canvas id="skills-chart"></canvas>
+          </div>
+        </div>
+        <div class="bloch-container">
+          <div class="bloch-header">
+            <span class="bloch-title">// Quantum Bloch Sphere</span>
+            <span class="bloch-state" id="bloch-state-text">|ψ⟩ = 1.00|0⟩ + 0.00|1⟩</span>
+          </div>
+          <canvas id="bloch-canvas" width="280" height="240" aria-label="Interactive Quantum Bloch Sphere"></canvas>
+          <div class="bloch-controls">
+            <button type="button" class="bloch-btn" data-gate="H" title="Hadamard gate">H</button>
+            <button type="button" class="bloch-btn" data-gate="X" title="Pauli-X (NOT) gate">X</button>
+            <button type="button" class="bloch-btn" data-gate="Y" title="Pauli-Y gate">Y</button>
+            <button type="button" class="bloch-btn" data-gate="Z" title="Pauli-Z (Phase) gate">Z</button>
+            <button type="button" class="bloch-btn" data-gate="reset" title="Reset state to |0⟩">Reset</button>
+          </div>
+        </div>
       </div>
       <!-- Skill tag categories -->
       <div class="skills-grid" id="skills-grid"></div>
@@ -839,6 +868,6 @@
 </footer>
 
 <script src="data.js?v=3"></script>
-<script src="main.js?v=10"></script>
+<script src="main.js?v=12"></script>
 </body>
 </html>

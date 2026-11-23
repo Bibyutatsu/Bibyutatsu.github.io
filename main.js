@@ -393,6 +393,11 @@ const GLSL_SNOISE = `
     targetGrad.c3.setHex(tg.c3);
     targetGrad.c4.setHex(tg.c4);
     targetGrad.op = tg.op;
+    if (window._threeThemeCallbacks && Array.isArray(window._threeThemeCallbacks)) {
+      window._threeThemeCallbacks.forEach(cb => {
+        try { cb(theme); } catch (e) { console.error(e); }
+      });
+    }
   };
 
   /* -- Line update -- */
@@ -1117,9 +1122,20 @@ function buildChart() {
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      scales: { r: { min:0, max:5, ticks:{display:false,backdropColor:'transparent'}, grid:{color:grid}, angleLines:{color:grid}, pointLabels:{color:textCol, font:{size:11,family:"'Fira Code',monospace"}} } },
-      plugins: { legend:{display:false}, tooltip:{enabled:true} },
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.08,
+      scales: {
+        r: {
+          min: 0,
+          max: 5,
+          ticks: { display: false, backdropColor: 'transparent' },
+          grid: { color: grid },
+          angleLines: { color: grid },
+          pointLabels: { color: textCol, font: { size: 10, family: "'Fira Code',monospace" } }
+        }
+      },
+      plugins: { legend: { display: false }, tooltip: { enabled: true } },
       animation: { duration: 800 }
     }
   });
@@ -1376,4 +1392,743 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial stage setup
   updateStage(0);
   startAutoplay();
+})();
+
+
+/* ─── 15. 3D CHRONO-PILLAR (EXPERIENCE SECTION) ─────────── */
+(function initChronoPillar() {
+  const canvas = document.getElementById('chrono-pillar-canvas');
+  const section = document.getElementById('experience');
+  if (!canvas || !section || typeof THREE === 'undefined') return;
+
+  const w = 80, h = 480;
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(w, h, false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 500);
+  camera.position.set(0, 0, 95);
+  camera.lookAt(0, 0, 0);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // Hexagonal Crystal Column
+  const hexGeo = new THREE.CylinderGeometry(7, 7, 72, 6, 12, false);
+  const hexEdges = new THREE.EdgesGeometry(hexGeo);
+  const hexColor = new THREE.Color(0x00ccff);
+  const hexMat = new THREE.LineBasicMaterial({ color: hexColor, transparent: true, opacity: 0.35 });
+  const hexLines = new THREE.LineSegments(hexEdges, hexMat);
+  group.add(hexLines);
+
+  // Inner Core Pillar
+  const coreGeo = new THREE.CylinderGeometry(3.5, 3.5, 68, 6, 6);
+  const coreColor = new THREE.Color(0x8855ff);
+  const coreMat = new THREE.MeshBasicMaterial({ color: coreColor, wireframe: true, transparent: true, opacity: 0.16 });
+  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+  group.add(coreMesh);
+
+  // Laser Ring Indicator
+  const ringGeo = new THREE.TorusGeometry(8.8, 0.7, 8, 36);
+  const ringMat = new THREE.MeshBasicMaterial({ color: hexColor, transparent: true, opacity: 0.9 });
+  const laserRing = new THREE.Mesh(ringGeo, ringMat);
+  laserRing.rotation.x = Math.PI / 2;
+  laserRing.position.y = 32;
+  group.add(laserRing);
+
+  // Orbiting Particle Sparks along the rail
+  const particleCount = 28;
+  const partGeo = new THREE.BufferGeometry();
+  const partPos = new Float32Array(particleCount * 3);
+  const partYBase = new Float32Array(particleCount);
+  const partSpeed = new Float32Array(particleCount);
+  const partRadius = new Float32Array(particleCount);
+  const partAngle = new Float32Array(particleCount);
+
+  for (let i = 0; i < particleCount; i++) {
+    partYBase[i] = (Math.random() - 0.5) * 65;
+    partSpeed[i] = 0.2 + Math.random() * 0.4;
+    partRadius[i] = 7.5 + Math.random() * 2.5;
+    partAngle[i] = Math.random() * Math.PI * 2;
+    partPos[i * 3] = Math.cos(partAngle[i]) * partRadius[i];
+    partPos[i * 3 + 1] = partYBase[i];
+    partPos[i * 3 + 2] = Math.sin(partAngle[i]) * partRadius[i];
+  }
+  partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
+  const partMat = new THREE.PointsMaterial({ size: 1.8, color: hexColor, transparent: true, opacity: 0.8 });
+  const particles = new THREE.Points(partGeo, partMat);
+  group.add(particles);
+
+  // Scroll Progress Calculation
+  let targetProgress = 0;
+  let currentProgress = 0;
+  function updateScrollProgress() {
+    const rect = section.getBoundingClientRect();
+    const windowH = window.innerHeight;
+    const totalDist = rect.height - windowH * 0.4;
+    if (totalDist <= 0) return;
+    const progress = Math.min(1.0, Math.max(0.0, (-rect.top + windowH * 0.25) / totalDist));
+    targetProgress = progress;
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+  // Theme Sync
+  window._threeThemeCallbacks = window._threeThemeCallbacks || [];
+  window._threeThemeCallbacks.push(theme => {
+    if (theme === 'batman') {
+      hexColor.setHex(0xffe919);
+      coreColor.setHex(0xffffff);
+    } else if (theme === 'cyberpunk') {
+      hexColor.setHex(0xff0080);
+      coreColor.setHex(0x00f0ff);
+    } else if (theme === 'ocean') {
+      hexColor.setHex(0x00e5ff);
+      coreColor.setHex(0x00ffaa);
+    } else if (theme === 'light') {
+      hexColor.setHex(0x6c3ce0);
+      coreColor.setHex(0x0284c7);
+    } else {
+      hexColor.setHex(0x00ccff);
+      coreColor.setHex(0x8855ff);
+    }
+    hexMat.color.copy(hexColor);
+    ringMat.color.copy(hexColor);
+    partMat.color.copy(hexColor);
+    coreMat.color.copy(coreColor);
+  });
+
+  let inView = false;
+  const observer = new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting;
+    if (inView) requestAnimationFrame(render);
+  }, { threshold: 0.05 });
+  observer.observe(section);
+
+  let clock = 0;
+  function render() {
+    if (!inView) return;
+    clock += 0.02;
+
+    currentProgress += (targetProgress - currentProgress) * 0.08;
+    // Map progress 0..1 to Laser Ring Y: 32 down to -32
+    laserRing.position.y = 32 - currentProgress * 64;
+    laserRing.scale.setScalar(1 + Math.sin(clock * 3.5) * 0.06);
+
+    // Rotate column slowly
+    group.rotation.y += 0.007;
+
+    // Pulse particles
+    const positions = partGeo.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      partAngle[i] += 0.015;
+      partYBase[i] += partSpeed[i] * 0.3;
+      if (partYBase[i] > 34) partYBase[i] = -34;
+      positions[i * 3] = Math.cos(partAngle[i]) * partRadius[i];
+      positions[i * 3 + 1] = partYBase[i];
+      positions[i * 3 + 2] = Math.sin(partAngle[i]) * partRadius[i];
+    }
+    partGeo.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
+})();
+
+
+/* ─── 16. INTERACTIVE 3D BLOCH SPHERE (SKILLS SECTION) ──── */
+(function initBlochSphere() {
+  const canvas = document.getElementById('bloch-canvas');
+  const stateText = document.getElementById('bloch-state-text');
+  const container = document.querySelector('.bloch-container');
+  const radarContainer = document.getElementById('radar-chart-container');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const w = 280, h = 240;
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(w, h, false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 500);
+  camera.position.set(0, 14, 62);
+  camera.lookAt(0, 0, 0);
+
+  const blochGroup = new THREE.Group();
+  scene.add(blochGroup);
+
+  const R = 18;
+  const accentColor = new THREE.Color(0x00ccff);
+  const accent2Color = new THREE.Color(0x8855ff);
+
+  // Wireframe Unit Sphere
+  const sphereGeo = new THREE.SphereGeometry(R, 20, 14);
+  const sphereMat = new THREE.MeshBasicMaterial({ color: accentColor, wireframe: true, transparent: true, opacity: 0.12 });
+  const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+  blochGroup.add(sphereMesh);
+
+  // Equator Ring (XZ plane)
+  const ringGeo = new THREE.RingGeometry(R - 0.15, R + 0.15, 48);
+  const ringMat = new THREE.MeshBasicMaterial({ color: accentColor, side: THREE.DoubleSide, transparent: true, opacity: 0.35 });
+  const equator = new THREE.Mesh(ringGeo, ringMat);
+  equator.rotation.x = Math.PI / 2;
+  blochGroup.add(equator);
+
+  // Meridian Ring (XY plane)
+  const meridian1 = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: accent2Color, side: THREE.DoubleSide, transparent: true, opacity: 0.2 }));
+  blochGroup.add(meridian1);
+
+  // Meridian Ring (YZ plane)
+  const meridian2 = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: accent2Color, side: THREE.DoubleSide, transparent: true, opacity: 0.2 }));
+  meridian2.rotation.y = Math.PI / 2;
+  blochGroup.add(meridian2);
+
+  // Coordinate Axes
+  const axisGeo = new THREE.BufferGeometry();
+  const axisCoords = new Float32Array([
+    -R * 1.25, 0, 0,  R * 1.25, 0, 0,
+    0, -R * 1.25, 0,  0, R * 1.25, 0,
+    0, 0, -R * 1.25,  0, 0, R * 1.25
+  ]);
+  axisGeo.setAttribute('position', new THREE.BufferAttribute(axisCoords, 3));
+  const axisMat = new THREE.LineBasicMaterial({ color: 0x8888aa, transparent: true, opacity: 0.3 });
+  blochGroup.add(new THREE.LineSegments(axisGeo, axisMat));
+
+  // Poles Markers
+  const poleGeo = new THREE.SphereGeometry(0.8, 8, 8);
+  const poleMat = new THREE.MeshBasicMaterial({ color: accentColor });
+  const pole0 = new THREE.Mesh(poleGeo, poleMat);
+  pole0.position.set(0, R, 0); // |0>
+  const pole1 = new THREE.Mesh(poleGeo, poleMat);
+  pole1.position.set(0, -R, 0); // |1>
+  blochGroup.add(pole0);
+  blochGroup.add(pole1);
+
+  // State Vector Arrow (|psi>)
+  const arrowGroup = new THREE.Group();
+  blochGroup.add(arrowGroup);
+
+  const shaftGeo = new THREE.CylinderGeometry(0.4, 0.4, R, 8);
+  shaftGeo.translate(0, R / 2, 0);
+  const arrowMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+  const shaftMesh = new THREE.Mesh(shaftGeo, arrowMat);
+  arrowGroup.add(shaftMesh);
+
+  const coneGeo = new THREE.ConeGeometry(1.2, 3.2, 12);
+  coneGeo.translate(0, R, 0);
+  const coneMesh = new THREE.Mesh(coneGeo, new THREE.MeshBasicMaterial({ color: 0xffe919 }));
+  arrowGroup.add(coneMesh);
+
+  const tipLightGeo = new THREE.SphereGeometry(1.4, 12, 12);
+  const tipLight = new THREE.Mesh(tipLightGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 }));
+  tipLight.position.set(0, R, 0);
+  arrowGroup.add(tipLight);
+
+  // Quantum State: theta (0 to PI) and phi (0 to 2*PI)
+  let curTheta = 0, curPhi = 0;
+  let targetTheta = 0, targetPhi = 0;
+
+  function updateArrow() {
+    const dir = new THREE.Vector3(
+      Math.sin(curTheta) * Math.cos(curPhi),
+      Math.cos(curTheta),
+      Math.sin(curTheta) * Math.sin(curPhi)
+    );
+    const up = new THREE.Vector3(0, 1, 0);
+    arrowGroup.quaternion.setFromUnitVectors(up, dir.normalize());
+
+    if (stateText) {
+      const a = Math.cos(curTheta / 2);
+      const bMag = Math.sin(curTheta / 2);
+      const bReal = bMag * Math.cos(curPhi);
+      const bImag = bMag * Math.sin(curPhi);
+
+      let bStr = '';
+      if (Math.abs(bMag) < 0.01) {
+        bStr = '+ 0.00';
+      } else if (Math.abs(bImag) < 0.03) {
+        bStr = (bReal >= 0 ? '+ ' : '- ') + Math.abs(bReal).toFixed(2);
+      } else {
+        bStr = `+ (${bReal.toFixed(2)}${bImag >= 0 ? '+' : ''}${bImag.toFixed(2)}i)`;
+      }
+      stateText.textContent = `|ψ⟩ = ${a.toFixed(2)}|0⟩ ${bStr}|1⟩`;
+    }
+  }
+
+  // Gate actions
+  function applyGate(gate) {
+    if (gate === 'reset') {
+      targetTheta = 0;
+      targetPhi = 0;
+    } else if (gate === 'H') {
+      if (curTheta < 0.25) {
+        targetTheta = Math.PI / 2; targetPhi = 0;
+      } else if (Math.abs(curTheta - Math.PI) < 0.25) {
+        targetTheta = Math.PI / 2; targetPhi = Math.PI;
+      } else if (Math.abs(curTheta - Math.PI / 2) < 0.25 && Math.abs(curPhi) < 0.3) {
+        targetTheta = 0; targetPhi = 0;
+      } else if (Math.abs(curTheta - Math.PI / 2) < 0.25 && Math.abs(curPhi - Math.PI) < 0.3) {
+        targetTheta = Math.PI; targetPhi = 0;
+      } else {
+        targetTheta = Math.PI - curTheta;
+      }
+    } else if (gate === 'X') {
+      targetTheta = Math.PI - curTheta;
+      targetPhi = -curPhi;
+    } else if (gate === 'Y') {
+      targetTheta = Math.PI - curTheta;
+      targetPhi = curPhi + Math.PI;
+    } else if (gate === 'Z') {
+      targetPhi = curPhi + Math.PI;
+    }
+  }
+
+  // Connect Buttons
+  document.querySelectorAll('.bloch-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      applyGate(btn.dataset.gate);
+    });
+  });
+
+  // Drag interaction to rotate the sphere in 3D
+  let isDragging = false;
+  let prevPointerX = 0, prevPointerY = 0;
+  canvas.addEventListener('pointerdown', e => {
+    isDragging = true;
+    prevPointerX = e.clientX;
+    prevPointerY = e.clientY;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  window.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    const dx = e.clientX - prevPointerX;
+    const dy = e.clientY - prevPointerY;
+    blochGroup.rotation.y += dx * 0.015;
+    blochGroup.rotation.x += dy * 0.015;
+    prevPointerX = e.clientX;
+    prevPointerY = e.clientY;
+  });
+  window.addEventListener('pointerup', e => {
+    if (isDragging) {
+      isDragging = false;
+      try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
+    }
+  });
+
+  // Bidirectional interaction: dragging radar also rotates Bloch sphere
+  if (radarContainer) {
+    let isRadarDragging = false;
+    let rPrevX = 0, rPrevY = 0;
+    radarContainer.addEventListener('pointerdown', e => {
+      isRadarDragging = true;
+      rPrevX = e.clientX;
+      rPrevY = e.clientY;
+      radarContainer.setPointerCapture(e.pointerId);
+    });
+    window.addEventListener('pointermove', e => {
+      if (!isRadarDragging) return;
+      const dx = e.clientX - rPrevX;
+      const dy = e.clientY - rPrevY;
+      blochGroup.rotation.y += dx * 0.015;
+      blochGroup.rotation.x += dy * 0.015;
+      rPrevX = e.clientX;
+      rPrevY = e.clientY;
+    });
+    window.addEventListener('pointerup', e => {
+      if (isRadarDragging) {
+        isRadarDragging = false;
+        try { radarContainer.releasePointerCapture(e.pointerId); } catch(err){}
+      }
+    });
+  }
+
+  // Theme Sync
+  window._threeThemeCallbacks = window._threeThemeCallbacks || [];
+  window._threeThemeCallbacks.push(theme => {
+    if (theme === 'batman') {
+      accentColor.setHex(0xffe919);
+      accent2Color.setHex(0xaaaaaa);
+    } else if (theme === 'cyberpunk') {
+      accentColor.setHex(0xff0080);
+      accent2Color.setHex(0x00f0ff);
+    } else if (theme === 'ocean') {
+      accentColor.setHex(0x00e5ff);
+      accent2Color.setHex(0x00ffaa);
+    } else if (theme === 'light') {
+      accentColor.setHex(0x6c3ce0);
+      accent2Color.setHex(0x0284c7);
+    } else {
+      accentColor.setHex(0x00ccff);
+      accent2Color.setHex(0x8855ff);
+    }
+    sphereMat.color.copy(accentColor);
+    ringMat.color.copy(accentColor);
+    poleMat.color.copy(accentColor);
+    arrowMat.color.copy(accentColor);
+  });
+
+  let inView = false;
+  const skillsSec = document.getElementById('skills');
+  const observer = new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting;
+    if (inView) requestAnimationFrame(render);
+  }, { threshold: 0.05 });
+  if (skillsSec) observer.observe(skillsSec);
+  else if (container) observer.observe(container);
+
+  blochGroup.rotation.y = 0.5;
+  blochGroup.rotation.x = 0.2;
+
+  function render() {
+    if (!inView) return;
+
+    curTheta += (targetTheta - curTheta) * 0.12;
+    curPhi += (targetPhi - curPhi) * 0.12;
+    updateArrow();
+
+    if (!isDragging) {
+      blochGroup.rotation.y += 0.003;
+    }
+
+    // Synchronize Proficiency Radar 3D orientation with Bloch sphere
+    if (radarContainer) {
+      const pitch = (curTheta / Math.PI) * 22 + (blochGroup.rotation.x - 0.2) * 15;
+      const yaw   = (curPhi / (Math.PI * 2)) * 14 + (blochGroup.rotation.y - 0.5) * 14;
+      const roll  = Math.sin(curPhi) * 6;
+      radarContainer.style.transform = `perspective(750px) rotateX(${pitch.toFixed(2)}deg) rotateY(${yaw.toFixed(2)}deg) rotateZ(${roll.toFixed(2)}deg)`;
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
+})();
+
+
+/* ─── 17. 3D NEURAL LATENT MANIFOLD (ABOUT BACKDROP) ─────── */
+(function initNeuralManifold() {
+  const canvas = document.getElementById('manifold-canvas');
+  const section = document.getElementById('about');
+  if (!canvas || !section || typeof THREE === 'undefined') return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 1, 1000);
+  camera.position.set(0, 48, 105);
+  camera.lookAt(0, -5, 0);
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width || canvas.clientWidth || 600;
+    const h = rect.height || canvas.clientHeight || 500;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const cols = 48, rows = 36;
+  const planeW = 160, planeH = 120;
+  const geo = new THREE.PlaneGeometry(planeW, planeH, cols, rows);
+  geo.rotateX(-Math.PI / 2.3);
+
+  const manifoldColor = new THREE.Color(0x00ccff);
+  const mat = new THREE.MeshBasicMaterial({
+    color: manifoldColor,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.32
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  scene.add(mesh);
+
+  // Store original positions
+  const posAttr = geo.attributes.position;
+  const origY = new Float32Array(posAttr.count);
+  for (let i = 0; i < posAttr.count; i++) {
+    origY[i] = posAttr.getY(i);
+  }
+
+  // Cursor interaction
+  let targetDipX = 0, targetDipZ = 0;
+  let curDipX = 0, curDipZ = 0;
+  let isHovered = false;
+
+  section.addEventListener('mousemove', e => {
+    const rect = section.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    targetDipX = nx * planeW * 0.9;
+    targetDipZ = ny * planeH * 0.9;
+    isHovered = true;
+  });
+  section.addEventListener('mouseleave', () => {
+    isHovered = false;
+  });
+
+  // Theme Sync
+  window._threeThemeCallbacks = window._threeThemeCallbacks || [];
+  window._threeThemeCallbacks.push(theme => {
+    if (theme === 'batman') manifoldColor.setHex(0xffe919);
+    else if (theme === 'cyberpunk') manifoldColor.setHex(0xff0080);
+    else if (theme === 'ocean') manifoldColor.setHex(0x00e5ff);
+    else if (theme === 'light') manifoldColor.setHex(0x6c3ce0);
+    else manifoldColor.setHex(0x00ccff);
+    mat.color.copy(manifoldColor);
+  });
+
+  let inView = false;
+  const observer = new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting;
+    if (inView) {
+      resize();
+      requestAnimationFrame(render);
+    }
+  }, { threshold: 0.05 });
+  observer.observe(section);
+
+  let clock = 0;
+  function render() {
+    if (!inView) return;
+    clock += 0.016;
+
+    if (isHovered) {
+      curDipX += (targetDipX - curDipX) * 0.08;
+      curDipZ += (targetDipZ - curDipZ) * 0.08;
+    }
+
+    const dipStrength = isHovered ? 16 : 0;
+    for (let i = 0; i < posAttr.count; i++) {
+      const vx = posAttr.getX(i);
+      const vz = posAttr.getZ(i);
+
+      let wave = Math.sin(vx * 0.06 + clock) * Math.cos(vz * 0.07 + clock * 0.8) * 5.2 +
+                 Math.cos(vx * 0.035 - vz * 0.045 + clock * 0.5) * 3.4;
+
+      if (isHovered) {
+        const dx = vx - curDipX;
+        const dz = vz - curDipZ;
+        const distSq = dx * dx + dz * dz;
+        wave -= Math.exp(-distSq / 450) * dipStrength;
+      }
+
+      posAttr.setY(i, origY[i] + wave);
+    }
+    posAttr.needsUpdate = true;
+
+    mesh.rotation.z = Math.sin(clock * 0.3) * 0.03;
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
+})();
+
+
+/* ─── 18. BENTO CARD 3D MICRO-HOLOGRAMS ─────────────────── */
+(function initBentoMicroHolograms() {
+  if (typeof THREE === 'undefined') return;
+
+  // 1. Repolect: 3D AST / Semantic Knowledge Graph
+  const repoCanvas = document.getElementById('canvas-repolect');
+  const repoCard = document.getElementById('project-repolect');
+  if (repoCanvas && repoCard) {
+    const rw = 260, rh = 200;
+    const renderer = new THREE.WebGLRenderer({ canvas: repoCanvas, alpha: true, antialias: true });
+    renderer.setSize(rw, rh, false);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, rw / rh, 0.1, 300);
+    camera.position.set(0, 10, 52);
+    camera.lookAt(0, 0, 0);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    // Central AST Octahedron Hub
+    const astColor = new THREE.Color(0x00ccff);
+    const hubGeo = new THREE.OctahedronGeometry(6, 0);
+    const hubMat = new THREE.MeshBasicMaterial({ color: astColor, wireframe: true, transparent: true, opacity: 0.85 });
+    const hubMesh = new THREE.Mesh(hubGeo, hubMat);
+    group.add(hubMesh);
+
+    // Satellite AST leaf nodes
+    const nodeCount = 9;
+    const nodes = [];
+    const lineCoords = [];
+    const leafGeo = new THREE.SphereGeometry(1.2, 8, 8);
+    const leafMat = new THREE.MeshBasicMaterial({ color: 0x8855ff, transparent: true, opacity: 0.75 });
+
+    for (let i = 0; i < nodeCount; i++) {
+      const theta = (i / nodeCount) * Math.PI * 2 + Math.random() * 0.3;
+      const phi = (Math.random() - 0.5) * 1.2;
+      const dist = 16 + Math.random() * 6;
+      const x = Math.cos(theta) * Math.cos(phi) * dist;
+      const y = Math.sin(phi) * dist;
+      const z = Math.sin(theta) * Math.cos(phi) * dist;
+
+      const leaf = new THREE.Mesh(leafGeo, leafMat);
+      leaf.position.set(x, y, z);
+      group.add(leaf);
+      nodes.push(leaf);
+
+      lineCoords.push(0, 0, 0, x, y, z);
+    }
+
+    const linesGeo = new THREE.BufferGeometry();
+    linesGeo.setAttribute('position', new THREE.Float32BufferAttribute(lineCoords, 3));
+    const linesMat = new THREE.LineBasicMaterial({ color: astColor, transparent: true, opacity: 0.3 });
+    group.add(new THREE.LineSegments(linesGeo, linesMat));
+
+    let repoInView = false;
+    let repoHovered = false;
+    const observer = new IntersectionObserver(entries => {
+      repoInView = entries[0].isIntersecting;
+      if (repoInView) requestAnimationFrame(renderRepo);
+    }, { threshold: 0.1 });
+    observer.observe(repoCard);
+
+    repoCard.addEventListener('mouseenter', () => { repoHovered = true; });
+    repoCard.addEventListener('mouseleave', () => { repoHovered = false; });
+
+    // Theme Sync
+    window._threeThemeCallbacks = window._threeThemeCallbacks || [];
+    window._threeThemeCallbacks.push(theme => {
+      if (theme === 'batman') astColor.setHex(0xffe919);
+      else if (theme === 'cyberpunk') astColor.setHex(0xff0080);
+      else if (theme === 'ocean') astColor.setHex(0x00e5ff);
+      else if (theme === 'light') astColor.setHex(0x6c3ce0);
+      else astColor.setHex(0x00ccff);
+      hubMat.color.copy(astColor);
+      linesMat.color.copy(astColor);
+    });
+
+    function renderRepo() {
+      if (!repoInView) return;
+      const speed = repoHovered ? 0.022 : 0.007;
+      group.rotation.y += speed;
+      group.rotation.x = Math.sin(group.rotation.y * 0.7) * 0.25;
+      hubMesh.rotation.y += speed * 1.5;
+      renderer.render(scene, camera);
+      requestAnimationFrame(renderRepo);
+    }
+  }
+
+  // 2. FastJTNNpy3: 3D Molecular Graph (Junction Tree VAE)
+  const molCanvas = document.getElementById('canvas-fastjtnn');
+  const molCard = document.getElementById('project-fastjtnn');
+  if (molCanvas && molCard) {
+    const mw = 260, mh = 180;
+    const renderer = new THREE.WebGLRenderer({ canvas: molCanvas, alpha: true, antialias: true });
+    renderer.setSize(mw, mh, false);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, mw / mh, 0.1, 300);
+    camera.position.set(0, 0, 48);
+    camera.lookAt(0, 0, 0);
+
+    const molGroup = new THREE.Group();
+    scene.add(molGroup);
+
+    const molColor = new THREE.Color(0x00ccff);
+    const branchColor = new THREE.Color(0xff0080);
+
+    // Benzene aromatic ring (6 carbon vertices)
+    const carbonGeo = new THREE.SphereGeometry(1.3, 10, 10);
+    const carbonMat = new THREE.MeshBasicMaterial({ color: molColor });
+    const ringRadius = 11;
+    const ringCoords = [];
+    const ringBonds = [];
+
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2;
+      const x = Math.cos(angle) * ringRadius;
+      const y = Math.sin(angle) * ringRadius;
+      ringCoords.push({ x, y, z: 0 });
+
+      const c = new THREE.Mesh(carbonGeo, carbonMat);
+      c.position.set(x, y, 0);
+      molGroup.add(c);
+
+      const nextAngle = ((i + 1) / 6) * Math.PI * 2;
+      const nx = Math.cos(nextAngle) * ringRadius;
+      const ny = Math.sin(nextAngle) * ringRadius;
+      ringBonds.push(x, y, 0, nx, ny, 0);
+    }
+
+    // Functional branches (OH and Methyl offshoot)
+    const branchGeo = new THREE.SphereGeometry(1.6, 10, 10);
+    const branchMat = new THREE.MeshBasicMaterial({ color: branchColor });
+
+    // Branch 1 at vertex 0
+    const b1x = ringCoords[0].x * 1.7;
+    const b1y = ringCoords[0].y * 1.7;
+    const b1 = new THREE.Mesh(branchGeo, branchMat);
+    b1.position.set(b1x, b1y, 3);
+    molGroup.add(b1);
+    ringBonds.push(ringCoords[0].x, ringCoords[0].y, 0, b1x, b1y, 3);
+
+    // Branch 2 at vertex 3
+    const b2x = ringCoords[3].x * 1.6;
+    const b2y = ringCoords[3].y * 1.6;
+    const b2 = new THREE.Mesh(branchGeo, new THREE.MeshBasicMaterial({ color: 0x8855ff }));
+    b2.position.set(b2x, b2y, -3);
+    molGroup.add(b2);
+    ringBonds.push(ringCoords[3].x, ringCoords[3].y, 0, b2x, b2y, -3);
+
+    const bondGeo = new THREE.BufferGeometry();
+    bondGeo.setAttribute('position', new THREE.Float32BufferAttribute(ringBonds, 3));
+    const bondMat = new THREE.LineBasicMaterial({ color: molColor, transparent: true, opacity: 0.5 });
+    molGroup.add(new THREE.LineSegments(bondGeo, bondMat));
+
+    let molInView = false;
+    let molHovered = false;
+    const observer = new IntersectionObserver(entries => {
+      molInView = entries[0].isIntersecting;
+      if (molInView) requestAnimationFrame(renderMol);
+    }, { threshold: 0.1 });
+    observer.observe(molCard);
+
+    molCard.addEventListener('mouseenter', () => { molHovered = true; });
+    molCard.addEventListener('mouseleave', () => { molHovered = false; });
+
+    // Theme Sync
+    window._threeThemeCallbacks = window._threeThemeCallbacks || [];
+    window._threeThemeCallbacks.push(theme => {
+      if (theme === 'batman') {
+        molColor.setHex(0xffe919);
+        branchColor.setHex(0xffffff);
+      } else if (theme === 'cyberpunk') {
+        molColor.setHex(0x00f0ff);
+        branchColor.setHex(0xff0080);
+      } else if (theme === 'ocean') {
+        molColor.setHex(0x00ffaa);
+        branchColor.setHex(0x00e5ff);
+      } else if (theme === 'light') {
+        molColor.setHex(0x6c3ce0);
+        branchColor.setHex(0x0284c7);
+      } else {
+        molColor.setHex(0x00ccff);
+        branchColor.setHex(0xff0080);
+      }
+      carbonMat.color.copy(molColor);
+      bondMat.color.copy(molColor);
+      branchMat.color.copy(branchColor);
+    });
+
+    let mClock = 0;
+    function renderMol() {
+      if (!molInView) return;
+      mClock += 0.02;
+      const speed = molHovered ? 0.025 : 0.008;
+      molGroup.rotation.y += speed;
+      molGroup.rotation.x = Math.sin(mClock * 0.7) * 0.3;
+      molGroup.rotation.z = Math.cos(mClock * 0.5) * 0.15;
+      renderer.render(scene, camera);
+      requestAnimationFrame(renderMol);
+    }
+  }
 })();
