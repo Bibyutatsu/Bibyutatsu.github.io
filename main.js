@@ -56,6 +56,91 @@
   const particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
 
+  /* -- ShaderGradient Plane (Fluid wavy grain gradient) -- */
+  const gradVertexShader = `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+    void main() {
+      vUv = uv;
+      vec3 pos = position;
+      float w1 = sin(pos.x * 0.006 + uTime * 0.35) * cos(pos.y * 0.006 + uTime * 0.28) * 35.0;
+      float w2 = sin((pos.x + pos.y) * 0.004 + uTime * 0.45) * 20.0;
+      pos.z += w1 + w2;
+      vElevation = (w1 + w2) / 55.0;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `;
+
+  const gradFragmentShader = `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform vec3 uColor3;
+    uniform vec3 uColor4;
+    uniform float uOpacity;
+
+    float grain(vec2 uv, float t) {
+      return fract(sin(dot(uv + fract(t * 0.04), vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+    }
+
+    void main() {
+      vec2 p = vUv;
+      float f1 = sin(p.x * 3.14159 + uTime * 0.25) * 0.5 + 0.5;
+      float f2 = cos(p.y * 3.14159 + uTime * 0.2 + vElevation * 0.8) * 0.5 + 0.5;
+      float f3 = sin((p.x + p.y + vElevation) * 2.0 + uTime * 0.3) * 0.5 + 0.5;
+
+      vec3 colA = mix(uColor1, uColor2, f1);
+      vec3 colB = mix(uColor3, uColor4, f2);
+      vec3 finalCol = mix(colA, colB, f3);
+
+      float g = grain(gl_FragCoord.xy, uTime) * 0.055;
+      finalCol += vec3(g);
+
+      gl_FragColor = vec4(finalCol, uOpacity);
+    }
+  `;
+
+  const THEME_GRADIENTS = {
+    dark:      { c1: 0x050518, c2: 0x160830, c3: 0x01172e, c4: 0x1f0a3d, op: 0.55 },
+    light:     { c1: 0xeeeef8, c2: 0xd8e4fc, c3: 0xebe0f8, c4: 0xfcfcff, op: 0.65 },
+    batman:    { c1: 0x000000, c2: 0x1f1c00, c3: 0x120000, c4: 0x2e2700, op: 0.70 },
+    cyberpunk: { c1: 0x200018, c2: 0x00201e, c3: 0x320038, c4: 0x00332e, op: 0.62 },
+    ocean:     { c1: 0x010c16, c2: 0x002024, c3: 0x01162a, c4: 0x00322b, op: 0.60 },
+  };
+
+  const targetGrad = {
+    c1: new THREE.Color(THEME_GRADIENTS.dark.c1),
+    c2: new THREE.Color(THEME_GRADIENTS.dark.c2),
+    c3: new THREE.Color(THEME_GRADIENTS.dark.c3),
+    c4: new THREE.Color(THEME_GRADIENTS.dark.c4),
+    op: THEME_GRADIENTS.dark.op
+  };
+
+  const gradUniforms = {
+    uTime: { value: 0 },
+    uColor1: { value: new THREE.Color(THEME_GRADIENTS.dark.c1) },
+    uColor2: { value: new THREE.Color(THEME_GRADIENTS.dark.c2) },
+    uColor3: { value: new THREE.Color(THEME_GRADIENTS.dark.c3) },
+    uColor4: { value: new THREE.Color(THEME_GRADIENTS.dark.c4) },
+    uOpacity: { value: THEME_GRADIENTS.dark.op }
+  };
+
+  const gradMat = new THREE.ShaderMaterial({
+    vertexShader: gradVertexShader,
+    fragmentShader: gradFragmentShader,
+    uniforms: gradUniforms,
+    transparent: true,
+    depthWrite: false
+  });
+
+  const gradGeo = new THREE.PlaneGeometry(1800, 1300, 40, 40);
+  const gradMesh = new THREE.Mesh(gradGeo, gradMat);
+  gradMesh.position.set(0, 0, -220);
+  scene.add(gradMesh);
+
   /* -- Theme color mapping -- */
   const THEME_COLORS = {
     dark:      { ico: 0x00ccff, n1: 0x00ccff, n2: 0x8855ff, p: 0xffffff, ptex: 'bokeh' },
@@ -75,6 +160,12 @@
       lastTex = c.ptex;
       loader.load(`images/particles/${c.ptex}.png`, tex => { pMat.map = tex; pMat.needsUpdate = true; });
     }
+    const tg = THEME_GRADIENTS[theme] || THEME_GRADIENTS.dark;
+    targetGrad.c1.setHex(tg.c1);
+    targetGrad.c2.setHex(tg.c2);
+    targetGrad.c3.setHex(tg.c3);
+    targetGrad.c4.setHex(tg.c4);
+    targetGrad.op = tg.op;
   };
 
   /* -- Line update -- */
@@ -113,6 +204,12 @@
     camera.position.x=tx; camera.position.y=-ty; camera.lookAt(scene.position);
     ico.rotation.y+=.05*(mx*.5-ico.rotation.y); ico.rotation.x+=.05*(my*.5-ico.rotation.x); ico.rotation.z+=.002;
     particles.rotation.y=-mx*.0002; particles.rotation.x=-my*.0002;
+    gradUniforms.uTime.value += 0.016;
+    gradUniforms.uColor1.value.lerp(targetGrad.c1, 0.04);
+    gradUniforms.uColor2.value.lerp(targetGrad.c2, 0.04);
+    gradUniforms.uColor3.value.lerp(targetGrad.c3, 0.04);
+    gradUniforms.uColor4.value.lerp(targetGrad.c4, 0.04);
+    gradUniforms.uOpacity.value += (targetGrad.op - gradUniforms.uOpacity.value) * 0.04;
     if(frame%4===0) updateLines();
     renderer.render(scene, camera);
   }
@@ -176,6 +273,313 @@
     applyMagnetic('.btn-primary,.btn-ghost,.social-btn,.tl-toggle,.theme-opt');
   });
   applyMagnetic('.btn-primary,.btn-ghost');
+})();
+
+
+/* ─── 4b. CANVAS UI: SHATTER, LIQUID & DITHER SHOCKWAVES ─── */
+(function () {
+  const canvas = document.getElementById('canvas-ui-layer');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let particles = [];
+  let shockwaves = [];
+  let activeThemeFX = null;
+  let isRunning = false;
+
+  function startLoop() {
+    if (!isRunning) {
+      isRunning = true;
+      requestAnimationFrame(renderLoop);
+    }
+  }
+
+  // Button Click Glass Shatter
+  window.triggerCanvasUIButtonShatter = function (x, y) {
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const count = 15;
+    const colors = {
+      dark: ['rgba(0,204,255,0.75)', 'rgba(136,85,255,0.75)', 'rgba(255,255,255,0.9)'],
+      light: ['rgba(0,85,204,0.65)', 'rgba(119,34,204,0.65)', 'rgba(255,255,255,0.85)'],
+      batman: ['rgba(255,233,25,0.9)', 'rgba(255,68,68,0.75)', 'rgba(255,255,255,0.95)'],
+      cyberpunk: ['rgba(255,0,128,0.85)', 'rgba(0,255,204,0.85)', 'rgba(255,255,255,0.95)'],
+      ocean: ['rgba(0,229,176,0.85)', 'rgba(0,153,255,0.85)', 'rgba(255,255,255,0.9)']
+    }[theme] || ['rgba(0,204,255,0.75)', 'rgba(255,255,255,0.9)'];
+
+    // Spawn glass shards
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.45;
+      const speed = Math.random() * 5.5 + 3.5;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        rot: Math.random() * Math.PI * 2,
+        vrot: (Math.random() - 0.5) * 0.28,
+        size: Math.random() * 11 + 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 1.0,
+        decay: Math.random() * 0.035 + 0.025
+      });
+    }
+
+    // Expanding shockwave ripple
+    shockwaves.push({
+      x, y,
+      radius: 6,
+      maxRadius: 85,
+      opacity: 0.75,
+      color: colors[0],
+      strokeWidth: 2
+    });
+
+    startLoop();
+  };
+
+  // Theme Switcher Easter Egg: Fullscreen Canvas UI Transitions
+  window.triggerCanvasUIThemeEffect = function (theme, x, y) {
+    if (x === undefined) x = window.innerWidth / 2;
+    if (y === undefined) y = 50;
+
+    activeThemeFX = {
+      theme: theme,
+      time: 0,
+      maxTime: 26,
+      x: x,
+      y: y
+    };
+
+    // Spawn theme-specific shard particles across the screen
+    const particleCount = theme === 'batman' ? 30 : 20;
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.4;
+      const speed = Math.random() * 8 + 4;
+      let color;
+      if (theme === 'batman') {
+        color = i % 2 === 0 ? 'rgba(255,233,25,0.95)' : 'rgba(30,30,30,0.9)';
+      } else if (theme === 'ocean') {
+        color = i % 2 === 0 ? 'rgba(0,229,176,0.9)' : 'rgba(0,153,255,0.9)';
+      } else if (theme === 'cyberpunk') {
+        color = i % 2 === 0 ? 'rgba(255,0,128,0.9)' : 'rgba(0,255,204,0.9)';
+      } else if (theme === 'light') {
+        color = i % 2 === 0 ? 'rgba(0,85,204,0.85)' : 'rgba(119,34,204,0.85)';
+      } else {
+        color = i % 2 === 0 ? 'rgba(0,204,255,0.9)' : 'rgba(136,85,255,0.9)';
+      }
+
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        rot: Math.random() * Math.PI * 2,
+        vrot: (Math.random() - 0.5) * 0.35,
+        size: Math.random() * 14 + 6,
+        color: color,
+        life: 1.0,
+        decay: Math.random() * 0.035 + 0.025
+      });
+    }
+
+    startLoop();
+  };
+
+  // Button click delegator
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-primary, .btn-ghost, .bento-btn, .theme-icon-btn, .theme-opt');
+    if (btn && !btn.classList.contains('theme-opt')) {
+      window.triggerCanvasUIButtonShatter(e.clientX, e.clientY);
+    }
+  });
+
+  function renderLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 1. Draw shockwaves
+    for (let i = shockwaves.length - 1; i >= 0; i--) {
+      const sw = shockwaves[i];
+      if (sw.radius > 0) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = sw.color;
+        ctx.globalAlpha = sw.opacity;
+        ctx.lineWidth = sw.strokeWidth;
+        ctx.stroke();
+        ctx.restore();
+      }
+      sw.radius += 4.8;
+      sw.opacity *= 0.94;
+      if (sw.radius >= sw.maxRadius || sw.opacity <= 0.02) {
+        shockwaves.splice(i, 1);
+      }
+    }
+
+    // 2. Draw glass shards (Canvas UI signature)
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.96;
+      p.vy *= 0.96;
+      p.rot += p.vrot;
+      p.life -= p.decay;
+
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.moveTo(-p.size * 0.5, p.size * 0.5);
+      ctx.lineTo(p.size * 0.8, -p.size * 0.2);
+      ctx.lineTo(p.size * 0.2, -p.size * 0.7);
+      ctx.closePath();
+      ctx.fill();
+
+      // Specular edge line
+      ctx.strokeStyle = 'rgba(255,255,255,0.65)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 3. Draw Fullscreen Theme Transition FX (Active across all 5 themes)
+    if (activeThemeFX) {
+      activeThemeFX.time++;
+      const progress = activeThemeFX.time / activeThemeFX.maxTime;
+      const alpha = 1 - progress;
+      const t = activeThemeFX.theme;
+      const ox = activeThemeFX.x;
+      const oy = activeThemeFX.y;
+
+      ctx.save();
+
+      if (t === 'cyberpunk') {
+        // Neon scanline glitch slices + 8-bit dither blocks
+        ctx.globalAlpha = alpha * 0.75;
+        for (let s = 0; s < 10; s++) {
+          const sy = (oy + (s * 40) + activeThemeFX.time * 16) % canvas.height;
+          const sh = Math.random() * 5 + 3;
+          ctx.fillStyle = s % 2 === 0 ? 'rgba(255,0,128,0.75)' : 'rgba(0,255,204,0.75)';
+          ctx.fillRect(0, sy, canvas.width, sh);
+        }
+        for (let b = 0; b < 14; b++) {
+          const bx = Math.random() * canvas.width;
+          const by = Math.random() * canvas.height;
+          ctx.fillStyle = Math.random() > 0.5 ? 'rgba(0,255,204,0.55)' : 'rgba(255,0,128,0.55)';
+          ctx.fillRect(bx, by, Math.random() * 100 + 35, Math.random() * 18 + 6);
+        }
+      } else if (t === 'batman') {
+        // Comic dark vignette + Fullscreen yellow/amber shatter fractures
+        ctx.globalAlpha = alpha * 0.85;
+        // Dark vignette pulse
+        const grad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, canvas.width * 0.75);
+        grad.addColorStop(0, 'rgba(0,0,0,0)');
+        grad.addColorStop(1, `rgba(0,0,0,${0.65 * alpha})`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Heavy diagonal lightning/shatter fracture lines
+        ctx.strokeStyle = '#FFE919';
+        ctx.lineWidth = 3.5;
+        for (let j = 0; j < 5; j++) {
+          ctx.beginPath();
+          const startX = (canvas.width / 5) * j;
+          ctx.moveTo(startX, 0);
+          ctx.lineTo(startX + (Math.sin(activeThemeFX.time + j) * 80) + 120, canvas.height * 0.5);
+          ctx.lineTo(startX + (Math.cos(activeThemeFX.time + j) * 120) + 240, canvas.height);
+          ctx.stroke();
+        }
+        // Expanding Bat-Shockwave from button
+        ctx.beginPath();
+        ctx.arc(ox, oy, activeThemeFX.time * 55, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ff3333';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+      } else if (t === 'ocean') {
+        // Fullscreen Bioluminescent Fluid Waves
+        ctx.globalAlpha = alpha * 0.75;
+        // Sweeping sinusoidal wave bands
+        for (let w = 0; w < 4; w++) {
+          ctx.fillStyle = w % 2 === 0 ? 'rgba(0,229,176,0.22)' : 'rgba(0,153,255,0.22)';
+          ctx.beginPath();
+          const waveBaseY = ((activeThemeFX.time * 30 + w * (canvas.height / 3.5)) % (canvas.height + 150)) - 50;
+          ctx.moveTo(0, waveBaseY);
+          for (let wx = 0; wx <= canvas.width; wx += 40) {
+            const wy = waveBaseY + Math.sin(wx * 0.012 + activeThemeFX.time * 0.3 + w) * 28;
+            ctx.lineTo(wx, wy);
+          }
+          ctx.lineTo(canvas.width, canvas.height);
+          ctx.lineTo(0, canvas.height);
+          ctx.closePath();
+          ctx.fill();
+        }
+        // Concentric fluid rings
+        ctx.strokeStyle = 'rgba(0,229,176,0.85)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(ox, oy, activeThemeFX.time * 48, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (t === 'light') {
+        // Solar flare / clean prismatic sunburst
+        ctx.globalAlpha = alpha * 0.65;
+        // Luminous radial flare
+        const flare = ctx.createRadialGradient(ox, oy, 10, ox, oy, activeThemeFX.time * 65);
+        flare.addColorStop(0, 'rgba(255,255,255,0.85)');
+        flare.addColorStop(0.4, 'rgba(180,215,255,0.45)');
+        flare.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = flare;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Radiant clean blue ring
+        ctx.strokeStyle = 'rgba(0,85,204,0.7)';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.arc(ox, oy, activeThemeFX.time * 50, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        // Dark theme: Deep midnight chromatic pulse
+        ctx.globalAlpha = alpha * 0.75;
+        ctx.strokeStyle = 'rgba(0,204,255,0.8)';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.arc(ox, oy, activeThemeFX.time * 50, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(136,85,255,0.8)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ox, oy, Math.max(0, activeThemeFX.time * 50 - 35), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+
+      if (activeThemeFX.time >= activeThemeFX.maxTime) {
+        activeThemeFX = null;
+      }
+    }
+
+    if (particles.length > 0 || shockwaves.length > 0 || activeThemeFX !== null) {
+      requestAnimationFrame(renderLoop);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      isRunning = false;
+    }
+  }
 })();
 
 
@@ -382,9 +786,15 @@ if (statsEl) cIO.observe(statsEl);
   pop.addEventListener('click', e => e.stopPropagation());
 
   opts.forEach(opt => {
-    opt.addEventListener('click', () => {
+    opt.addEventListener('click', e => {
+      const rect = opt.getBoundingClientRect();
+      const ox = rect.left + rect.width / 2;
+      const oy = rect.top + rect.height / 2;
       applyTheme(opt.dataset.theme, true);
       pop.classList.remove('open');
+      if (typeof window.triggerCanvasUIThemeEffect === 'function') {
+        window.triggerCanvasUIThemeEffect(opt.dataset.theme, ox, oy);
+      }
     });
   });
 
