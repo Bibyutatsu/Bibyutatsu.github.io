@@ -495,18 +495,27 @@ const GLSL_SNOISE = `
   updateSize();
   window.addEventListener('resize', updateSize);
 
-  // Load textures with LinearFilter (no mipmaps required for WebGL vertex texture fetch)
+  // Load textures with LinearFilter (uses embedded Data URIs on file:// protocol to bypass Chrome local CORS restriction)
   const loader = new THREE.TextureLoader();
-  function loadTex(url) {
+  const assets = window.BUST_ASSETS || {};
+
+  function loadTex(url, fallbackDataUri) {
+    const src = (window.location.protocol === 'file:' || !url) && fallbackDataUri ? fallbackDataUri : (fallbackDataUri || url);
     const t = loader.load(
-      url,
+      src,
       () => {
         t.needsUpdate = true;
         if (!animId) renderLoop();
       },
       undefined,
       err => {
-        console.warn('Texture failed to load:', url, err);
+        if (fallbackDataUri && src !== fallbackDataUri) {
+          loader.load(fallbackDataUri, fTex => {
+            t.image = fTex.image;
+            t.needsUpdate = true;
+            if (!animId) renderLoop();
+          });
+        }
       }
     );
     t.minFilter = THREE.LinearFilter;
@@ -515,10 +524,10 @@ const GLSL_SNOISE = `
     return t;
   }
 
-  const texHuman = loadTex('images/img_profile.jpg');
-  const depthHuman = loadTex('images/img_profile_depth.png');
-  const texBatman = loadTex('images/img_profile_batman.png');
-  const depthBatman = loadTex('images/img_profile_batman_depth.png');
+  const texHuman = loadTex('images/img_profile.jpg', assets.h);
+  const depthHuman = loadTex('images/img_profile_depth.png', assets.dh);
+  const texBatman = loadTex('images/img_profile_batman.png', assets.b);
+  const depthBatman = loadTex('images/img_profile_batman_depth.png', assets.db);
 
   // Volumetric 3D Grid (110 cols x 146 rows = 16,060 points at 3:4 portrait ratio)
   const COLS = 110, ROWS = 146;
