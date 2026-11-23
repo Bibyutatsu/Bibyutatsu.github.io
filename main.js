@@ -3,6 +3,54 @@
    Three.js · Cursor · Magnetic · Tilt · Themes · Carousel · Radar
    ============================================================ */
 
+/* ─── GLSL SIMPLEX 3D NOISE (SPARK FX) ─────────────────────── */
+const GLSL_SNOISE = `
+  vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+  vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+  float snoise(vec3 v){
+    const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+    vec3 i  = floor(v + dot(v, C.yyy));
+    vec3 x0 = v - i + dot(i, C.xxx);
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min(g.xyz, l.zxy);
+    vec3 i2 = max(g.xyz, l.zxy);
+    vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+    vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+    vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+    i = mod(i, 289.0);
+    vec4 p = permute(permute(permute(
+               i.z + vec4(0.0, i1.z, i2.z, 1.0))
+             + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+             + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+    float n_ = 0.142857142857;
+    vec3 ns = n_ * D.wyz - D.xzx;
+    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_);
+    vec4 x = x_ *ns.x + ns.yyyy;
+    vec4 y = y_ *ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs(x) - abs(y);
+    vec4 b0 = vec4(x.xy, y.xy);
+    vec4 b1 = vec4(x.zw, y.zw);
+    vec4 s0 = floor(b0)*2.0 + 1.0;
+    vec4 s1 = floor(b1)*2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+    vec3 p0 = vec3(a0.xy, h.x);
+    vec3 p1 = vec3(a0.zw, h.y);
+    vec3 p2 = vec3(a1.xy, h.z);
+    vec3 p3 = vec3(a1.zw, h.w);
+    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+    p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+  }
+`;
+
 /* ─── 1. THREE.JS HERO SCENE ─────────────────────────────── */
 (function () {
   const canvas = document.getElementById('hero-canvas');
@@ -38,12 +86,188 @@
   const lines = new THREE.LineSegments(lGeo, lMat);
   scene.add(lines);
 
-  /* -- Icosahedron wireframe (from original) -- */
-  const icoGeo = new THREE.IcosahedronGeometry(68, 1);
-  const icoMat = new THREE.MeshBasicMaterial({ color: 0x00ccff, wireframe: true, transparent: true, opacity: 0.22 });
-  const ico = new THREE.Mesh(icoGeo, icoMat);
-  ico.position.set(window.innerWidth < 700 ? 0 : 220, 10, -60);
-  scene.add(ico);
+  /* -- Quantum Processor Die (QPU) with Spark Dust Dissolution -- */
+  const qpuGroup = new THREE.Group();
+  qpuGroup.position.set(window.innerWidth < 700 ? 0 : 220, 10, -60);
+  scene.add(qpuGroup);
+
+  const CHIP_SIZE = 96;
+  const HALF_CHIP = CHIP_SIZE / 2;
+  const qpuPtCount = 1850;
+  const qpuPos = new Float32Array(qpuPtCount * 3);
+  const qpuType = new Float32Array(qpuPtCount); // 0=substrate trace, 1=qubit junction, 2=gold wirebond pad
+  const qpuRand = new Float32Array(qpuPtCount * 3);
+
+  let qIdx = 0;
+  const Q_GRID = 6;
+  const Q_STEP = CHIP_SIZE / (Q_GRID + 1);
+
+  // 1. Qubit cross transmon array
+  for (let r = 0; r < Q_GRID; r++) {
+    for (let c = 0; c < Q_GRID; c++) {
+      const qx = -HALF_CHIP + (c + 1) * Q_STEP;
+      const qy = -HALF_CHIP + (r + 1) * Q_STEP;
+      // Central Josephson junction
+      qpuPos[qIdx * 3]     = qx;
+      qpuPos[qIdx * 3 + 1] = qy;
+      qpuPos[qIdx * 3 + 2] = 2.4;
+      qpuType[qIdx] = 1.0;
+      qpuRand[qIdx * 3]     = (Math.random() - 0.5) * 2;
+      qpuRand[qIdx * 3 + 1] = (Math.random() - 0.5) * 2;
+      qpuRand[qIdx * 3 + 2] = (Math.random() - 0.5) * 2;
+      qIdx++;
+
+      // Cross arms (transmon capacitor pads)
+      for (let a = 1; a <= 4; a++) {
+        const d = a * 1.6;
+        const arms = [[qx + d, qy], [qx - d, qy], [qx, qy + d], [qx, qy - d]];
+        for (let i = 0; i < arms.length; i++) {
+          qpuPos[qIdx * 3]     = arms[i][0];
+          qpuPos[qIdx * 3 + 1] = arms[i][1];
+          qpuPos[qIdx * 3 + 2] = 1.8;
+          qpuType[qIdx] = 1.0;
+          qpuRand[qIdx * 3]     = (Math.random() - 0.5) * 2;
+          qpuRand[qIdx * 3 + 1] = (Math.random() - 0.5) * 2;
+          qpuRand[qIdx * 3 + 2] = (Math.random() - 0.5) * 2;
+          qIdx++;
+        }
+      }
+    }
+  }
+
+  // 2. Gold wirebond contact pads on perimeter
+  const PADS_PER_EDGE = 14;
+  const pStep = (CHIP_SIZE - 12) / (PADS_PER_EDGE - 1);
+  for (let i = 0; i < PADS_PER_EDGE; i++) {
+    const off = -HALF_CHIP + 6 + i * pStep;
+    const perimeter = [
+      [off, HALF_CHIP - 2],
+      [off, -HALF_CHIP + 2],
+      [HALF_CHIP - 2, off],
+      [-HALF_CHIP + 2, off]
+    ];
+    perimeter.forEach(([px, py]) => {
+      qpuPos[qIdx * 3]     = px;
+      qpuPos[qIdx * 3 + 1] = py;
+      qpuPos[qIdx * 3 + 2] = 1.6;
+      qpuType[qIdx] = 2.0; // gold
+      qpuRand[qIdx * 3]     = (Math.random() - 0.5) * 2;
+      qpuRand[qIdx * 3 + 1] = (Math.random() - 0.5) * 2;
+      qpuRand[qIdx * 3 + 2] = (Math.random() - 0.5) * 2;
+      qIdx++;
+    });
+  }
+
+  // 3. Ground plane substrate traces
+  while (qIdx < qpuPtCount) {
+    qpuPos[qIdx * 3]     = (Math.random() - 0.5) * (CHIP_SIZE - 4);
+    qpuPos[qIdx * 3 + 1] = (Math.random() - 0.5) * (CHIP_SIZE - 4);
+    qpuPos[qIdx * 3 + 2] = (Math.random() - 0.5) * 2.0;
+    qpuType[qIdx] = 0.0;
+    qpuRand[qIdx * 3]     = (Math.random() - 0.5) * 2;
+    qpuRand[qIdx * 3 + 1] = (Math.random() - 0.5) * 2;
+    qpuRand[qIdx * 3 + 2] = (Math.random() - 0.5) * 2;
+    qIdx++;
+  }
+
+  const qpuGeo = new THREE.BufferGeometry();
+  qpuGeo.setAttribute('position', new THREE.BufferAttribute(qpuPos, 3));
+  qpuGeo.setAttribute('aType', new THREE.BufferAttribute(qpuType, 1));
+  qpuGeo.setAttribute('aRand', new THREE.BufferAttribute(qpuRand, 3));
+
+  // Quantum interconnect bus lines
+  const qpuLineCoords = [];
+  for (let r = 0; r < Q_GRID; r++) {
+    for (let c = 0; c < Q_GRID; c++) {
+      const qx = -HALF_CHIP + (c + 1) * Q_STEP;
+      const qy = -HALF_CHIP + (r + 1) * Q_STEP;
+      if (c < Q_GRID - 1) qpuLineCoords.push(qx, qy, 1.8, qx + Q_STEP, qy, 1.8);
+      if (r < Q_GRID - 1) qpuLineCoords.push(qx, qy, 1.8, qx, qy + Q_STEP, 1.8);
+    }
+  }
+  // Chip perimeter border lines
+  qpuLineCoords.push(
+    -HALF_CHIP, -HALF_CHIP, 0.8,  HALF_CHIP, -HALF_CHIP, 0.8,
+     HALF_CHIP, -HALF_CHIP, 0.8,  HALF_CHIP,  HALF_CHIP, 0.8,
+     HALF_CHIP,  HALF_CHIP, 0.8, -HALF_CHIP,  HALF_CHIP, 0.8,
+    -HALF_CHIP,  HALF_CHIP, 0.8, -HALF_CHIP, -HALF_CHIP, 0.8
+  );
+  const qpuLineGeo = new THREE.BufferGeometry();
+  qpuLineGeo.setAttribute('position', new THREE.Float32BufferAttribute(qpuLineCoords, 3));
+  const qpuLineMat = new THREE.LineBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.28 });
+  const qpuLines = new THREE.LineSegments(qpuLineGeo, qpuLineMat);
+  qpuGroup.add(qpuLines);
+
+  // Outer cryostat resonator ring
+  const cryoRingGeo = new THREE.TorusGeometry(72, 0.8, 8, 48);
+  const cryoRingMat = new THREE.MeshBasicMaterial({ color: 0x8855ff, transparent: true, opacity: 0.2, wireframe: true });
+  const cryoRing = new THREE.Mesh(cryoRingGeo, cryoRingMat);
+  qpuGroup.add(cryoRing);
+
+  // Spark dissolution shader for Quantum Processor
+  const qpuUniforms = {
+    uTime: { value: 0 },
+    uDissolve: { value: 0 },
+    uColorPrimary: { value: new THREE.Color(0x00ccff) },
+    uColorSecondary: { value: new THREE.Color(0x8855ff) }
+  };
+
+  const qpuMat = new THREE.ShaderMaterial({
+    uniforms: qpuUniforms,
+    vertexShader: `
+      uniform float uTime;
+      uniform float uDissolve;
+      uniform vec3 uColorPrimary;
+      uniform vec3 uColorSecondary;
+      attribute float aType;
+      attribute vec3 aRand;
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      ${GLSL_SNOISE}
+
+      void main() {
+        vec3 pos = position;
+        vec3 col = (aType > 0.5) ? uColorSecondary : uColorPrimary;
+        if (aType > 1.5) col = vec3(1.0, 0.82, 0.26); // Gold bonding pads
+
+        if (uDissolve > 0.0) {
+          float n1 = snoise(pos * 0.022 + vec3(uTime * 0.25));
+          float n2 = snoise(pos * 0.038 + vec3(aRand.x * 4.0, uTime * 0.2, 0.0));
+          pos.x += n1 * uDissolve * 150.0 + aRand.x * uDissolve * 45.0;
+          pos.y -= (abs(n2) * 135.0 + 75.0) * uDissolve; // Drift downward towards Bento Showcase
+          pos.z += (n2 - 0.25) * uDissolve * 110.0;
+        }
+
+        vColor = col;
+        vAlpha = max(0.0, 1.0 - uDissolve * 0.85);
+
+        vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+        float sizeBase = (aType > 0.5 ? 4.2 : 2.5);
+        if (aType > 1.5) sizeBase = 4.8;
+        gl_PointSize = sizeBase * (1.0 - uDissolve * 0.45) * (260.0 / -mvPos.z);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vAlpha;
+      void main() {
+        if (vAlpha < 0.02) discard;
+        vec2 coord = gl_PointCoord - vec2(0.5);
+        float dist = length(coord);
+        if (dist > 0.5) discard;
+        float glow = smoothstep(0.5, 0.06, dist);
+        gl_FragColor = vec4(vColor, vAlpha * glow);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+
+  const qpuPoints = new THREE.Points(qpuGeo, qpuMat);
+  qpuGroup.add(qpuPoints);
 
   /* -- Texture particles -- */
   const loader = new THREE.TextureLoader();
@@ -153,7 +377,10 @@
 
   window.updateThreeColors = function(theme) {
     const c = THEME_COLORS[theme] || THEME_COLORS.dark;
-    icoMat.color.setHex(c.ico);
+    qpuLineMat.color.setHex(c.ico);
+    cryoRingMat.color.setHex(c.n2);
+    qpuUniforms.uColorPrimary.value.setHex(c.n1);
+    qpuUniforms.uColorSecondary.value.setHex(c.n2);
     nodes.forEach((n, i) => n.material.color.setHex(i % 3 === 0 ? c.n2 : c.n1));
     pMat.color.setHex(c.p);
     if (c.ptex !== lastTex) {
@@ -194,15 +421,29 @@
   document.addEventListener('mousemove', e => { mx=(e.clientX/window.innerWidth-.5)*2; my=(e.clientY/window.innerHeight-.5)*2; });
   window.addEventListener('resize', () => { camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); });
 
-  let frame=0, heroGone=false;
-  window.addEventListener('scroll', () => { heroGone = window.scrollY > window.innerHeight*.8; canvas.style.opacity = heroGone?'0':'1'; });
+  let frame=0, heroGone=false, targetDissolve=0;
+  window.addEventListener('scroll', () => {
+    heroGone = window.scrollY > window.innerHeight * 1.1;
+    canvas.style.opacity = window.scrollY > window.innerHeight * 0.95 ? '0' : '1';
+    targetDissolve = Math.min(1.0, Math.max(0.0, window.scrollY / (window.innerHeight * 0.72)));
+  });
 
   function animate() {
     requestAnimationFrame(animate); if (heroGone) return; frame++;
     nodes.forEach(n => { n.position.x+=n.userData.vx; n.position.y+=n.userData.vy; if(Math.abs(n.position.x)>360)n.userData.vx*=-1; if(Math.abs(n.position.y)>240)n.userData.vy*=-1; });
     tx+=(mx*18-tx)*.03; ty+=(my*10-ty)*.03;
     camera.position.x=tx; camera.position.y=-ty; camera.lookAt(scene.position);
-    ico.rotation.y+=.05*(mx*.5-ico.rotation.y); ico.rotation.x+=.05*(my*.5-ico.rotation.x); ico.rotation.z+=.002;
+
+    // QPU Spark Dust Dissolution & 3D Parallax Rotation
+    qpuUniforms.uDissolve.value += (targetDissolve - qpuUniforms.uDissolve.value) * 0.08;
+    qpuLineMat.opacity = Math.max(0.0, 0.28 * (1.0 - qpuUniforms.uDissolve.value * 1.5));
+    cryoRingMat.opacity = Math.max(0.0, 0.2 * (1.0 - qpuUniforms.uDissolve.value * 1.5));
+    qpuGroup.rotation.y += 0.003 + (mx * 0.35 - qpuGroup.rotation.y) * 0.03;
+    qpuGroup.rotation.x = 0.35 + (my * 0.25 - qpuGroup.rotation.x) * 0.03;
+    cryoRing.rotation.z += 0.004;
+    cryoRing.rotation.x += 0.002;
+    qpuUniforms.uTime.value += 0.016;
+
     particles.rotation.y=-mx*.0002; particles.rotation.x=-my*.0002;
     gradUniforms.uTime.value += 0.016;
     gradUniforms.uColor1.value.lerp(targetGrad.c1, 0.04);
@@ -214,6 +455,235 @@
     renderer.render(scene, camera);
   }
   animate();
+})();
+
+
+/* ─── 1B. HOLOGRAPHIC BUST 3D SCENE (SPARK) ─────────────── */
+(function () {
+  const canvas = document.getElementById('profile-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+  const container = canvas.closest('.about-image');
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+  } catch (e) {
+    if (container) container.classList.add('fallback-active');
+    return;
+  }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  renderer.setPixelRatio(dpr);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, 340 / 453, 1, 1000);
+  camera.position.z = 295;
+
+  function updateSize() {
+    const w = canvas.clientWidth || 340;
+    const h = canvas.clientHeight || 453;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+  }
+  updateSize();
+  window.addEventListener('resize', updateSize);
+
+  // Textures: High-res RGB + MiDaS Neural Depth Maps
+  const loader = new THREE.TextureLoader();
+  const texHuman = loader.load('images/img_profile.jpg');
+  const depthHuman = loader.load('images/img_profile_depth.png');
+  const texBatman = loader.load('images/img_profile_batman.png');
+  const depthBatman = loader.load('images/img_profile_batman_depth.png');
+
+  // Volumetric 3D Grid (110 cols x 146 rows = 16,060 particles at 3:4 portrait ratio)
+  const COLS = 110, ROWS = 146;
+  const count = COLS * ROWS;
+  const positions = new Float32Array(count * 3);
+  const uvs = new Float32Array(count * 2);
+
+  const WIDTH = 205, HEIGHT = 273;
+  let idx = 0;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const u = c / (COLS - 1);
+      const v = 1.0 - r / (ROWS - 1);
+      positions[idx * 3]     = (u - 0.5) * WIDTH;
+      positions[idx * 3 + 1] = (v - 0.5) * HEIGHT;
+      positions[idx * 3 + 2] = 0;
+
+      uvs[idx * 2]     = u;
+      uvs[idx * 2 + 1] = v;
+      idx++;
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+
+  const bustUniforms = {
+    uTexHuman: { value: texHuman },
+    uDepthHuman: { value: depthHuman },
+    uTexBatman: { value: texBatman },
+    uDepthBatman: { value: depthBatman },
+    uMorph: { value: 0.0 },
+    uDissolve: { value: 0.0 },
+    uDepthScale: { value: 52.0 },
+    uPointSize: { value: dpr > 1.5 ? 3.4 : 2.7 },
+    uTime: { value: 0.0 }
+  };
+
+  const bustMat = new THREE.ShaderMaterial({
+    uniforms: bustUniforms,
+    vertexShader: `
+      uniform sampler2D uTexHuman;
+      uniform sampler2D uDepthHuman;
+      uniform sampler2D uTexBatman;
+      uniform sampler2D uDepthBatman;
+      uniform float uMorph;
+      uniform float uDissolve;
+      uniform float uDepthScale;
+      uniform float uPointSize;
+      uniform float uTime;
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      ${GLSL_SNOISE}
+
+      void main() {
+        vec2 uv = uv;
+        float dH = texture2D(uDepthHuman, uv).r;
+        float dB = texture2D(uDepthBatman, uv).r;
+        float depth = mix(dH, dB, uMorph);
+
+        vec4 colH = texture2D(uTexHuman, uv);
+        vec4 colB = texture2D(uTexBatman, uv);
+        vec3 col = mix(colH.rgb, colB.rgb, uMorph);
+
+        vec3 pos = position;
+        pos.z += (depth - 0.38) * uDepthScale;
+
+        if (uDissolve > 0.0) {
+          float n1 = snoise(pos * 0.024 + vec3(uTime * 0.3));
+          float n2 = snoise(pos * 0.042 + vec3(uv * 8.0, uTime * 0.25));
+          pos.x += n1 * uDissolve * 115.0;
+          pos.y += (abs(n2) * 125.0 + 35.0) * uDissolve;
+          pos.z += (n2 - 0.3) * uDissolve * 90.0;
+        }
+
+        vColor = col;
+        float aH = colH.a;
+        float aB = colB.a;
+        float alpha = mix(aH, aB, uMorph);
+        if (depth < 0.05 && length(col) < 0.1) alpha *= 0.15;
+        vAlpha = alpha * max(0.0, 1.0 - uDissolve * 0.9);
+
+        vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+        gl_PointSize = uPointSize * (1.0 - uDissolve * 0.5) * (260.0 / -mvPos.z);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vAlpha;
+      void main() {
+        if (vAlpha < 0.04) discard;
+        vec2 coord = gl_PointCoord - vec2(0.5);
+        float dist = length(coord);
+        if (dist > 0.5) discard;
+        float radial = smoothstep(0.5, 0.08, dist);
+        vec3 finalCol = vColor + vec3(0.06 * (0.5 - dist));
+        gl_FragColor = vec4(finalCol, vAlpha * radial);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.NormalBlending
+  });
+
+  const bustMesh = new THREE.Points(geometry, bustMat);
+  scene.add(bustMesh);
+
+  // Initial theme check
+  const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('bm-theme') || 'dark';
+  bustUniforms.uMorph.value = (currentTheme === 'batman') ? 1.0 : 0.0;
+
+  let targetRotX = 0, targetRotY = 0;
+  let isHovered = false;
+
+  if (container) {
+    container.addEventListener('mousemove', e => {
+      const rect = container.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      targetRotY = x * 0.42;
+      targetRotX = -y * 0.32;
+      isHovered = true;
+    });
+
+    container.addEventListener('mouseleave', () => {
+      targetRotX = 0;
+      targetRotY = 0;
+      isHovered = false;
+    });
+  }
+
+  let targetMorph = bustUniforms.uMorph.value;
+  let dissolvePhase = 0; // 0 = idle, 1 = bursting, 2 = reassembling
+
+  window.triggerProfileMorph = function (isBatman) {
+    targetMorph = isBatman ? 1.0 : 0.0;
+    if (bustUniforms.uMorph.value !== targetMorph || dissolvePhase !== 0) {
+      dissolvePhase = 1;
+    }
+  };
+
+  // Zero-Idle CPU: IntersectionObserver pauses render loop when scrolled away
+  let isVisible = false;
+  let animId = null;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      isVisible = entry.isIntersecting;
+      if (isVisible && !animId) renderLoop();
+    });
+  }, { threshold: 0.1 });
+  observer.observe(canvas);
+
+  function renderLoop() {
+    if (!isVisible) { animId = null; return; }
+    animId = requestAnimationFrame(renderLoop);
+
+    bustUniforms.uTime.value += 0.016;
+
+    // Smooth hover parallax
+    bustMesh.rotation.y += (targetRotY - bustMesh.rotation.y) * 0.06;
+    bustMesh.rotation.x += (targetRotX - bustMesh.rotation.x) * 0.06;
+
+    if (!isHovered) {
+      bustMesh.position.y = Math.sin(bustUniforms.uTime.value * 1.5) * 2.5;
+    } else {
+      bustMesh.position.y += (0 - bustMesh.position.y) * 0.1;
+    }
+
+    // Spark dissolution wave during theme transition
+    if (dissolvePhase === 1) {
+      bustUniforms.uDissolve.value += 0.055;
+      if (bustUniforms.uDissolve.value >= 0.85) {
+        bustUniforms.uMorph.value = targetMorph;
+        dissolvePhase = 2;
+      }
+    } else if (dissolvePhase === 2) {
+      bustUniforms.uDissolve.value -= 0.045;
+      if (bustUniforms.uDissolve.value <= 0.0) {
+        bustUniforms.uDissolve.value = 0.0;
+        dissolvePhase = 0;
+      }
+    }
+
+    renderer.render(scene, camera);
+  }
 })();
 
 
@@ -806,9 +1276,10 @@ if (statsEl) cIO.observe(statsEl);
     const names = {dark:'Dark',light:'Light',batman:'Batman',cyberpunk:'Cyber',ocean:'Ocean'};
     const label = btn.querySelector('.theme-label');
     if (label) label.textContent = names[theme]||theme;
-    // Profile image
+    // Profile image & 3D holographic bust morph
     const img = document.getElementById('profile-img');
     if (img) img.src = theme==='batman' ? 'images/img_profile_batman.png' : 'images/img_profile.jpg';
+    if (typeof window.triggerProfileMorph === 'function') window.triggerProfileMorph(theme === 'batman');
     // Three.js colors
     if (typeof window.updateThreeColors === 'function') window.updateThreeColors(theme);
     // Chart colors

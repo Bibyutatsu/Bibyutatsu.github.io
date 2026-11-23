@@ -153,7 +153,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
   <!-- Critical overrides: bypass any CSS cache -->
   <style>
     .hero-content {
@@ -680,7 +680,8 @@
     </div>
     <div class="about-grid">
       <div class="about-image reveal from-left">
-        <img id="profile-img" src="images/img_profile.jpg" alt="Bibhash Mitra" width="340" height="453">
+        <canvas id="profile-canvas" width="340" height="453" aria-label="Bibhash Mitra 3D Holographic Photogrammetry Bust"></canvas>
+        <img id="profile-img" src="images/img_profile.jpg" alt="Bibhash Mitra" width="340" height="453" class="profile-fallback">
         <div class="img-frame"></div>
       </div>
       <div class="about-body reveal from-right d1">
@@ -839,6 +840,6 @@
 </footer>
 
 <script src="data.js?v=3"></script>
-<script src="main.js?v=6"></script>
+<script src="main.js?v=7"></script>
 </body>
 </html>
