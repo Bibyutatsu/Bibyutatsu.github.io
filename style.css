@@ -353,6 +353,123 @@ body.c-click #cursor-ring { width: 24px; height: 24px; opacity: 1; }
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), var(--glow);
 }
 
+/* ── Holographic Foil & 3D Tilt Glare (Pokemon Cards CSS style) ── */
+.holo-card {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --foil-x: 50%;
+  --foil-y: 50%;
+  --angle: 135deg;
+  --holo-opacity: 0;
+  transform-style: preserve-3d;
+  will-change: transform, box-shadow;
+  perspective: 1000px;
+}
+
+/* Holographic Prismatic Rainbow Sheen */
+.holo-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--holo-opacity, 0);
+  transition: opacity 0.35s ease;
+  background-image: 
+    linear-gradient(
+      var(--angle, 135deg),
+      rgba(255, 0, 128, 0.38) 0%,
+      rgba(255, 136, 0, 0.38) 15%,
+      rgba(255, 230, 0, 0.38) 30%,
+      rgba(0, 230, 118, 0.38) 45%,
+      rgba(0, 180, 255, 0.38) 60%,
+      rgba(157, 0, 255, 0.38) 75%,
+      rgba(255, 0, 128, 0.38) 90%,
+      rgba(255, 230, 0, 0.38) 100%
+    ),
+    repeating-linear-gradient(
+      calc(var(--angle, 135deg) + 45deg),
+      rgba(255, 255, 255, 0.08) 0px,
+      rgba(255, 255, 255, 0.08) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+  background-size: 220% 220%, 100% 100%;
+  background-position: var(--foil-x, 50%) var(--foil-y, 50%), 0 0;
+  mix-blend-mode: color-dodge;
+}
+
+/* Dynamic Specular Glare */
+.holo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--holo-opacity, 0);
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    farthest-corner circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.22) 22%,
+    rgba(255, 255, 255, 0.05) 45%,
+    transparent 68%
+  );
+  mix-blend-mode: overlay;
+}
+
+/* Theme overrides */
+[data-theme="light"] .holo-card::before {
+  mix-blend-mode: overlay;
+  opacity: calc(var(--holo-opacity, 0) * 0.7);
+}
+
+[data-theme="batman"] .holo-card::before {
+  background-image: 
+    linear-gradient(
+      var(--angle, 135deg),
+      rgba(255, 233, 25, 0.45) 0%,
+      rgba(255, 60, 0, 0.35) 25%,
+      rgba(255, 233, 25, 0.45) 50%,
+      rgba(255, 255, 255, 0.35) 75%,
+      rgba(255, 233, 25, 0.45) 100%
+    ),
+    repeating-linear-gradient(
+      calc(var(--angle, 135deg) + 45deg),
+      rgba(255, 233, 25, 0.12) 0px,
+      rgba(255, 233, 25, 0.12) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+}
+
+[data-theme="ocean"] .holo-card::before {
+  background-image: 
+    linear-gradient(
+      var(--angle, 135deg),
+      rgba(0, 229, 176, 0.45) 0%,
+      rgba(0, 153, 255, 0.4) 30%,
+      rgba(255, 255, 255, 0.35) 50%,
+      rgba(0, 229, 176, 0.45) 75%,
+      rgba(0, 153, 255, 0.4) 100%
+    ),
+    repeating-linear-gradient(
+      calc(var(--angle, 135deg) + 45deg),
+      rgba(0, 229, 176, 0.1) 0px,
+      rgba(0, 229, 176, 0.1) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+}
+
+/* Interactive elements stay reliably clickable above overlay */
+.holo-card .bento-actions {
+  position: relative;
+  z-index: 12;
+}
+
 /* Split layout for large hero horizontal cards */
 .bento-card-horizontal {
   display: grid;

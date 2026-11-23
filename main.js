@@ -201,6 +201,73 @@
 })();
 
 
+/* ─── 5b. HOLOGRAPHIC FOIL & 3D TILT (Pokemon Cards CSS style) ─── */
+(function () {
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+
+  function initHoloCards() {
+    const cards = document.querySelectorAll('.holo-card:not([data-holo-active])');
+    cards.forEach(card => {
+      card.setAttribute('data-holo-active', 'true');
+      let rafId = null;
+
+      function onMouseMove(e) {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+
+        const px = (x * 100).toFixed(1);
+        const py = (y * 100).toFixed(1);
+        const dx = x - 0.5;
+        const dy = y - 0.5;
+
+        // Subtle tilt angles (max ~11 deg)
+        const rotX = (dy * -11).toFixed(2);
+        const rotY = (dx * 11).toFixed(2);
+
+        // Angle and foil shift based on cursor
+        const angle = (Math.atan2(dy, dx) * (180 / Math.PI) + 90).toFixed(1);
+        const foilX = (50 + dx * 60).toFixed(1);
+        const foilY = (50 + dy * 60).toFixed(1);
+
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          card.style.setProperty('--pointer-x', `${px}%`);
+          card.style.setProperty('--pointer-y', `${py}%`);
+          card.style.setProperty('--foil-x', `${foilX}%`);
+          card.style.setProperty('--foil-y', `${foilY}%`);
+          card.style.setProperty('--angle', `${angle}deg`);
+          card.style.setProperty('--holo-opacity', '1');
+          card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px) translateZ(8px)`;
+        });
+      }
+
+      function onMouseEnter() {
+        card.style.transition = 'transform 0.12s ease-out, border-color 0.3s ease, box-shadow 0.3s ease';
+      }
+
+      function onMouseLeave() {
+        if (rafId) cancelAnimationFrame(rafId);
+        card.style.transition = 'transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.38s ease, box-shadow 0.38s ease';
+        card.style.setProperty('--holo-opacity', '0');
+        card.style.transform = '';
+      }
+
+      card.addEventListener('mouseenter', onMouseEnter);
+      card.addEventListener('mousemove', onMouseMove);
+      card.addEventListener('mouseleave', onMouseLeave);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHoloCards);
+  } else {
+    initHoloCards();
+  }
+  document.addEventListener('portfolio-ready', initHoloCards);
+})();
+
+
 /* ─── 6. HERO SCROLL PARALLAX ───────────────────────────── */
 (function () {
   const hc = document.querySelector('.hero-content');
