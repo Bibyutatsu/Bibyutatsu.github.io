@@ -463,14 +463,170 @@ const GLSL_SNOISE = `
 })();
 
 
+/* ─── PRETEXT: ZERO-REFLOW ARITHMETIC TEXT LAYOUT ENGINE ─── */
+const Pretext = (function () {
+  const cache = new Map();
+  let ctx = null;
+
+  function getContext(font) {
+    if (!ctx) {
+      const c = document.createElement('canvas');
+      ctx = c.getContext('2d');
+    }
+    ctx.font = font;
+    return ctx;
+  }
+
+  // Pretext Step 1: prepare(text, font)
+  // Evaluates and caches character metrics once; returns an immutable handle
+  function prepare(text, font) {
+    const key = font + '::' + text;
+    if (cache.has(key)) return cache.get(key);
+
+    const c = getContext(font);
+    const words = text.split(/\s+/);
+    const wordWidths = new Float32Array(words.length);
+    const spaceWidth = c.measureText(' ').width;
+
+    for (let i = 0; i < words.length; i++) {
+      wordWidths[i] = c.measureText(words[i]).width;
+    }
+
+    const prep = { text, font, words, wordWidths, spaceWidth };
+    cache.set(key, prep);
+    return prep;
+  }
+
+  // Pretext Step 2: layout(prep, containerWidth, lineHeight)
+  // Pure arithmetic evaluation in microseconds with ZERO DOM touch (0ms layout reflow)
+  function layout(prep, containerWidth, lineHeight) {
+    if (containerWidth <= 0) return { height: 0, lineCount: 0, lines: [] };
+    const { words, wordWidths, spaceWidth } = prep;
+    let currentLineWidth = 0;
+    let lineCount = 1;
+    let currentLine = [];
+    const lines = [];
+
+    for (let i = 0; i < wordWidths.length; i++) {
+      const w = wordWidths[i];
+      if (currentLineWidth + w <= containerWidth || currentLineWidth === 0) {
+        currentLine.push(words[i]);
+        currentLineWidth += w + spaceWidth;
+      } else {
+        lines.push(currentLine.join(' '));
+        currentLine = [words[i]];
+        currentLineWidth = w + spaceWidth;
+        lineCount++;
+      }
+    }
+    if (currentLine.length > 0) lines.push(currentLine.join(' '));
+
+    const height = Math.round(lineCount * lineHeight);
+    return { height, lineCount, lines };
+  }
+
+  // Pretext Step 3: balance(prep, containerWidth, lineHeight)
+  // Binary search to find optimal container width that balances multiline text without orphan words
+  function balance(prep, containerWidth, lineHeight) {
+    const natural = layout(prep, containerWidth, lineHeight);
+    if (natural.lineCount <= 1) return containerWidth;
+
+    let low = containerWidth * 0.72;
+    let high = containerWidth;
+    let bestWidth = containerWidth;
+    const targetLines = natural.lineCount;
+
+    for (let iter = 0; iter < 8; iter++) {
+      const mid = (low + high) / 2;
+      const res = layout(prep, mid, lineHeight);
+      if (res.lineCount === targetLines) {
+        bestWidth = mid;
+        high = mid;
+      } else {
+        low = mid;
+      }
+    }
+    return Math.round(bestWidth);
+  }
+
+  // Pretext Step 4: fitText(text, containerWidth, baseSize, minSize)
+  // Calculates optimal single-line font size without DOM reflow
+  function fitText(text, containerWidth, baseSize, minSize) {
+    if (containerWidth <= 0) return baseSize;
+    const prep = prepare(text, `${baseSize}px "Fira Code", monospace`);
+    let totalW = 0;
+    for (let i = 0; i < prep.wordWidths.length; i++) totalW += prep.wordWidths[i];
+    totalW += (prep.words.length - 1) * prep.spaceWidth;
+
+    if (totalW <= containerWidth) return baseSize;
+    const scale = containerWidth / totalW;
+    return Math.max(minSize, Math.round(baseSize * scale * 10) / 10);
+  }
+
+  // Pretext Step 5: shapeWrap(prep, containerWidth, lineHeight, obstacle)
+  // Arithmetically wraps text lines around an obstacle contour (e.g. avatar)
+  function shapeWrap(prep, containerWidth, lineHeight, obstacle) {
+    if (containerWidth <= 0) return { height: 0, lines: [] };
+    const { words, wordWidths, spaceWidth } = prep;
+    let wordIdx = 0;
+    const lines = [];
+    let y = 0;
+
+    while (wordIdx < words.length) {
+      let availableWidth = containerWidth;
+      let leftOffset = 0;
+      if (obstacle && y >= obstacle.top && y <= obstacle.top + obstacle.height) {
+        const relY = (y - obstacle.top) / obstacle.height;
+        const exclusionWidth = obstacle.width * Math.sin(relY * Math.PI);
+        if (obstacle.side === 'left') {
+          leftOffset = exclusionWidth;
+          availableWidth = Math.max(120, containerWidth - exclusionWidth);
+        } else {
+          availableWidth = Math.max(120, containerWidth - exclusionWidth);
+        }
+      }
+
+      let lineWidth = 0;
+      const lineWords = [];
+      while (wordIdx < words.length) {
+        const wWidth = wordWidths[wordIdx];
+        if (lineWidth + wWidth <= availableWidth || lineWords.length === 0) {
+          lineWords.push(words[wordIdx]);
+          lineWidth += wWidth + spaceWidth;
+          wordIdx++;
+        } else {
+          break;
+        }
+      }
+      lines.push({ text: lineWords.join(' '), leftOffset, width: lineWidth });
+      y += lineHeight;
+    }
+
+    return { height: lines.length * lineHeight, lines };
+  }
+
+  return { prepare, layout, balance, fitText, shapeWrap };
+})();
+
+
 /* ─── 2. TYPED TEXT ─────────────────────────────────────── */
 (function () {
   const el = document.getElementById('typed-text');
   if (!el) return;
   const roles = ['Lead Data Scientist','Generative AI Engineer','ML Systems Architect','Quantum Computing Researcher','NLP & Vision Expert'];
   let ri=0,ci=0,del=false;
+
+  function updateFit() {
+    if (typeof Pretext !== 'undefined' && Pretext.fitText) {
+      const containerW = el.parentElement ? el.parentElement.clientWidth - 40 : 360;
+      const fitSize = Pretext.fitText(roles[ri], containerW, 16, 12);
+      el.style.fontSize = `${fitSize}px`;
+    }
+  }
+
   function tick() {
     const r=roles[ri];
+    if (ci === 0 && !del) updateFit();
     if (!del) { el.textContent=r.slice(0,++ci); if(ci===r.length){del=true;return setTimeout(tick,2200);} setTimeout(tick,75); }
     else { el.textContent=r.slice(0,--ci); if(ci===0){del=false;ri=(ri+1)%roles.length;} setTimeout(tick,38); }
   }
@@ -1249,8 +1405,43 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="tl-projects">
           ${job.projects.map(p=>`<div class="proj-card"><h4>${p.title.trim()}</h4><p>${p.description}</p></div>`).join('')}
         </div>`;
-      const btn=entry.querySelector('.tl-toggle'), proj=entry.querySelector('.tl-projects');
-      btn.addEventListener('click', () => { const o=proj.classList.toggle('open'); btn.textContent=o?'[ hide ]':`[ ${job.projects.length} projects ]`; });
+      const btn = entry.querySelector('.tl-toggle'), proj = entry.querySelector('.tl-projects');
+      btn.addEventListener('click', () => {
+        const isOpen = proj.classList.contains('open');
+
+        // Trigger Canvas UI tactile button shatter
+        if (window.triggerCanvasUIButtonShatter) {
+          const rect = btn.getBoundingClientRect();
+          window.triggerCanvasUIButtonShatter(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+
+        // Trigger Chrono-Pillar milestone energy pulse along 3D rail
+        if (window.triggerChronoPillarPulse) {
+          const ratio = portfolioData.Experience.length > 1 ? i / (portfolioData.Experience.length - 1) : 0;
+          window.triggerChronoPillarPulse(ratio);
+        }
+
+        if (!isOpen) {
+          // Pretext Zero-Reflow arithmetic height measurement across child project cards
+          let totalHeight = 0;
+          const cardWidth = Math.max(220, (proj.clientWidth || entry.clientWidth || 600) - 40);
+          job.projects.forEach(p => {
+            const prepTitle = Pretext.prepare(p.title.trim(), '600 14px "Space Grotesk"');
+            const prepDesc = Pretext.prepare(p.description, '12.8px "Inter"');
+            const hTitle = Pretext.layout(prepTitle, cardWidth, 18).height;
+            const hDesc = Pretext.layout(prepDesc, cardWidth, 20.5).height;
+            totalHeight += hTitle + hDesc + 36 + 10; // card padding (28px) + border (2px) + title margin (6px) + gap
+          });
+
+          proj.style.height = `${totalHeight + 8}px`;
+          proj.classList.add('open');
+          btn.textContent = '[ hide ]';
+        } else {
+          proj.style.height = '0px';
+          proj.classList.remove('open');
+          btn.textContent = `[ ${job.projects.length} projects ]`;
+        }
+      });
       // if (i===0) { proj.classList.add('open'); btn.textContent='[ hide ]'; } // Removed to collapse by default
       timeline.appendChild(entry);
     });
@@ -2470,63 +2661,36 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 
-/* ─── 19. PRETEXT: ZERO-REFLOW ARITHMETIC TEXT LAYOUT ENGINE ─── */
-const Pretext = (function () {
-  const cache = new Map();
-  let ctx = null;
-
-  function getContext(font) {
-    if (!ctx) {
-      const c = document.createElement('canvas');
-      ctx = c.getContext('2d');
-    }
-    ctx.font = font;
-    return ctx;
-  }
-
-  // Pretext Step 1: prepare(text, font)
-  // Evaluates and caches character metrics once; returns an immutable handle
-  function prepare(text, font) {
-    const key = font + '::' + text;
-    if (cache.has(key)) return cache.get(key);
-
-    const c = getContext(font);
-    const words = text.split(/\s+/);
-    const wordWidths = new Float32Array(words.length);
-    const spaceWidth = c.measureText(' ').width;
-
-    for (let i = 0; i < words.length; i++) {
-      wordWidths[i] = c.measureText(words[i]).width;
+/* ─── 19. PRETEXT: BENTO TYPOGRAPHY BALANCING & ABOUT SHAPE-FITTING ─── */
+(function initPretextEnhancements() {
+  document.addEventListener('portfolio-ready', () => {
+    // 1. Balance Bento Card descriptions to eliminate orphan words
+    if (typeof Pretext !== 'undefined' && Pretext.balance) {
+      document.querySelectorAll('.bento-desc').forEach(desc => {
+        const text = desc.textContent.trim();
+        const parentW = desc.parentElement ? desc.parentElement.clientWidth : 360;
+        const prep = Pretext.prepare(text, '13.5px "Inter", sans-serif');
+        const balancedW = Pretext.balance(prep, parentW, 21);
+        if (balancedW > 160 && balancedW < parentW) {
+          desc.style.maxWidth = `${balancedW}px`;
+        }
+      });
     }
 
-    const prep = { text, font, words, wordWidths, spaceWidth };
-    cache.set(key, prep);
-    return prep;
-  }
-
-  // Pretext Step 2: layout(prep, containerWidth, lineHeight)
-  // Pure arithmetic evaluation in microseconds with ZERO DOM touch (0ms layout reflow)
-  function layout(prep, containerWidth, lineHeight) {
-    if (containerWidth <= 0) return { height: 0, lineCount: 0 };
-    const { wordWidths, spaceWidth } = prep;
-    let currentLineWidth = 0;
-    let lineCount = 1;
-
-    for (let i = 0; i < wordWidths.length; i++) {
-      const w = wordWidths[i];
-      if (currentLineWidth + w <= containerWidth || currentLineWidth === 0) {
-        currentLineWidth += w + spaceWidth;
-      } else {
-        currentLineWidth = w + spaceWidth;
-        lineCount++;
+    // 2. About Bio dynamic contour shape fitting
+    if (typeof Pretext !== 'undefined' && Pretext.shapeWrap) {
+      const intro = document.querySelector('.about-intro');
+      if (intro) {
+        const text = intro.textContent.trim();
+        const prep = Pretext.prepare(text, '15px "Inter", sans-serif');
+        const w = intro.clientWidth || 500;
+        const res = Pretext.shapeWrap(prep, w, 24, { top: 0, height: 120, width: 45, side: 'left' });
+        if (res.lines.length > 0 && window.innerWidth > 768) {
+          intro.setAttribute('data-pretext-wrapped', 'true');
+        }
       }
     }
-
-    const height = Math.round(lineCount * lineHeight);
-    return { height, lineCount };
-  }
-
-  return { prepare, layout };
+  });
 })();
 
 
