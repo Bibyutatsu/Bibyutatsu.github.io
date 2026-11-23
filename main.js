@@ -464,11 +464,16 @@ const GLSL_SNOISE = `
   if (!canvas || typeof THREE === 'undefined') return;
   const container = canvas.closest('.about-image');
 
+  function fallback() {
+    if (container) container.classList.add('fallback-active');
+  }
+
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+    renderer.setClearColor(0x000000, 0);
   } catch (e) {
-    if (container) container.classList.add('fallback-active');
+    fallback();
     return;
   }
 
@@ -476,8 +481,9 @@ const GLSL_SNOISE = `
   renderer.setPixelRatio(dpr);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(42, 340 / 453, 1, 1000);
-  camera.position.z = 295;
+  const camera = new THREE.PerspectiveCamera(45, 340 / 453, 1, 1000);
+  camera.position.set(0, 0, 315);
+  camera.lookAt(0, 0, 0);
 
   function updateSize() {
     const w = canvas.clientWidth || 340;
@@ -489,20 +495,39 @@ const GLSL_SNOISE = `
   updateSize();
   window.addEventListener('resize', updateSize);
 
-  // Textures: High-res RGB + MiDaS Neural Depth Maps
+  // Load textures with LinearFilter (no mipmaps required for WebGL vertex texture fetch)
   const loader = new THREE.TextureLoader();
-  const texHuman = loader.load('images/img_profile.jpg');
-  const depthHuman = loader.load('images/img_profile_depth.png');
-  const texBatman = loader.load('images/img_profile_batman.png');
-  const depthBatman = loader.load('images/img_profile_batman_depth.png');
+  function loadTex(url) {
+    const t = loader.load(
+      url,
+      () => {
+        t.needsUpdate = true;
+        if (!animId) renderLoop();
+      },
+      undefined,
+      err => {
+        console.warn('Texture failed to load:', url, err);
+      }
+    );
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
+    t.generateMipmaps = false;
+    return t;
+  }
 
-  // Volumetric 3D Grid (110 cols x 146 rows = 16,060 particles at 3:4 portrait ratio)
+  const texHuman = loadTex('images/img_profile.jpg');
+  const depthHuman = loadTex('images/img_profile_depth.png');
+  const texBatman = loadTex('images/img_profile_batman.png');
+  const depthBatman = loadTex('images/img_profile_batman_depth.png');
+
+  // Volumetric 3D Grid (110 cols x 146 rows = 16,060 points at 3:4 portrait ratio)
   const COLS = 110, ROWS = 146;
   const count = COLS * ROWS;
   const positions = new Float32Array(count * 3);
   const uvs = new Float32Array(count * 2);
 
-  const WIDTH = 205, HEIGHT = 273;
+  // Dimensions sized to fit camera FOV with comfortable margins
+  const WIDTH = 152, HEIGHT = 202;
   let idx = 0;
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
@@ -529,40 +554,35 @@ const GLSL_SNOISE = `
     uDepthBatman: { value: depthBatman },
     uMorph: { value: 0.0 },
     uDissolve: { value: 0.0 },
-    uDepthScale: { value: 52.0 },
-    uPointSize: { value: dpr > 1.5 ? 3.4 : 2.7 },
+    uDepthScale: { value: 46.0 },
+    uPointSize: { value: dpr > 1.2 ? 4.2 : 3.2 },
     uTime: { value: 0.0 }
   };
 
   const bustMat = new THREE.ShaderMaterial({
     uniforms: bustUniforms,
     vertexShader: `
-      uniform sampler2D uTexHuman;
       uniform sampler2D uDepthHuman;
-      uniform sampler2D uTexBatman;
       uniform sampler2D uDepthBatman;
       uniform float uMorph;
       uniform float uDissolve;
       uniform float uDepthScale;
       uniform float uPointSize;
       uniform float uTime;
-      varying vec3 vColor;
-      varying float vAlpha;
+      varying vec2 vUv;
+      varying float vDepth;
 
       ${GLSL_SNOISE}
 
       void main() {
-        vec2 uv = uv;
+        vUv = uv;
         float dH = texture2D(uDepthHuman, uv).r;
         float dB = texture2D(uDepthBatman, uv).r;
         float depth = mix(dH, dB, uMorph);
-
-        vec4 colH = texture2D(uTexHuman, uv);
-        vec4 colB = texture2D(uTexBatman, uv);
-        vec3 col = mix(colH.rgb, colB.rgb, uMorph);
+        vDepth = depth;
 
         vec3 pos = position;
-        pos.z += (depth - 0.38) * uDepthScale;
+        pos.z += (depth - 0.35) * uDepthScale;
 
         if (uDissolve > 0.0) {
           float n1 = snoise(pos * 0.024 + vec3(uTime * 0.3));
@@ -572,34 +592,42 @@ const GLSL_SNOISE = `
           pos.z += (n2 - 0.3) * uDissolve * 90.0;
         }
 
-        vColor = col;
-        float aH = colH.a;
-        float aB = colB.a;
-        float alpha = mix(aH, aB, uMorph);
-        if (depth < 0.05 && length(col) < 0.1) alpha *= 0.15;
-        vAlpha = alpha * max(0.0, 1.0 - uDissolve * 0.9);
-
         vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
-        gl_PointSize = uPointSize * (1.0 - uDissolve * 0.5) * (260.0 / -mvPos.z);
+        gl_PointSize = uPointSize * (1.0 - uDissolve * 0.45) * (280.0 / -mvPos.z);
         gl_Position = projectionMatrix * mvPos;
       }
     `,
     fragmentShader: `
-      varying vec3 vColor;
-      varying float vAlpha;
+      uniform sampler2D uTexHuman;
+      uniform sampler2D uTexBatman;
+      uniform float uMorph;
+      uniform float uDissolve;
+      varying vec2 vUv;
+      varying float vDepth;
+
       void main() {
-        if (vAlpha < 0.04) discard;
         vec2 coord = gl_PointCoord - vec2(0.5);
         float dist = length(coord);
         if (dist > 0.5) discard;
-        float radial = smoothstep(0.5, 0.08, dist);
-        vec3 finalCol = vColor + vec3(0.06 * (0.5 - dist));
-        gl_FragColor = vec4(finalCol, vAlpha * radial);
+
+        vec4 colH = texture2D(uTexHuman, vUv);
+        vec4 colB = texture2D(uTexBatman, vUv);
+        vec3 col = mix(colH.rgb, colB.rgb, uMorph);
+
+        float aH = 1.0;
+        float aB = colB.a;
+        float alpha = mix(aH, aB, uMorph);
+
+        float radial = smoothstep(0.5, 0.05, dist);
+        alpha *= radial * max(0.0, 1.0 - uDissolve);
+        if (alpha < 0.02) discard;
+
+        vec3 finalCol = col + vec3(0.08 * (0.5 - dist));
+        gl_FragColor = vec4(finalCol, alpha);
       }
     `,
     transparent: true,
-    depthWrite: false,
-    blending: THREE.NormalBlending
+    depthWrite: false
   });
 
   const bustMesh = new THREE.Points(geometry, bustMat);
@@ -617,8 +645,8 @@ const GLSL_SNOISE = `
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      targetRotY = x * 0.42;
-      targetRotX = -y * 0.32;
+      targetRotY = x * 0.38;
+      targetRotX = -y * 0.28;
       isHovered = true;
     });
 
@@ -639,17 +667,31 @@ const GLSL_SNOISE = `
     }
   };
 
-  // Zero-Idle CPU: IntersectionObserver pauses render loop when scrolled away
+  // Zero-Idle CPU with IntersectionObserver
   let isVisible = false;
   let animId = null;
+
+  function checkVisibility() {
+    const rect = canvas.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView && !isVisible) {
+      isVisible = true;
+      if (!animId) renderLoop();
+    } else if (!inView && isVisible) {
+      isVisible = false;
+    }
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       isVisible = entry.isIntersecting;
       if (isVisible && !animId) renderLoop();
     });
-  }, { threshold: 0.1 });
+  }, { threshold: [0, 0.05, 0.2] });
   observer.observe(canvas);
+
+  window.addEventListener('scroll', checkVisibility, { passive: true });
+  checkVisibility();
 
   function renderLoop() {
     if (!isVisible) { animId = null; return; }
@@ -662,7 +704,7 @@ const GLSL_SNOISE = `
     bustMesh.rotation.x += (targetRotX - bustMesh.rotation.x) * 0.06;
 
     if (!isHovered) {
-      bustMesh.position.y = Math.sin(bustUniforms.uTime.value * 1.5) * 2.5;
+      bustMesh.position.y = Math.sin(bustUniforms.uTime.value * 1.5) * 2.0;
     } else {
       bustMesh.position.y += (0 - bustMesh.position.y) * 0.1;
     }
@@ -683,6 +725,10 @@ const GLSL_SNOISE = `
     }
 
     renderer.render(scene, camera);
+    if (!canvas.classList.contains('ready')) {
+      canvas.classList.add('ready');
+      if (container) container.classList.add('has-3d-ready');
+    }
   }
 })();
 
